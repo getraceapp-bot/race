@@ -163,6 +163,18 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 .search-bar{width:100%;padding:11px 16px;background:var(--s1);border:1px solid var(--b1);color:var(--txt);font-size:14px;border-radius:10px;outline:none;margin-bottom:14px}
 .search-bar:focus{border-color:var(--og)}
 
+
+.wdreq{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--s1);border:1px solid rgba(240,200,66,0.25);border-radius:12px;margin-bottom:10px}
+.wdreq-info{flex:1;min-width:0}
+.wdreq-name{font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;margin-bottom:3px}
+.wdreq-amt{font-family:'Cabinet Grotesk';font-size:20px;font-weight:900;color:var(--gold)}
+.wdreq-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:3px}
+.wdreq-actions{display:flex;gap:8px;flex-shrink:0}
+.btn-approve{padding:10px 16px;background:var(--green);border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:12px;font-weight:800;cursor:pointer;border-radius:8px;transition:all .2s}
+.btn-approve:hover{opacity:.85}
+.btn-reject{padding:10px 14px;background:none;border:1px solid rgba(231,76,60,.4);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;border-radius:8px;transition:all .2s}
+.btn-reject:hover{background:var(--red);color:#fff}
+
 @media(max-width:600px){.f2,.f3{grid-template-columns:1fr}.ovgrid{grid-template-columns:1fr 1fr}.pg{padding:14px}.card{padding:16px}.aquick{grid-template-columns:1fr}}
 </style>
 </head>
@@ -202,6 +214,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
     <button class="tb" onclick="goTab('agents',this)">👤 AGENTS<span class="badge" id="tab-ag-badge">0</span></button>
     <button class="tb" onclick="goTab('txs',this)">⛽ FILLS</button>
     <button class="tb" onclick="goTab('invites',this)">👥 INVITES</button>
+    <button class="tb" onclick="goTab('withdrawals',this)">💸 WITHDRAWALS<span class="badge" id="tab-wd-badge">0</span></button>
     <button class="tb" onclick="goTab('leaderboard',this)">🏆 RANKINGS</button>
   </div>
 
@@ -283,6 +296,15 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
     <div class="card" style="padding:0;overflow:hidden"><div class="tscroll"><div id="invlist"><div class="empty">Loading...</div></div></div></div>
   </div>
 
+
+  <!-- WITHDRAWALS -->
+  <div class="pg" id="pg-withdrawals">
+    <div class="slbl">// PENDING WITHDRAWAL REQUESTS <span id="wd-refresh" style="cursor:pointer;color:var(--o)">↻ refresh</span></div>
+    <div id="wd-pending"><div class="empty">Loading...</div></div>
+    <div class="slbl" style="margin-top:20px">// WITHDRAWAL HISTORY</div>
+    <div class="card" style="padding:0;overflow:hidden"><div class="tscroll"><div id="wd-history"><div class="empty">Loading...</div></div></div></div>
+  </div>
+
   <!-- LEADERBOARD -->
   <div class="pg" id="pg-leaderboard">
     <div class="slbl">// AGENT RANKINGS — BY DRIVERS RECRUITED</div>
@@ -347,6 +369,7 @@ function goTab(id,el){
   if(id==='invites'){populateSels();loadInvites();}
   if(id==='overview'){loadOverview();}
   if(id==='leaderboard'){loadLeaderboard();}
+  if(id==='withdrawals'){loadWithdrawals();}
 }
 
 // BOOT
@@ -356,8 +379,11 @@ function boot(){
   document.getElementById('inv-dt').valueAsDate=d;
   loadOverview();
   loadAgentsData();
+  // load pending withdrawal badge
+  sbFetch('agent_withdrawals?status=eq.pending&select=id').then(function(d){document.getElementById('tab-wd-badge').textContent=d.length;}).catch(function(){});
 }
 document.getElementById('ov-refresh').onclick=function(){loadOverview();loadAgentsData();showToast('Refreshed');};
+document.getElementById('wd-refresh').onclick=function(){loadWithdrawals();showToast('Refreshed');};
 
 // Central data loader
 function loadAgentsData(){
@@ -602,6 +628,76 @@ function loadOverview(){
     }
     document.getElementById('ov-top').innerHTML=h;
   }).catch(function(e){document.getElementById('ov-top').innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
+}
+
+
+// WITHDRAWALS
+function loadWithdrawals(){
+  var pend=document.getElementById('wd-pending');
+  var hist=document.getElementById('wd-history');
+  Promise.all([
+    sbFetch('agent_withdrawals?order=requested_at.desc&select=*,vip_agents(name,phone)'),
+    sbFetch('vip_agents?select=id,name')
+  ]).then(function(r){
+    var wds=r[0];
+    var pending=wds.filter(function(w){return w.status==='pending';});
+    var done=wds.filter(function(w){return w.status!=='pending';});
+    document.getElementById('tab-wd-badge').textContent=pending.length;
+
+    // Pending cards
+    if(!pending.length){pend.innerHTML='<div class="empty">No pending requests. 🎉</div>';}
+    else{
+      var ph='';
+      pending.forEach(function(w){
+        var nm=w.vip_agents?w.vip_agents.name:'Unknown';
+        var d=new Date(w.requested_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+        ph+='<div class="wdreq"><div class="wdreq-info">';
+        ph+='<div class="wdreq-name">'+esc(nm)+'</div>';
+        ph+='<div class="wdreq-amt">'+fmt(w.amount)+' IQD</div>';
+        ph+='<div class="wdreq-meta">Requested '+d+'</div>';
+        ph+='</div><div class="wdreq-actions">';
+        ph+='<button class="btn-approve" onclick="approveWd(\''+w.id+'\')">✓ Mark Paid</button>';
+        ph+='<button class="btn-reject" onclick="rejectWd(\''+w.id+'\')">Reject</button>';
+        ph+='</div></div>';
+      });
+      pend.innerHTML=ph;
+    }
+
+    // History table
+    if(!done.length){hist.innerHTML='<div class="empty">No processed withdrawals yet.</div>';}
+    else{
+      var hh='<table class="ttbl"><thead><tr><th>AGENT</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead><tbody>';
+      done.forEach(function(w){
+        var nm=w.vip_agents?w.vip_agents.name:'—';
+        var stColor=w.status==='rejected'?'var(--red)':'var(--green)';
+        var stLbl=w.status==='rejected'?'✕ Rejected':'✓ Paid';
+        var d=new Date(w.requested_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+        hh+='<tr><td style="font-size:12px">'+esc(nm)+'</td>';
+        hh+='<td class="tg">'+fmt(w.amount)+' IQD</td>';
+        hh+='<td style="font-family:JetBrains Mono;font-size:11px;color:'+stColor+'">'+stLbl+'</td>';
+        hh+='<td class="td">'+d+'</td>';
+        hh+='<td><button class="btn-del" data-id="'+w.id+'" onclick="delWd(this)">×</button></td></tr>';
+      });
+      hh+='</tbody></table>';
+      hist.innerHTML=hh;
+    }
+  }).catch(function(e){pend.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
+}
+function approveWd(id){
+  if(!confirm('Mark this withdrawal as PAID?\n\nConfirm you have sent the money to the agent.'))return;
+  sbFetch('agent_withdrawals?id=eq.'+id,'PATCH',{status:'paid',confirmed_at:new Date().toISOString()}).then(function(){
+    showToast('✅ Marked as paid');loadWithdrawals();
+  }).catch(function(){showToast('Error',true);});
+}
+function rejectWd(id){
+  if(!confirm('Reject this withdrawal request?\n\nThe amount returns to the agent\'s available balance.'))return;
+  sbFetch('agent_withdrawals?id=eq.'+id,'PATCH',{status:'rejected'}).then(function(){
+    showToast('Request rejected');loadWithdrawals();
+  }).catch(function(){showToast('Error',true);});
+}
+function delWd(btn){
+  if(!confirm('Delete this withdrawal record permanently?'))return;
+  sbFetch('agent_withdrawals?id=eq.'+btn.getAttribute('data-id'),'DELETE').then(function(){showToast('Deleted');loadWithdrawals();}).catch(function(){showToast('Error',true);});
 }
 
 // LEADERBOARD

@@ -216,6 +216,32 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
 .sticky-cta-btn:active{transform:scale(0.98)}
 
 
+
+/* WITHDRAWAL */
+.wd-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.wd-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.wd-box{background:var(--s2s);border:1px solid var(--b1);border-radius:12px;padding:16px;text-align:center}
+.wd-box.avail{border-color:var(--og);background:linear-gradient(135deg,rgba(230,106,42,0.08),transparent)}
+.wd-box-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);margin-bottom:7px}
+.wd-box-v{font-family:'Cabinet Grotesk';font-size:24px;font-weight:900;line-height:1}
+.wd-box-v.g{color:var(--green)}
+.wd-box-v.o{color:var(--o)}
+.wd-input-row{display:flex;gap:8px;margin-bottom:12px}
+.wd-input-row input{flex:1;padding:14px 16px;background:var(--bg);border:1px solid var(--b2);color:var(--txt);font-family:'Outfit';font-size:15px;outline:none;border-radius:10px;transition:border-color 0.2s}
+.wd-input-row input:focus{border-color:var(--o)}
+.wd-btn{padding:14px 20px;background:linear-gradient(135deg,var(--o),var(--o2));border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:14px;font-weight:800;cursor:pointer;border-radius:10px;transition:all 0.2s;white-space:nowrap}
+.wd-btn:active{transform:scale(0.97)}
+.wd-btn:disabled{opacity:0.5;cursor:not-allowed}
+.wd-hint{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);line-height:1.5;text-align:center}
+.wd-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.wd-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2s);border:1px solid var(--b1);border-radius:10px}
+.wd-item-amt{font-family:'Cabinet Grotesk';font-size:15px;font-weight:800}
+.wd-item-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-top:2px}
+.wd-status{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:20px}
+.wd-status.pending{background:rgba(240,200,66,0.12);color:var(--gold);border:1px solid rgba(240,200,66,0.3)}
+.wd-status.paid{background:var(--gd);color:var(--green);border:1px solid var(--gg)}
+.wd-status.rejected{background:rgba(231,76,60,0.1);color:var(--red);border:1px solid rgba(231,76,60,0.3)}
+
 /* INSTALL PROMPT */
 .install-banner{background:linear-gradient(135deg,rgba(230,106,42,0.16),rgba(240,200,66,0.06));border:1px solid var(--og);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform 0.2s;position:relative;overflow:hidden}
 .install-banner:active{transform:scale(0.98)}
@@ -324,6 +350,28 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
       <div class="stat-card"><div class="stat-ic">👥</div><div class="stat-v o" id="st-invites">0</div><div class="stat-l">DRIVERS</div></div>
       <div class="stat-card"><div class="stat-ic">⛽</div><div class="stat-v gold" id="st-txs">0</div><div class="stat-l">FILLS</div></div>
       <div class="stat-card"><div class="stat-ic">💰</div><div class="stat-v g" id="st-spend">0</div><div class="stat-l">IQD MOVED</div></div>
+    </div>
+
+
+    <!-- WITHDRAWAL -->
+    <div class="wd-card">
+      <div class="card-sec-lbl" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:16px">// YOUR WALLET</div>
+      <div class="wd-split">
+        <div class="wd-box">
+          <div class="wd-box-lbl">TOTAL EARNED</div>
+          <div class="wd-box-v g" id="wd-earned">0</div>
+        </div>
+        <div class="wd-box avail">
+          <div class="wd-box-lbl">AVAILABLE TO WITHDRAW</div>
+          <div class="wd-box-v o" id="wd-avail">0</div>
+        </div>
+      </div>
+      <div class="wd-input-row">
+        <input type="number" id="wd-amount" placeholder="Amount in IQD" min="0">
+        <button class="wd-btn" id="wd-btn" onclick="requestWithdraw()">Withdraw</button>
+      </div>
+      <div class="wd-hint" id="wd-hint">Request a withdrawal — RACE admin will process it.</div>
+      <div class="wd-list" id="wd-list"></div>
     </div>
 
     <!-- MISSION / INVITE -->
@@ -544,7 +592,13 @@ function renderMiles(invCount){
 async function boot(){
   const params=new URLSearchParams(window.location.search);
   agentId=params.get('id');
-  if(!agentId){showErr('No agent ID in URL. Please use the link from RACE admin.');return;}
+  // PWA fix: remember the agent ID so the home-screen app works without ?id= in the URL
+  if(agentId){
+    try{localStorage.setItem('race_agent_id',agentId);}catch(e){}
+  }else{
+    try{agentId=localStorage.getItem('race_agent_id');}catch(e){}
+  }
+  if(!agentId){showErr('No agent ID found. Please open the link your RACE admin sent you first.');return;}
   try{
     const [agents,txs,invites]=await Promise.all([
       sb('vip_agents?id=eq.'+agentId+'&select=*'),
@@ -555,6 +609,7 @@ async function boot(){
     const agent=agents[0];
     invitesData=invites;
     prevTxCount=txs.length;
+    await loadWithdrawals();
 
     document.getElementById('hdr-name').textContent=agent.name.toUpperCase();
     document.title=agent.name+' — RACE VIP';
@@ -583,6 +638,7 @@ function renderAll(txs,invites,isRefresh){
   const totalEarned=totalSpend*RATE;
 
   countUp(document.getElementById('earn-total'),totalEarned,'<sup>IQD</sup>',true);
+  renderWallet(totalEarned);
   document.getElementById('earn-desc').innerHTML='<strong>'+txs.length+' fills</strong> · '+invites.length+' drivers recruited · <strong>'+fmt(totalSpend)+' IQD</strong> total moved';
   countUp(document.getElementById('st-invites'),invites.length,'',false);
   countUp(document.getElementById('st-txs'),txs.length,'',false);
@@ -624,6 +680,7 @@ async function refresh(){
       sb('agent_invites?agent_id=eq.'+agentId+'&order=joined_date.desc&select=*')
     ]);
     invitesData=invites;
+    await loadWithdrawals();
     renderAll(txs,invites,true);
   }catch(e){}
 }
@@ -706,6 +763,68 @@ function fxLoop(){
 }
 fxLoop();
 
+
+
+// ═══ WITHDRAWAL SYSTEM ═══
+let withdrawalsData=[];
+
+async function loadWithdrawals(){
+  try{
+    withdrawalsData=await sb('agent_withdrawals?agent_id=eq.'+agentId+'&order=requested_at.desc&select=*');
+  }catch(e){withdrawalsData=[];}
+}
+
+function renderWallet(totalEarned){
+  // Sum pending + paid withdrawals
+  let withdrawn=0,pending=0;
+  withdrawalsData.forEach(w=>{
+    const amt=parseFloat(w.amount)||0;
+    if(w.status==='paid'||w.status==='confirmed'||w.status==='approved')withdrawn+=amt;
+    else if(w.status==='pending')pending+=amt;
+  });
+  const available=Math.max(totalEarned-withdrawn-pending,0);
+  countUp(document.getElementById('wd-earned'),totalEarned,'',true);
+  countUp(document.getElementById('wd-avail'),available,'',true);
+  window._available=available;
+
+  const list=document.getElementById('wd-list');
+  if(!withdrawalsData.length){list.innerHTML='';return;}
+  list.innerHTML=withdrawalsData.map(w=>{
+    const st=w.status==='pending'?'pending':(w.status==='rejected'?'rejected':'paid');
+    const lbl=st==='pending'?'⏳ Pending':(st==='rejected'?'✕ Rejected':'✓ Paid');
+    const d=new Date(w.requested_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    return `<div class="wd-item">
+      <div><div class="wd-item-amt">${fmt(w.amount)} IQD</div><div class="wd-item-date">Requested ${d}</div></div>
+      <div class="wd-status ${st}">${lbl}</div>
+    </div>`;
+  }).join('');
+}
+
+async function requestWithdraw(){
+  const inp=document.getElementById('wd-amount');
+  const amt=parseFloat(inp.value);
+  const avail=window._available||0;
+  if(!amt||amt<=0){toast('⚠️ Enter a valid amount');return;}
+  if(amt>avail){toast('⚠️ Max available: '+fmt(avail)+' IQD');return;}
+  const btn=document.getElementById('wd-btn');
+  btn.disabled=true;btn.textContent='...';
+  try{
+    const r=await fetch(SB+'/rest/v1/agent_withdrawals',{
+      method:'POST',
+      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify({agent_id:agentId,amount:amt,status:'pending'})
+    });
+    if(!r.ok)throw new Error(await r.text());
+    inp.value='';
+    btn.disabled=false;btn.textContent='Withdraw';
+    toast('✅ Withdrawal requested — pending approval');
+    await loadWithdrawals();
+    refresh();
+  }catch(e){
+    btn.disabled=false;btn.textContent='Withdraw';
+    toast('⚠️ Could not submit. Try again.');
+  }
+}
 
 // ═══ PWA INSTALL SYSTEM ═══
 let deferredPrompt=null;

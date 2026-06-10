@@ -3,6 +3,7 @@
   "short_name": "RACE VIP",
   "description": "RACE VIP Agent Network — Invite drivers, earn forever.",
   "start_url": "./race-vip-agent.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#070708",
