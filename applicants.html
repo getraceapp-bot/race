@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>RACE — Applicants Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;700;800;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#07080a;--card:#11141a;--card2:#181c24;--gold:#f0c842;--gold-d:#c8972a;--green:#00e5a0;--red:#ff5e5e;--blue:#6ba3ff;--txt:#e8e6e1;--muted:#7a7f8a;--border:rgba(255,255,255,0.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Instrument Sans',sans-serif;min-height:100vh}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:48px;width:90%;max-width:380px;text-align:center}
+.login-box h1{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:32px;color:var(--gold);letter-spacing:-1px;margin-bottom:6px}
+.login-box p{font-size:13px;color:var(--muted);margin-bottom:28px}
+.login-box input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:#fff;font-size:15px;outline:none;margin-bottom:14px;text-align:center}
+.login-box input:focus{border-color:var(--gold-d)}
+.login-box button{width:100%;background:var(--gold);color:#000;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:15px;padding:14px;border-radius:10px;border:none;cursor:pointer}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;display:none}
+/* DASH */
+#dash{display:none;padding:0 0 60px}
+header{background:var(--card);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.h-logo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:22px;color:var(--gold);letter-spacing:-1px}
+.h-logo span{font-size:11px;color:var(--muted);font-weight:400;margin-left:8px;letter-spacing:1px;text-transform:uppercase}
+.h-actions{display:flex;gap:10px}
+.hbtn{background:var(--card2);border:1px solid var(--border);color:var(--txt);font-size:13px;font-weight:600;padding:9px 16px;border-radius:8px;cursor:pointer;transition:all 0.15s}
+.hbtn:hover{border-color:var(--gold-d);color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:24px 32px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.stat .n{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:32px;line-height:1}
+.stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:5px}
+.stat.gold .n{color:var(--gold)}
+.stat.green .n{color:var(--green)}
+.stat.blue .n{color:var(--blue)}
+.stat.red .n{color:var(--red)}
+.filters{display:flex;gap:8px;padding:0 32px 18px;flex-wrap:wrap}
+.fbtn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;cursor:pointer;transition:all 0.15s}
+.fbtn.on{background:var(--gold);color:#000;border-color:var(--gold)}
+.search-row{padding:0 32px 18px}
+.search-row input{width:100%;max-width:400px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:#fff;font-size:14px;outline:none}
+.list{padding:0 32px;display:flex;flex-direction:column;gap:10px}
+.app-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;transition:border-color 0.15s}
+.app-card:hover{border-color:rgba(240,200,66,0.3)}
+.ac-main{display:flex;flex-direction:column;gap:6px}
+.ac-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:18px}
+.ac-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.ac-meta .wa{color:var(--gold);font-weight:600}
+.ac-meta a{color:var(--gold);text-decoration:none}
+.ac-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:11px;background:var(--card2);border:1px solid var(--border);border-radius:100px;padding:3px 10px;color:var(--muted)}
+.ac-side{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.status-pill{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:100px}
+.st-new{background:rgba(240,200,66,0.15);color:var(--gold);border:1px solid rgba(240,200,66,0.3)}
+.st-contacted{background:rgba(107,163,255,0.12);color:var(--blue);border:1px solid rgba(107,163,255,0.25)}
+.st-approved{background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.25)}
+.st-rejected{background:rgba(255,94,94,0.1);color:var(--red);border:1px solid rgba(255,94,94,0.25)}
+.ac-btns{display:flex;gap:6px}
+.sbtn{font-size:11px;font-weight:600;padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--card2);color:var(--muted);cursor:pointer;transition:all 0.15s}
+.sbtn:hover{color:#fff;border-color:rgba(255,255,255,0.25)}
+.sbtn.contact:hover{color:var(--blue);border-color:var(--blue)}
+.sbtn.approve:hover{color:var(--green);border-color:var(--green)}
+.sbtn.reject:hover{color:var(--red);border-color:var(--red)}
+.ac-date{font-size:11px;color:var(--muted)}
+.empty{text-align:center;padding:80px 32px;color:var(--muted)}
+.empty .big{font-size:48px;margin-bottom:16px}
+.loading{text-align:center;padding:60px;color:var(--muted)}
+@media(max-width:640px){.app-card{grid-template-columns:1fr}.ac-side{align-items:flex-start}header{padding:14px 18px}.stats,.filters,.search-row,.list{padding-left:18px;padding-right:18px}}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>RACE</h1>
+    <p>Applicants Admin — Enter password</p>
+    <input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')login()"/>
+    <button onclick="login()">Enter Dashboard</button>
+    <div class="login-err" id="loginErr">Wrong password</div>
+  </div>
+</div>
+
+<div id="dash">
+  <header>
+    <div class="h-logo">RACE <span>Applicants Admin</span></div>
+    <div class="h-actions">
+      <button class="hbtn" onclick="loadApps()">↻ Refresh</button>
+      <button class="hbtn" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat gold"><div class="n" id="stTotal">0</div><div class="l">Total Applications</div></div>
+    <div class="stat gold"><div class="n" id="stNew">0</div><div class="l">New</div></div>
+    <div class="stat blue"><div class="n" id="stContacted">0</div><div class="l">Contacted</div></div>
+    <div class="stat green"><div class="n" id="stApproved">0</div><div class="l">Approved</div></div>
+    <div class="stat red"><div class="n" id="stRejected">0</div><div class="l">Rejected</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="fbtn on" data-f="all" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" data-f="new" onclick="setFilter('new',this)">New</button>
+    <button class="fbtn" data-f="contacted" onclick="setFilter('contacted',this)">Contacted</button>
+    <button class="fbtn" data-f="approved" onclick="setFilter('approved',this)">Approved</button>
+    <button class="fbtn" data-f="rejected" onclick="setFilter('rejected',this)">Rejected</button>
+  </div>
+
+  <div class="search-row">
+    <input type="text" id="search" placeholder="🔍 Search name, WhatsApp, city..." oninput="render()"/>
+  </div>
+
+  <div class="list" id="list"><div class="loading">Loading applications...</div></div>
+</div>
+
+<script>
+const SB_URL='https://zluhwkdrijrklviijuvl.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w';
+const ADMIN_PW='race2024admin';
+
+let apps=[],filter='all';
+
+function login(){
+  if(document.getElementById('pw').value===ADMIN_PW){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dash').style.display='block';
+    sessionStorage.setItem('race_admin','1');
+    loadApps();
+  }else{
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+if(sessionStorage.getItem('race_admin')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('dash').style.display='block';
+  loadApps();
+}
+
+async function loadApps(){
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/agent_applications?select=*&order=created_at.desc`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    apps=await res.json();
+    if(!Array.isArray(apps))apps=[];
+    updateStats();render();
+  }catch(e){
+    document.getElementById('list').innerHTML='<div class="empty"><div class="big">⚠️</div>Could not load. Check internet and refresh.</div>';
+  }
+}
+
+function updateStats(){
+  document.getElementById('stTotal').textContent=apps.length;
+  document.getElementById('stNew').textContent=apps.filter(a=>a.status==='new').length;
+  document.getElementById('stContacted').textContent=apps.filter(a=>a.status==='contacted').length;
+  document.getElementById('stApproved').textContent=apps.filter(a=>a.status==='approved').length;
+  document.getElementById('stRejected').textContent=apps.filter(a=>a.status==='rejected').length;
+}
+
+function setFilter(f,btn){
+  filter=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+function render(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  let rows=apps;
+  if(filter!=='all')rows=rows.filter(a=>a.status===filter);
+  if(q)rows=rows.filter(a=>((a.first_name||'')+' '+(a.last_name||'')+' '+(a.whatsapp||'')+' '+(a.city||'')).toLowerCase().includes(q));
+  const list=document.getElementById('list');
+  if(!rows.length){list.innerHTML='<div class="empty"><div class="big">📭</div>No applications here yet.</div>';return}
+  list.innerHTML=rows.map(a=>{
+    const d=new Date(a.created_at).toLocaleString('en-GB',{timeZone:'Asia/Baghdad',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    const waClean=(a.whatsapp||'').replace(/[^0-9+]/g,'');
+    return `<div class="app-card">
+      <div class="ac-main">
+        <div class="ac-name">${esc(a.first_name)} ${esc(a.last_name||'')}</div>
+        <div class="ac-meta">
+          <a class="wa" href="https://wa.me/${waClean.replace('+','')}" target="_blank">📱 ${esc(a.whatsapp)}</a>
+          <span>📍 ${esc(a.city||'—')}</span>
+          <span>🌐 ${(a.language||'en').toUpperCase()}</span>
+        </div>
+        <div class="ac-tags">
+          ${a.invite_strategy?`<span class="tag">${esc(a.invite_strategy)}</span>`:''}
+          ${a.expected_volume?`<span class="tag">${esc(a.expected_volume)}</span>`:''}
+        </div>
+      </div>
+      <div class="ac-side">
+        <span class="status-pill st-${a.status}">${a.status}</span>
+        <div class="ac-btns">
+          <button class="sbtn contact" onclick="setStatus('${a.id}','contacted')">Contacted</button>
+          <button class="sbtn approve" onclick="setStatus('${a.id}','approved')">Approve</button>
+          <button class="sbtn reject" onclick="setStatus('${a.id}','rejected')">Reject</button>
+        </div>
+        <span class="ac-date">${d}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function esc(s){return String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
+
+async function setStatus(id,status){
+  try{
+    await fetch(`${SB_URL}/rest/v1/agent_applications?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({status})
+    });
+    const a=apps.find(x=>x.id===id);if(a)a.status=status;
+    updateStats();render();
+  }catch(e){alert('Update failed — check connection')}
+}
+
+function exportCSV(){
+  const head=['Date','First Name','Last Name','WhatsApp','City','Strategy','Volume','Language','Status'];
+  const rows=apps.map(a=>[
+    new Date(a.created_at).toISOString(),a.first_name,a.last_name,a.whatsapp,a.city,a.invite_strategy,a.expected_volume,a.language,a.status
+  ].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(','));
+  const csv=[head.join(','),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='race-applicants-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+</script>
+</body>
+</html>

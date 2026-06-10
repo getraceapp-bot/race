@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>RACE Agent Network — Erbil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f5f2eb;--cream:#ede9df;--ink:#07080a;--gold:#c8972a;--gold-l:#f0c842;--gold-p:#fdf6e3;
+  --green:#1a6b3c;--green-l:#d4f0e0;--blue:#1a3a6b;--blue-l:#dce8f8;--red:#c0392b;--red-l:#fdecea;
+  --txt:#1a1a1a;--muted:#6b6457;--border:#d9d3c6;--sh:rgba(0,0,0,0.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Instrument Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* LANG SWITCHER */
+.lang-bar{background:var(--ink);display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:8px 40px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.lang-btn{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.55);font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px}
+.lang-btn.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.lang-btn:hover:not(.active){color:#fff;border-color:rgba(255,255,255,0.4)}
+
+/* TICKER */
+.ticker-wrap{background:var(--ink);overflow:hidden;padding:9px 0;border-bottom:2px solid var(--gold)}
+.ticker-inner{display:inline-flex;gap:56px;white-space:nowrap;animation:tick 35s linear infinite}
+.ticker-inner span{font-family:'Cabinet Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-l);opacity:0.8}
+.ticker-inner span::before{content:'◆  ';opacity:0.4}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(245,242,235,0.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 40px}
+.nav-logo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:22px;letter-spacing:-1px;color:var(--ink);text-decoration:none}
+.nav-logo sup{font-size:10px;background:var(--gold);color:#fff;padding:2px 6px;border-radius:4px;margin-left:4px;font-weight:800;vertical-align:super}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--ink);color:var(--gold-l);font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:13px;padding:10px 22px;border-radius:7px;text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.nav-cta:hover{background:var(--gold);color:var(--ink)}
+@media(max-width:768px){.nav-links{display:none}.nav{padding:14px 20px}}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:90vh}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:72px 56px 72px 72px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--gold-p);border:1px solid rgba(200,151,42,0.3);border-radius:5px;padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;width:fit-content}
+.blink{width:7px;height:7px;background:var(--gold);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero h1{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(48px,5vw,80px);line-height:0.95;letter-spacing:-3px;margin-bottom:26px}
+.hero h1 .gold{color:var(--gold)}
+.hero h1 .struck{position:relative;color:var(--muted)}
+.hero h1 .struck::after{content:'';position:absolute;left:-2px;right:-2px;top:54%;height:3px;background:var(--red);transform:rotate(-1.5deg)}
+.hero-sub{font-size:17px;line-height:1.75;color:var(--muted);max-width:420px;margin-bottom:38px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-dark{background:var(--ink);color:var(--gold-l);font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;padding:15px 30px;border-radius:8px;text-decoration:none;transition:all 0.2s;border:2px solid var(--ink)}
+.btn-dark:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.btn-out{background:transparent;color:var(--ink);font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:15px;padding:15px 30px;border-radius:8px;text-decoration:none;border:2px solid var(--border);transition:all 0.2s}
+.btn-out:hover{border-color:var(--ink)}
+.hero-stats{display:flex;gap:28px;margin-top:44px;padding-top:28px;border-top:1px solid var(--border);flex-wrap:wrap}
+.hstat .n{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:30px;letter-spacing:-1px;color:var(--ink)}
+.hstat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+.hero-right{background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 48px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:180px;color:rgba(255,255,255,0.025);letter-spacing:-10px;user-select:none;white-space:nowrap;top:50%;left:50%;transform:translate(-50%,-50%)}
+.earn-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;width:100%;max-width:320px;margin-bottom:14px;position:relative;z-index:1}
+.ec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.38);margin-bottom:6px}
+.ec-amt{font-family:'Cabinet Grotesk',sans-serif;font-size:52px;font-weight:900;color:var(--gold-l);letter-spacing:-2px;line-height:1}
+.ec-per{font-size:13px;color:rgba(255,255,255,0.4);margin-top:3px}
+.ec-note{font-size:12px;color:rgba(255,255,255,0.25);margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)}
+.feed-zone{display:flex;flex-direction:column;gap:7px;width:100%;max-width:320px;position:relative;z-index:1}
+.feed-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:9px 13px;animation:slideIn 0.4s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.fdot.g{background:#00e5a0}
+.fdot.y{background:var(--gold-l)}
+.ftxt{font-size:12px;color:rgba(255,255,255,0.55);flex:1}
+.fval{font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:800;color:var(--gold-l)}
+
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-right{display:none}.hero-left{padding:56px 24px}}
+
+/* SECTION */
+.sec{padding:88px 40px}
+.sec.alt{background:var(--cream)}
+.sec.dark{background:var(--ink);color:#fff}
+.wrap{max-width:1060px;margin:0 auto}
+.stag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.stag.lt{color:var(--gold-l)}
+.stitle{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(30px,4vw,52px);letter-spacing:-2px;line-height:1.05;margin-bottom:16px}
+.ssub{font-size:16px;line-height:1.75;color:var(--muted);max-width:500px}
+.ssub.lt{color:rgba(255,255,255,0.5)}
+
+/* VALUE CARDS */
+.vcards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:56px;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+@media(max-width:700px){.vcards{grid-template-columns:1fr}}
+.vc{background:#fff;padding:36px 28px;transition:background 0.2s}
+.vc:hover{background:var(--gold-p)}
+.vc-ico{font-size:34px;margin-bottom:18px}
+.vc h3{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:19px;margin-bottom:8px;letter-spacing:-0.3px}
+.vc p{font-size:14px;color:var(--muted);line-height:1.65}
+.vc .acc{color:var(--gold);font-weight:700}
+
+/* ALREADY SECTION */
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:56px}
+@media(max-width:768px){.ag{grid-template-columns:1fr}}
+.al-list{display:flex;flex-direction:column}
+.ali{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--border);align-items:flex-start;transition:background 0.2s;padding-left:8px;border-radius:4px}
+.ali:hover{background:var(--gold-p);padding-left:12px}
+.ali-n{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:40px;color:rgba(200,151,42,0.18);line-height:1;flex-shrink:0;width:50px}
+.ali h4{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:17px;margin-bottom:5px}
+.ali p{font-size:13px;color:var(--muted);line-height:1.6}
+.already-box{background:var(--ink);border-radius:20px;padding:40px;color:#fff}
+.ab-title{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:26px;color:var(--gold-l);margin-bottom:20px;letter-spacing:-0.5px;line-height:1.2}
+.ab-list{display:flex;flex-direction:column;gap:10px}
+.ab-item{display:flex;align-items:center;gap:12px;font-size:14px;padding:13px 15px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.06)}
+.ab-chk{width:22px;height:22px;background:rgba(0,229,160,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:#00e5a0;font-weight:800}
+
+/* MILESTONES */
+.ms-track{margin-top:60px;position:relative;padding-left:40px}
+.ms-line{position:absolute;left:20px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold) 0%,var(--border) 100%)}
+.ms{display:flex;gap:28px;padding-bottom:44px;position:relative}
+.ms:last-child{padding-bottom:0}
+.ms-dot{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid var(--border);background:var(--bg);box-shadow:0 3px 12px var(--sh);margin-left:-64px;position:relative;z-index:1}
+.ms-dot.on{border-color:var(--gold);background:var(--gold-p)}
+.ms-dot.s{border-color:#9ca3af;background:#f9fafb}
+.ms-dot.p{border-color:#b8a040;background:#fffff0}
+.ms-body{flex:1}
+.ms-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ms-title{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:21px;letter-spacing:-0.5px}
+.ms-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 11px;border-radius:100px}
+.bg-gold{background:var(--gold-p);color:var(--gold);border:1px solid rgba(200,151,42,0.25)}
+.bg-green{background:var(--green-l);color:var(--green);border:1px solid rgba(26,107,60,0.2)}
+.bg-blue{background:var(--blue-l);color:var(--blue);border:1px solid rgba(26,58,107,0.2)}
+.bg-red{background:var(--red-l);color:var(--red);border:1px solid rgba(192,57,43,0.2)}
+.ms-desc{font-size:15px;color:var(--muted);line-height:1.65;margin-bottom:14px}
+.perks{display:flex;flex-wrap:wrap;gap:7px}
+.ptag{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--border);border-radius:100px;padding:5px 13px;font-size:12px;font-weight:600}
+@media(max-width:768px){.ms-track{padding-left:20px}.ms-line{display:none}.ms-dot{margin-left:0}}
+
+/* STATIONS */
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:48px}
+.sc{background:#fff;border:1px solid var(--border);border-radius:13px;padding:22px;transition:all 0.22s;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-l));transform:scaleX(0);transform-origin:left;transition:transform 0.3s}
+.sc:hover{transform:translateY(-3px);box-shadow:0 10px 32px var(--sh)}
+.sc:hover::before{transform:scaleX(1)}
+.sc.flag{border-color:var(--gold);background:var(--gold-p)}
+.sc.flag::before{transform:scaleX(1)}
+.sc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.sc-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px}
+.live{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px}
+.live::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+.sc-loc{font-size:12px;color:var(--muted);margin-bottom:12px}
+.sc-row{display:flex;gap:10px}
+.ssi{font-size:12px;background:var(--cream);border-radius:5px;padding:5px 9px}
+.ssi strong{display:block;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;color:var(--ink)}
+.ssi span{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.5px}
+.sc.coming{border-style:dashed;opacity:0.5}
+
+/* ONECLICK */
+.oc-grid{display:grid;grid-template-columns:320px 1fr;gap:60px;align-items:start;margin-top:60px}
+@media(max-width:900px){.oc-grid{grid-template-columns:1fr}}
+.phone-wrap{display:flex;flex-direction:column;align-items:center}
+.phone{background:#0d1117;border-radius:34px;width:290px;overflow:hidden;border:5px solid #1e2530;box-shadow:0 28px 72px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.05)}
+.ph-top{display:flex;justify-content:space-between;padding:10px 18px 6px;font-size:10px;color:rgba(255,255,255,0.35)}
+.ph-header{background:linear-gradient(135deg,var(--gold),var(--gold-l));padding:16px 18px 12px}
+.ph-logo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:20px;color:#000;letter-spacing:-1px}
+.ph-sub{font-size:10px;color:rgba(0,0,0,0.55);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.ph-status{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.ph-member{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:12px;color:rgba(255,255,255,0.65)}
+.ph-tier{font-size:9px;font-weight:800;text-transform:uppercase;padding:2px 8px;border-radius:100px;background:rgba(200,151,42,0.2);color:var(--gold-l);border:1px solid rgba(200,151,42,0.3);letter-spacing:1px}
+.ph-loc{font-size:10px;color:rgba(255,255,255,0.28)}
+.ph-btns{padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.phb{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.15s;text-align:center}
+.phb:hover,.phb:active{transform:scale(0.95);background:rgba(255,255,255,0.1)}
+.phb.t{border-color:rgba(240,200,66,0.3);background:rgba(240,200,66,0.06)}
+.phb.r{border-color:rgba(0,229,160,0.3);background:rgba(0,229,160,0.05)}
+.phb.f{border-color:rgba(255,107,53,0.3);background:rgba(255,107,53,0.05)}
+.phb.b{border-color:rgba(100,160,255,0.3);background:rgba(100,160,255,0.05)}
+.phb-ico{font-size:22px}
+.phb-lbl{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:11px;color:#fff}
+.phb-sub{font-size:9px;color:rgba(255,255,255,0.3);line-height:1.3}
+.ph-dispatch{padding:14px;text-align:center;display:none;animation:fadeU 0.35s ease both}
+@keyframes fadeU{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pd-ico{font-size:36px;margin-bottom:8px}
+.pd-title{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:14px;color:#fff;margin-bottom:6px}
+.pd-eta{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:3px}
+.pd-driver{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px}
+.pd-bar{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:10px;overflow:hidden}
+.pd-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));width:0;border-radius:2px;transition:width 9s linear}
+.pd-cancel{background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:7px;padding:7px 18px;color:rgba(255,255,255,0.38);font-size:11px;cursor:pointer}
+.ph-footer{text-align:center;font-size:10px;color:rgba(255,255,255,0.18);padding:10px 14px;border-top:1px solid rgba(255,255,255,0.05)}
+.phone-shadow{width:180px;height:16px;background:radial-gradient(ellipse,rgba(0,0,0,0.35),transparent);border-radius:50%;margin-top:7px}
+
+.oc-feats{display:flex;flex-direction:column;gap:24px;margin-bottom:32px}
+.oc-feat{display:flex;gap:14px;align-items:flex-start}
+.oc-feat-ico{width:40px;height:40px;background:rgba(255,255,255,0.06);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.oc-feat h4{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-bottom:4px}
+.oc-feat p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.6}
+.unlock-bar{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:22px}
+.ub-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.28);margin-bottom:18px;font-weight:700}
+.ub-track{display:flex;align-items:center}
+.ub-pt{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;min-width:56px;text-align:center}
+.ub-dot{font-size:14px;color:rgba(255,255,255,0.2)}
+.ub-pt.on .ub-dot{color:var(--gold-l)}
+.ub-n{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:12px;color:rgba(255,255,255,0.45)}
+.ub-tag{font-size:10px;color:rgba(255,255,255,0.3);line-height:1.3}
+.ub-line{flex:1;height:2px;background:rgba(255,255,255,0.08);margin-bottom:22px}
+
+/* CALCULATOR */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:56px}
+@media(max-width:768px){.calc-grid{grid-template-columns:1fr}}
+.calc-ctrls{display:flex;flex-direction:column;gap:28px}
+.cf-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:9px;display:block}
+.rrow{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:3px;border-radius:3px;background:rgba(255,255,255,0.12);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold-l);border:2px solid var(--ink);box-shadow:0 0 14px rgba(240,200,66,0.4);cursor:pointer}
+.rv{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:20px;min-width:68px;text-align:right;color:var(--gold-l)}
+.calc-tip{font-size:13px;color:rgba(255,255,255,0.38);line-height:1.6;padding:14px 16px;background:rgba(255,255,255,0.04);border-radius:8px;border-left:3px solid var(--gold)}
+
+.result-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:36px;position:sticky;top:80px}
+.rb-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:6px}
+.rb-amt{font-family:'Cabinet Grotesk',sans-serif;font-size:64px;font-weight:900;color:var(--gold-l);letter-spacing:-3px;line-height:1;display:block}
+.rb-per{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:24px}
+.rb-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.rb-row{display:flex;justify-content:space-between;padding:11px 14px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:13px;color:rgba(255,255,255,0.55)}
+.rb-v{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;color:var(--gold-l);font-size:14px}
+.rb-btn{display:block;text-align:center;background:var(--gold);color:var(--ink);font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:15px;padding:15px;border-radius:10px;text-decoration:none;transition:all 0.2s}
+.rb-btn:hover{background:var(--gold-l);transform:translateY(-1px)}
+
+/* INVITE STEPS */
+.isteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:20px;margin-top:56px}
+.ist{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px 22px;position:relative;overflow:hidden;transition:all 0.2s}
+.ist:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--sh)}
+.ist::after{content:attr(data-n);position:absolute;top:-8px;right:10px;font-family:'Cabinet Grotesk',sans-serif;font-size:88px;font-weight:900;color:rgba(0,0,0,0.04);line-height:1;user-select:none}
+.ist-ico{font-size:28px;margin-bottom:14px}
+.ist h3{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:16px;margin-bottom:7px;letter-spacing:-0.3px}
+.ist p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* FAQ */
+.faq-wrap{margin-top:44px;display:flex;flex-direction:column;gap:2px}
+.fi{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff}
+.fq{padding:17px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:15px;user-select:none;transition:background 0.15s;gap:14px}
+.fq:hover{background:var(--gold-p)}
+.fq.open{background:var(--gold-p)}
+.fi-ico{font-size:19px;color:var(--gold);transition:transform 0.28s;flex-shrink:0}
+.fi.on .fi-ico{transform:rotate(45deg)}
+.fa{max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding 0.2s;font-size:14px;color:var(--muted);line-height:1.7}
+.fa.open{max-height:220px;padding:0 20px 16px}
+
+/* JOIN */
+.join-outer{background:var(--ink);padding:88px 40px}
+.join-wrap{max-width:700px;margin:0 auto}
+.jcard{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:52px}
+@media(max-width:600px){.jcard{padding:32px 22px}}
+.jcard h2{font-family:'Cabinet Grotesk',sans-serif;font-size:36px;font-weight:900;letter-spacing:-1.5px;color:var(--gold-l);margin-bottom:10px}
+.jcard>p{color:rgba(255,255,255,0.45);margin-bottom:34px;font-size:15px}
+.jg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.jg{grid-template-columns:1fr}}
+.jf{display:flex;flex-direction:column;gap:7px}
+.jf.full{grid-column:1/-1}
+.jf label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.38);font-weight:700}
+.jf input,.jf select{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:13px 15px;color:#fff;font-family:'Instrument Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;-webkit-appearance:none;appearance:none}
+.jf input:focus,.jf select:focus{border-color:rgba(240,200,66,0.5)}
+.jf select option{background:#1a1a1a;color:#fff}
+.jsub{margin-top:24px;width:100%;background:var(--gold);color:var(--ink);font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:17px;padding:18px;border-radius:11px;border:none;cursor:pointer;transition:all 0.2s}
+.jsub:hover{background:var(--gold-l);transform:translateY(-2px)}
+.jsub:disabled{background:var(--green);color:#fff;transform:none;cursor:default}
+.jnote{font-size:12px;color:rgba(255,255,255,0.25);margin-top:12px;text-align:center}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding:34px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.flogo{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:20px;color:var(--gold-l)}
+footer p{font-size:13px;color:rgba(255,255,255,0.28)}
+footer a{color:rgba(255,255,255,0.35);text-decoration:none}
+footer a:hover{color:var(--gold-l)}
+
+/* REVEAL */
+.r{opacity:0;transform:translateY(28px);transition:opacity 0.6s ease,transform 0.6s ease}
+.r.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+
+.btn-dark,.btn-out,.nav-cta,.rb-btn{cursor:pointer;font-family:'Cabinet Grotesk',sans-serif}
+.btn-dark{background:var(--ink);color:var(--gold-l);font-weight:800;font-size:15px;padding:15px 30px;border-radius:8px;border:2px solid var(--ink);transition:all 0.2s}
+.btn-dark:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.btn-out{background:transparent;color:var(--ink);font-weight:700;font-size:15px;padding:15px 30px;border-radius:8px;border:2px solid var(--border);transition:all 0.2s}
+.btn-out:hover{border-color:var(--ink)}
+.fee-note{margin-top:20px;font-size:12px;color:var(--muted);background:var(--gold-p);border:1px solid rgba(200,151,42,0.25);border-radius:6px;padding:10px 14px;max-width:440px;line-height:1.5}
+
+
+/* ── POST-SUBMIT FUTURE EXPERIENCE ── */
+#futureUnlock{display:none;animation:unlockIn 0.7s ease both}
+@keyframes unlockIn{from{opacity:0;transform:translateY(40px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.fu-burst{text-align:center;margin-bottom:36px}
+.fu-check{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 20px;box-shadow:0 0 60px rgba(240,200,66,0.4);animation:popIn 0.5s 0.3s cubic-bezier(.18,.89,.32,1.28) both}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.fu-title{font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:34px;color:var(--gold-l);letter-spacing:-1.5px;margin-bottom:8px}
+.fu-sub{font-size:15px;color:rgba(255,255,255,0.5);max-width:420px;margin:0 auto;line-height:1.65}
+.fu-steps{display:flex;flex-direction:column;gap:10px;margin:36px 0}
+.fu-step{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:18px 20px;opacity:0;animation:stepIn 0.5s ease both}
+.fu-step:nth-child(1){animation-delay:0.5s}
+.fu-step:nth-child(2){animation-delay:0.7s}
+.fu-step:nth-child(3){animation-delay:0.9s}
+@keyframes stepIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+.fu-step-n{width:32px;height:32px;border-radius:50%;background:rgba(240,200,66,0.15);border:1px solid rgba(240,200,66,0.3);display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:14px;color:var(--gold-l);flex-shrink:0}
+.fu-step h4{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:15px;color:#fff;margin-bottom:4px}
+.fu-step p{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6}
+.fu-timeline{margin:36px 0;border:1px solid rgba(240,200,66,0.2);border-radius:14px;padding:28px;background:linear-gradient(135deg,rgba(240,200,66,0.05),transparent)}
+.fu-tl-title{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--gold-l);font-weight:700;margin-bottom:22px}
+.fu-tl-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.fu-tl-row:last-child{border-bottom:none}
+.fu-tl-when{font-size:13px;color:rgba(255,255,255,0.45)}
+.fu-tl-what{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:14px;color:#fff;text-align:right}
+.fu-tl-what em{font-style:normal;color:var(--gold-l)}
+.fu-cta{display:block;text-align:center;background:var(--gold);color:var(--ink);font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:16px;padding:17px;border-radius:11px;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;width:100%}
+.fu-cta:hover{background:var(--gold-l);transform:translateY(-2px)}
+.fu-note{text-align:center;font-size:12px;color:rgba(255,255,255,0.3);margin-top:14px}
+
+
+/* ═══ MULTI-MILLION VISUAL LAYER ═══ */
+
+/* Animated gold mesh background for dark sections */
+.sec.dark{position:relative;overflow:hidden}
+.sec.dark::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(240,200,66,0.07),transparent 65%);top:-200px;right:-150px;animation:orbFloat 14s ease-in-out infinite;pointer-events:none}
+.sec.dark::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,151,42,0.05),transparent 65%);bottom:-180px;left:-120px;animation:orbFloat 18s ease-in-out infinite reverse;pointer-events:none}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-40px,30px) scale(1.08)}66%{transform:translate(30px,-25px) scale(0.95)}}
+
+/* Hero canvas */
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero-right>*{position:relative;z-index:2}
+.hero-right{isolation:isolate}
+
+/* Shimmer sweep on big headings */
+.stitle{position:relative}
+.hero h1 .gold,.fu-title{background:linear-gradient(110deg,var(--gold-d) 20%,var(--gold-l) 40%,#fff8e0 50%,var(--gold-l) 60%,var(--gold-d) 80%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+/* Breathing glow on primary CTAs */
+.btn-dark,.jsub,.rb-btn,.fu-cta,.nav-cta{position:relative;overflow:hidden}
+.btn-dark::after,.jsub::after,.rb-btn::after,.fu-cta::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.25),transparent);animation:btnSweep 3.5s ease-in-out infinite}
+@keyframes btnSweep{0%{left:-100%}55%,100%{left:160%}}
+.jsub{box-shadow:0 0 0 0 rgba(240,200,66,0.5);animation:ctaPulse 2.5s ease-in-out infinite}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 0 0 rgba(240,200,66,0.35)}50%{box-shadow:0 0 32px 4px rgba(240,200,66,0.22)}}
+
+/* Floating animated particles in hero left */
+.hero-left{position:relative;overflow:hidden}
+.float-coin{position:absolute;font-size:22px;opacity:0;animation:coinRise 9s linear infinite;pointer-events:none;z-index:0}
+.float-coin:nth-child(1){left:8%;animation-delay:0s}
+.float-coin:nth-child(2){left:22%;animation-delay:2.2s;font-size:16px}
+.float-coin:nth-child(3){left:55%;animation-delay:4.5s;font-size:19px}
+.float-coin:nth-child(4){left:78%;animation-delay:1.2s;font-size:14px}
+.float-coin:nth-child(5){left:90%;animation-delay:6s;font-size:20px}
+.float-coin:nth-child(6){left:38%;animation-delay:7.4s;font-size:15px}
+@keyframes coinRise{0%{bottom:-40px;opacity:0;transform:rotate(0) translateX(0)}8%{opacity:0.5}50%{transform:rotate(180deg) translateX(18px)}92%{opacity:0.4}100%{bottom:105%;opacity:0;transform:rotate(360deg) translateX(-12px)}}
+.hero-left>*{position:relative;z-index:2}
+
+/* Live counter pop */
+.hstat .n{transition:transform 0.2s}
+.hstat.bump .n{transform:scale(1.15)}
+
+/* Card tilt + glow on station cards */
+.sc{will-change:transform}
+.sc:hover{box-shadow:0 14px 44px rgba(200,151,42,0.18),0 6px 18px rgba(0,0,0,0.12)}
+
+/* Milestone dots pulse-ring */
+.ms-dot.on{position:relative}
+.ms-dot.on::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(200,151,42,0.4);animation:ringPulse 2.4s ease-out infinite}
+@keyframes ringPulse{0%{transform:scale(0.8);opacity:1}100%{transform:scale(1.5);opacity:0}}
+
+/* Animated line through milestone track */
+.ms-line{background:linear-gradient(180deg,var(--gold-l),var(--gold),var(--border));background-size:100% 300%;animation:lineFlow 5s linear infinite}
+@keyframes lineFlow{from{background-position:0 0}to{background-position:0 300%}}
+
+/* Value cards lift + glow border on hover */
+.vc{position:relative;transition:transform 0.25s,box-shadow 0.25s}
+.vc:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(200,151,42,0.14);z-index:2}
+.vc-ico{display:inline-block;animation:icoBob 3.4s ease-in-out infinite}
+.vc:nth-child(2) .vc-ico{animation-delay:0.5s}
+.vc:nth-child(3) .vc-ico{animation-delay:1s}
+@keyframes icoBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* Result amount odometer glow */
+.rb-amt{transition:text-shadow 0.3s}
+.rb-amt.flash{text-shadow:0 0 36px rgba(240,200,66,0.7)}
+
+/* Ticker speed + glow */
+.ticker-wrap{box-shadow:0 2px 24px rgba(240,200,66,0.1)}
+
+/* Earn card live pulse border */
+.earn-card{animation:cardGlow 4s ease-in-out infinite}
+@keyframes cardGlow{0%,100%{border-color:rgba(255,255,255,0.1)}50%{border-color:rgba(240,200,66,0.45);box-shadow:0 0 36px rgba(240,200,66,0.12)}}
+
+/* Phone float animation */
+.phone{animation:phoneFloat 5.5s ease-in-out infinite}
+@keyframes phoneFloat{0%,100%{transform:translateY(0) rotate(-0.6deg)}50%{transform:translateY(-12px) rotate(0.6deg)}}
+
+/* Scroll progress bar */
+#scrollBar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));width:0;z-index:999;box-shadow:0 0 12px rgba(240,200,66,0.6)}
+
+/* Section reveal upgrade: scale + fade */
+.r{transform:translateY(36px) scale(0.985)}
+.r.in{transform:translateY(0) scale(1)}
+
+/* Unlock bar dots sequential glow */
+.ub-pt .ub-dot{animation:dotGlow 3s ease-in-out infinite}
+.ub-pt:nth-child(3) .ub-dot{animation-delay:0.7s}
+.ub-pt:nth-child(5) .ub-dot{animation-delay:1.4s}
+.ub-pt:nth-child(7) .ub-dot{animation-delay:2.1s}
+@keyframes dotGlow{0%,100%{text-shadow:none}50%{text-shadow:0 0 14px rgba(240,200,66,0.9);color:var(--gold-l)}}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}
+}
+
+/* RTL */
+body.rtl{direction:rtl;text-align:right}
+body.rtl .lang-bar{justify-content:flex-start}
+body.rtl .hero-left{padding:72px 72px 72px 56px}
+body.rtl .hero-eyebrow{margin-right:0}
+body.rtl .ms-track{padding-left:0;padding-right:40px}
+body.rtl .ms-line{left:auto;right:20px}
+body.rtl .ms-dot{margin-left:0;margin-right:-64px}
+body.rtl .ms{flex-direction:row-reverse}
+body.rtl .ali{flex-direction:row-reverse}
+body.rtl .calc-tip{border-left:none;border-right:3px solid var(--gold)}
+@media(max-width:768px){body.rtl .ms-dot{margin-right:0}}
+</style>
+</head>
+<body>
+<div id="scrollBar"></div>
+
+<!-- LANG BAR -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')">English</button>
+  <button class="lang-btn" onclick="setLang('ku')">کوردی</button>
+  <button class="lang-btn" onclick="setLang('ar')">عربي</button>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <span>20+ Live Stations · Erbil</span>
+    <span>1,400+ Active Drivers</span>
+    <span>0.32% Commission — Per Fill — Forever</span>
+    <span>Free Towing at 10 Invites</span>
+    <span>BM Oil · Viva · Babil · North Light · Sher · Syar · Lawand · Alla · Sun Kayan · Khak · Jaguar</span>
+    <span>Free Roadside Assist at 30 Invites</span>
+    <span>Zero Cost to Become an Agent</span>
+    <span>20+ Live Stations · Erbil</span>
+    <span>1,400+ Active Drivers</span>
+    <span>0.32% Commission — Per Fill — Forever</span>
+    <span>Free Towing at 10 Invites</span>
+    <span>BM Oil · Viva · Babil · North Light · Sher · Syar · Lawand · Alla · Sun Kayan · Khak · Jaguar</span>
+    <span>Free Roadside Assist at 30 Invites</span>
+    <span>Zero Cost to Become an Agent</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">RACE <sup>AGENT</sup></a>
+  <ul class="nav-links">
+    <li><a href="#how" data-i18n="nav_how">How It Works</a></li>
+    <li><a href="#milestones" data-i18n="nav_benefits">Your Benefits</a></li>
+    <li><a href="#stations" data-i18n="nav_stations">Stations</a></li>
+    <li><a href="#calc" data-i18n="nav_earn">Earnings</a></li>
+    <li><a href="#join" data-i18n="nav_apply">Apply</a></li>
+  </ul>
+  <button class="nav-cta" onclick="smoothTo('join')" data-i18n="nav_cta">Apply Now →</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <span class="float-coin">🪙</span><span class="float-coin">⛽</span><span class="float-coin">🪙</span><span class="float-coin">💰</span><span class="float-coin">🪙</span><span class="float-coin">⚡</span>
+    <div class="hero-eyebrow"><div class="blink"></div><span data-i18n="hero_tag">Now Recruiting Agents — Erbil, Kurdistan</span></div>
+    <h1><span data-i18n="hero_h1_1">They fill up,</span><br/><span class="gold" data-i18n="hero_h1_3">you earn every time.</span></h1>
+    <p class="hero-sub" data-i18n="hero_sub">RACE is Erbil's closed-loop fuel network. Your invitees already go to these stations. Every time they fill up, 0.32% lands in your wallet — automatically, permanently, forever.</p>
+    <div class="hero-btns">
+      <button class="btn-dark" onclick="smoothTo('calc')" data-i18n="hero_btn1">Calculate My Earnings</button>
+      <button class="btn-out" onclick="smoothTo('milestones')" data-i18n="hero_btn2">See My Benefits</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="n">20+</div><div class="l" data-i18n="stat1">Live Stations</div></div>
+      <div class="hstat"><div class="n">1,400+</div><div class="l" data-i18n="stat2">Active Drivers</div></div>
+      <div class="hstat"><div class="n">0.32%</div><div class="l" data-i18n="stat3">Of fill value · yours forever</div></div>
+      <div class="hstat"><div class="n">0</div><div class="l" data-i18n="stat4">Cost to Join</div></div>
+    </div>
+    <div class="fee-note" data-i18n="fee_note">Your 0.32% = 32% of RACE's 0.78% platform fee — your share of every transaction at every station, automatically.</div>
+  </div>
+  <div class="hero-right">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-bg">RACE</div>
+    <div class="earn-card">
+      <div class="ec-lbl" data-i18n="hero_card_lbl">Monthly Earning Estimate</div>
+      <div class="ec-amt">384,000</div>
+      <div class="ec-per" data-i18n="hero_card_per">IQD / month · passive income</div>
+      <div class="ec-note" data-i18n="hero_card_note">Based on 30 invitees × 4 fills/mo × 100K IQD avg fill</div>
+    </div>
+    <div class="feed-zone" id="feedZone"></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="sec alt">
+  <div class="wrap">
+    <div class="stag r" data-i18n="how_tag">The Model</div>
+    <h2 class="stitle r d1" data-i18n="how_title">Simple to start.<br/>Powerful to scale.</h2>
+    <p class="ssub r d2" data-i18n="how_sub">You don't sell anything. You invite people to a network that rewards their fuel habits — and every time they fill up at any RACE station, your wallet grows.</p>
+    <div class="vcards r d3">
+      <div class="vc"><div class="vc-ico">⛽</div><h3 data-i18n="vc1_h">They Already Fill Up Here</h3><p data-i18n="vc1_p">Your contacts fill up at <span class="acc">these exact RACE stations</span> right now. The only difference? Before RACE, you earned nothing from it.</p></div>
+      <div class="vc"><div class="vc-ico">🔗</div><h3 data-i18n="vc2_h">You Give Them Your Code</h3><p data-i18n="vc2_p">One share. Their plate is linked to your agent code. No app needed from them — it activates automatically at the pump.</p></div>
+      <div class="vc"><div class="vc-ico">💰</div><h3 data-i18n="vc3_h">You Earn Forever</h3><p data-i18n="vc3_p">Every fill, at any RACE station, for life — <span class="acc">0.32% lands in your wallet automatically.</span> No action needed from you ever again.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ALREADY SECTION -->
+<section class="sec">
+  <div class="wrap">
+    <div class="ag">
+      <div>
+        <div class="stag r" data-i18n="already_tag">The Insight</div>
+        <h2 class="stitle r d1" data-i18n="already_title">They were always going<br/>to fill up anyway.</h2>
+        <p class="ssub r d2" data-i18n="already_sub">RACE doesn't ask your invitees to change a single habit. Same stations they already visit — now with real value for every fill.</p>
+        <div class="al-list r d3">
+          <div class="ali"><div class="ali-n">1</div><div><h4 data-i18n="ali1_h">They Already Use These Stations</h4><p data-i18n="ali1_p">BM Oil, North Light, Sher, Syar, Lawand, Viva, and 14 more — already Erbil's most-used stations, now 20+ strong in the RACE network.</p></div></div>
+          <div class="ali"><div class="ali-n">2</div><div><h4 data-i18n="ali2_h">Now Their Fills Have Value</h4><p data-i18n="ali2_p">0.32% cashback, streak rewards, emergency services, roadside assistance — all unlocked just by fueling at RACE stations.</p></div></div>
+          <div class="ali"><div class="ali-n">3</div><div><h4 data-i18n="ali3_h">And You Earn From Every One</h4><p data-i18n="ali3_p">Every visit. Every fill. Every time. As long as they're in the RACE network, you earn from their habits.</p></div></div>
+        </div>
+      </div>
+      <div class="already-box r d2">
+        <div class="ab-title" data-i18n="ab_title">What your invitees unlock just by joining RACE:</div>
+        <div class="ab-list">
+          <div class="ab-item"><div class="ab-chk">✓</div><span data-i18n="ab1">0.32% RACE Credits back on every single fill</span></div>
+          <div class="ab-item"><div class="ab-chk">✓</div><span data-i18n="ab2">Streak multiplier — earn more the more consistent they are</span></div>
+          <div class="ab-item"><div class="ab-chk">✓</div><span data-i18n="ab3">One-tap towing request inside the RACE app</span></div>
+          <div class="ab-item"><div class="ab-chk">✓</div><span data-i18n="ab4">Free roadside assistance — unlocked by milestone</span></div>
+          <div class="ab-item"><div class="ab-chk">✓</div><span data-i18n="ab5">RACE Score — fuel behavior as verifiable credit history</span></div>
+          <div class="ab-item"><div class="ab-chk">✓</div><span data-i18n="ab6">All from stations they're <em>already visiting</em></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MILESTONES -->
+<section id="milestones" class="sec alt">
+  <div class="wrap">
+    <div class="stag r" data-i18n="ms_tag">Your Agent Journey</div>
+    <h2 class="stitle r d1" data-i18n="ms_title">The more you invite,<br/>the more you unlock.</h2>
+    <p class="ssub r d2" data-i18n="ms_sub">Earnings grow with every invitee. But your personal benefits unlock at milestones — real services worth serious money, all free.</p>
+    <div class="ms-track r d3">
+      <div class="ms-line"></div>
+      <div class="ms">
+        <div class="ms-dot on">🌱</div>
+        <div class="ms-body">
+          <div class="ms-head"><div class="ms-title" data-i18n="ms1_title">First Fill — Day 1</div><span class="ms-badge bg-gold" data-i18n="ms1_badge">Starter</span></div>
+          <p class="ms-desc" data-i18n="ms1_desc">Your wallet activates the moment your first invitee fuels up. 0.32% on that fill — and every fill they ever make, permanently linked to your code.</p>
+          <div class="perks">
+            <div class="ptag">💳 <span data-i18n="ms1_p1">RACE Wallet Activated</span></div>
+            <div class="ptag">⚡ <span data-i18n="ms1_p2">0.32% Per Fill, Forever</span></div>
+            <div class="ptag">📊 <span data-i18n="ms1_p3">Earnings Dashboard</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ms">
+        <div class="ms-dot on">🥉</div>
+        <div class="ms-body">
+          <div class="ms-head"><div class="ms-title" data-i18n="ms2_title">10 Active Invitees</div><span class="ms-badge bg-green" data-i18n="ms2_badge">Bronze Agent</span></div>
+          <p class="ms-desc" data-i18n="ms2_desc">Reach 10 active invitees and RACE unlocks free towing for you personally — anywhere in Erbil, anytime, one tap inside the app. No callout fee, no membership, just tap and we come.</p>
+          <div class="perks">
+            <div class="ptag">🚛 <span data-i18n="ms2_p1">FREE Towing — One Tap in App</span></div>
+            <div class="ptag">📞 <span data-i18n="ms2_p2">Priority Agent Support</span></div>
+            <div class="ptag">💰 <span data-i18n="ms2_p3">~30,000 IQD/month passive</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ms">
+        <div class="ms-dot s">🥈</div>
+        <div class="ms-body">
+          <div class="ms-head"><div class="ms-title" data-i18n="ms3_title">30 Active Invitees</div><span class="ms-badge bg-blue" data-i18n="ms3_badge">Silver Agent</span></div>
+          <p class="ms-desc" data-i18n="ms3_desc">30 invitees means you've built a real network. RACE rewards that with full roadside assistance — flat tires, dead battery, out-of-fuel emergencies. All covered, all free, all one tap away.</p>
+          <div class="perks">
+            <div class="ptag">🔧 <span data-i18n="ms3_p1">FREE Roadside Assistance</span></div>
+            <div class="ptag">🔋 <span data-i18n="ms3_p2">Battery Jump-Start</span></div>
+            <div class="ptag">🛞 <span data-i18n="ms3_p3">Flat Tire Service</span></div>
+            <div class="ptag">⛽ <span data-i18n="ms3_p4">Emergency Fuel Delivery</span></div>
+            <div class="ptag">💰 <span data-i18n="ms3_p5">~92,000 IQD/month passive</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ms">
+        <div class="ms-dot p">🥇</div>
+        <div class="ms-body">
+          <div class="ms-head"><div class="ms-title" data-i18n="ms4_title">75 Active Invitees</div><span class="ms-badge bg-red" data-i18n="ms4_badge">Gold Agent</span></div>
+          <p class="ms-desc" data-i18n="ms4_desc">Gold agents are RACE power nodes. Full mechanical referral discounts, priority processing, and fleet consultation rights — opening the highest-value invite tier available.</p>
+          <div class="perks">
+            <div class="ptag">🏆 <span data-i18n="ms4_p1">Gold Badge + Certificate</span></div>
+            <div class="ptag">🔩 <span data-i18n="ms4_p2">Mechanical Service Discounts</span></div>
+            <div class="ptag">🏢 <span data-i18n="ms4_p3">Fleet Account Referral Rights</span></div>
+            <div class="ptag">💰 <span data-i18n="ms4_p4">~230,000+ IQD/month passive</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ms">
+        <div class="ms-dot" style="border-color:var(--gold);background:linear-gradient(135deg,var(--gold),var(--gold-l));font-size:22px">♾️</div>
+        <div class="ms-body">
+          <div class="ms-head"><div class="ms-title" data-i18n="ms5_title">Fleet Invitation — Maximum Value</div><span class="ms-badge bg-gold" data-i18n="ms5_badge">No Cap</span></div>
+          <p class="ms-desc" data-i18n="ms5_desc">One fleet company. 20 vehicles, 15 fills per month — one invitation that pays you every month, for years. This is the highest-leverage move any RACE agent can make.</p>
+          <div class="perks">
+            <div class="ptag">🚗 <span data-i18n="ms5_p1">20 vehicles × 15 fills = 300 events/mo</span></div>
+            <div class="ptag">💸 <span data-i18n="ms5_p2">300 × 150K × 0.32% = 144,000 IQD/mo</span></div>
+            <div class="ptag">📈 <span data-i18n="ms5_p3">From one company. One invite.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATIONS -->
+<section id="stations" class="sec">
+  <div class="wrap">
+    <div class="stag r" data-i18n="st_tag">Live Network</div>
+    <h2 class="stitle r d1" data-i18n="st_title">20+ stations across Erbil.<br/>All live. All earning for you.</h2>
+    <p class="ssub r d2" data-i18n="st_sub">Every fill at any of these stations earns you 0.32%. New stations joining = automatic earnings boost for every agent with existing invitees.</p>
+    <div class="sg r d3">
+      <div class="sc flag"><div class="sc-top"><div class="sc-name">BM Oil — Flagship</div><div class="live">Live</div></div><div class="sc-loc">📍 Masif Road, Erbil</div><div class="sc-row"><div class="ssi"><strong>★ First</strong><span>Partner</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">North Light Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Sher Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Syar Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Lawand Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Viva Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Babil Oil — Ankawa</div><div class="live">Live</div></div><div class="sc-loc">📍 Ankawa, Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Alla Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      
+      <div class="sc"><div class="sc-top"><div class="sc-name">Sun Kayan Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Khak Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Jaguar Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="sc"><div class="sc-top"><div class="sc-name">Golden Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Nono Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-name">Karya Oil</div><div class="live">Live</div></div><div class="sc-loc">📍 Erbil</div><div class="sc-row"><div class="ssi"><strong>Active</strong><span>Status</span></div></div></div>
+      <div class="sc coming"><div class="sc-top"><div class="sc-name">+ Many More</div><span style="font-size:10px;color:var(--gold);font-weight:700;background:var(--gold-p);padding:3px 9px;border-radius:100px">Coming Soon</span></div><div class="sc-loc">📍 Erbil — Expanding 2026</div><div class="sc-row"><div class="ssi"><strong>Network</strong><span>Growing</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ONE CLICK SERVICE -->
+<section class="sec dark" id="oneclick">
+  <div class="wrap">
+    <div class="stag lt r" data-i18n="oc_tag">Built Into the RACE App</div>
+    <h2 class="stitle r d1" style="color:#fff" data-i18n="oc_title">Stranded? One tap.<br/>Help is on the way.</h2>
+    <p class="ssub lt r d2" data-i18n="oc_sub">Every RACE member gets one-tap roadside assistance directly inside the platform. No phone trees, no waiting. Tap once, GPS is shared, driver dispatched.</p>
+    <div class="oc-grid r d3">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="ph-top"><span>●●●●</span><span id="liveClock">--:--</span><span>▮▮▮</span></div>
+          <div class="ph-header"><div class="ph-logo">RACE</div><div class="ph-sub" data-i18n="oc_app_sub">Emergency Services</div></div>
+          <div class="ph-status">
+            <div class="ph-member"><span data-i18n="oc_member">Ahmad K. · Bronze Agent</span><span class="ph-tier" data-i18n="oc_tier">BRONZE</span></div>
+            <div class="ph-loc" data-i18n="oc_loc">📍 Detecting location...</div>
+          </div>
+          <div class="ph-btns" id="phBtns">
+            <button class="phb t" onclick="dispatch('tow',this)"><div class="phb-ico">🚛</div><div class="phb-lbl" data-i18n="oc_tow">Towing</div><div class="phb-sub" data-i18n="oc_tow_sub">Free · Erbil</div></button>
+            <button class="phb r" onclick="dispatch('road',this)"><div class="phb-ico">🔧</div><div class="phb-lbl" data-i18n="oc_road">Roadside</div><div class="phb-sub" data-i18n="oc_road_sub">Tire · Battery</div></button>
+            <button class="phb f" onclick="dispatch('fuel',this)"><div class="phb-ico">⛽</div><div class="phb-lbl" data-i18n="oc_fuel">Fuel</div><div class="phb-sub" data-i18n="oc_fuel_sub">Emergency delivery</div></button>
+            <button class="phb b" onclick="dispatch('bat',this)"><div class="phb-ico">🔋</div><div class="phb-lbl" data-i18n="oc_bat">Battery</div><div class="phb-sub" data-i18n="oc_bat_sub">Jump start</div></button>
+          </div>
+          <div class="ph-dispatch" id="phDispatch">
+            <div class="pd-ico" id="dIco">🚛</div>
+            <div class="pd-title" id="dTitle">Tow Truck Dispatched</div>
+            <div class="pd-eta">ETA: <strong id="dEta">12 min</strong></div>
+            <div class="pd-driver" data-i18n="oc_driver">Driver: Karwan · ⭐ 4.9</div>
+            <div class="pd-bar"><div class="pd-bar-fill" id="dBar"></div></div>
+            <button class="pd-cancel" onclick="cancelDispatch()" data-i18n="oc_cancel">Cancel Request</button>
+          </div>
+          <div class="ph-footer" data-i18n="oc_footer">Free for qualifying RACE members</div>
+        </div>
+        <div class="phone-shadow"></div>
+      </div>
+      <div>
+        <div class="oc-feats">
+          <div class="oc-feat"><div class="oc-feat-ico">📍</div><div><h4 data-i18n="oc_f1_h">Location Auto-Detected</h4><p data-i18n="oc_f1_p">The moment you tap, GPS coordinates are sent to the nearest available service driver — no typing, no explaining where you are.</p></div></div>
+          <div class="oc-feat"><div class="oc-feat-ico">⚡</div><div><h4 data-i18n="oc_f2_h">Under 15-Minute Response</h4><p data-i18n="oc_f2_p">RACE service drivers are positioned across Erbil. Average dispatch-to-arrival is under 15 minutes across the city.</p></div></div>
+          <div class="oc-feat"><div class="oc-feat-ico">🆓</div><div><h4 data-i18n="oc_f3_h">Free for Qualifying Members</h4><p data-i18n="oc_f3_p">Towing unlocks at 10 invitees. Full roadside at 30. Your invitees get access through their RACE membership as they progress.</p></div></div>
+          <div class="oc-feat"><div class="oc-feat-ico">🔗</div><div><h4 data-i18n="oc_f4_h">Tied to Your Milestone</h4><p data-i18n="oc_f4_p">The more people you invite, the more services you personally unlock. Every 10 invitees is a new tier of free road protection.</p></div></div>
+        </div>
+        <div class="unlock-bar">
+          <div class="ub-lbl" data-i18n="ub_lbl">Service unlock progress</div>
+          <div class="ub-track">
+            <div class="ub-pt on"><div class="ub-dot">●</div><div class="ub-n">0</div><div class="ub-tag" data-i18n="ub0">Join</div></div>
+            <div class="ub-line"></div>
+            <div class="ub-pt"><div class="ub-dot">●</div><div class="ub-n">10</div><div class="ub-tag" data-i18n="ub10">🚛 Towing</div></div>
+            <div class="ub-line"></div>
+            <div class="ub-pt"><div class="ub-dot">●</div><div class="ub-n">30</div><div class="ub-tag" data-i18n="ub30">🔧 Roadside</div></div>
+            <div class="ub-line"></div>
+            <div class="ub-pt"><div class="ub-dot">●</div><div class="ub-n">75</div><div class="ub-tag" data-i18n="ub75">🏆 Full Cover</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section id="calc" class="sec dark">
+  <div class="wrap">
+    <div class="stag lt r" data-i18n="calc_tag">Earnings Calculator</div>
+    <h2 class="stitle r d1" style="color:#fff" data-i18n="calc_title">Build your real number.</h2>
+    <p class="ssub lt r d2" data-i18n="calc_sub">Dial in your scenario — see exactly what lands in your wallet based on network size and fill frequency.</p>
+    <div class="calc-grid">
+      <div class="calc-ctrls r d1">
+        <div>
+          <span class="cf-lbl" data-i18n="c_lbl1">Number of People You Invite</span>
+          <div class="rrow"><input type="range" id="rD" min="1" max="300" value="30" oninput="calcUpdate()"/><span class="rv" id="vD">30</span></div>
+        </div>
+        <div>
+          <span class="cf-lbl" data-i18n="c_lbl2">Average Fill Amount (IQD)</span>
+          <div class="rrow"><input type="range" id="rF" min="20000" max="500000" step="10000" value="100000" oninput="calcUpdate()"/><span class="rv" id="vF">100K</span></div>
+        </div>
+        <div>
+          <span class="cf-lbl" data-i18n="c_lbl3">Average Fills Per Person Per Month</span>
+          <div class="rrow"><input type="range" id="rFx" min="1" max="25" value="4" oninput="calcUpdate()"/><span class="rv" id="vFx">4</span></div>
+        </div>
+        <div class="calc-tip" data-i18n="calc_tip">💡 <strong>Fleet tip:</strong> One company with 20 vehicles filling 15×/month at 200K IQD = <strong>1,920,000 IQD/month</strong> to your wallet — from one invitation.</div>
+      </div>
+      <div class="result-box r d2">
+        <div class="rb-lbl" data-i18n="rb_lbl">Monthly Passive Earnings</div>
+        <span class="rb-amt" id="rbM">384,000</span>
+        <div class="rb-per" id="rbD">~12,800 IQD per day</div>
+        <div class="rb-rows">
+          <div class="rb-row"><span data-i18n="rb_yr">Annual earnings</span><span class="rb-v" id="rbY">4,608,000 IQD</span></div>
+          <div class="rb-row"><span data-i18n="rb_pf">Per fill credit</span><span class="rb-v" id="rbPF">320 IQD</span></div>
+          <div class="rb-row"><span data-i18n="rb_ev">Fill events / month</span><span class="rb-v" id="rbEv">120</span></div>
+          <div class="rb-row" style="border:1px solid rgba(240,200,66,0.2)"><span data-i18n="rb_ml">Agent milestone</span><span class="rb-v" id="rbML">🌱 Starter</span></div>
+        </div>
+        <button class="rb-btn" onclick="smoothTo('join')" data-i18n="rb_cta">Claim This Income →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO INVITE -->
+<section class="sec alt">
+  <div class="wrap">
+    <div class="stag r" data-i18n="inv_tag">Your Playbook</div>
+    <h2 class="stitle r d1" data-i18n="inv_title">5 steps from signup<br/>to passive income.</h2>
+    <div class="isteps r d2">
+      <div class="ist" data-n="1"><div class="ist-ico">✍️</div><h3 data-i18n="i1_h">Apply Below</h3><p data-i18n="i1_p">Fill the form. Our team reviews and WhatsApps your personal invite code within 24 hours. Free, instant, no commitment.</p></div>
+      <div class="ist" data-n="2"><div class="ist-ico">💬</div><h3 data-i18n="i2_h">Share Your Code</h3><p data-i18n="i2_p">WhatsApp it, share it in-person, post online. "Join RACE free — cashback on every fill + free roadside services."</p></div>
+      <div class="ist" data-n="3"><div class="ist-ico">🪪</div><h3 data-i18n="i3_h">They Register at Station</h3><p data-i18n="i3_p">Invitee drives to any RACE station. Their plate is scanned — RACE account auto-creates and links to your code. Done.</p></div>
+      <div class="ist" data-n="4"><div class="ist-ico">⚡</div><h3 data-i18n="i4_h">Every Fill Pays You</h3><p data-i18n="i4_p">0.32% fires into your RACE wallet on every fill they ever make. Real-time. Automatic. No approval needed. Permanent.</p></div>
+      <div class="ist" data-n="5"><div class="ist-ico">🏦</div><h3 data-i18n="i5_h">Withdraw Anytime</h3><p data-i18n="i5_p">Your wallet, your money. Request withdrawal whenever you want — no minimum trap, no waiting period.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="stag r" data-i18n="faq_tag">Questions</div>
+    <h2 class="stitle r d1" data-i18n="faq_title">Every question<br/>you might have.</h2>
+    <div class="faq-wrap r d2">
+      <div class="fi"><div class="fq" onclick="faq(this)" data-i18n="fq1">Does it cost anything to become an agent?<span class="fi-ico">+</span></div><div class="fa" data-i18n="fa1">Nothing. Zero. RACE makes money from the platform fee that stations pay — agents never pay anything to join, operate, or withdraw. You are the growth engine, not the customer.</div></div>
+      <div class="fi"><div class="fq" onclick="faq(this)" data-i18n="fq2">How long do I earn from each person I invite?<span class="fi-ico">+</span></div><div class="fa" data-i18n="fa2">Permanently. Once someone registers under your code, they're linked to your wallet for life. No expiry, no reset. As long as they fill up at any RACE station, you earn — even years later.</div></div>
+      <div class="fi"><div class="fq" onclick="faq(this)" data-i18n="fq3">Can I invite companies and fleet accounts?<span class="fi-ico">+</span></div><div class="fa" data-i18n="fa3">Yes — and fleet accounts are the highest-value invitations you can make. A company with 20 vehicles filling 15 times per month can generate over 1,000,000+ IQD/month to your wallet from a single invitation.</div></div>
+      <div class="fi"><div class="fq" onclick="faq(this)" data-i18n="fq4">What happens when new stations join RACE?<span class="fi-ico">+</span></div><div class="fa" data-i18n="fa4">Your existing invitees automatically earn at new stations the moment they go live — and so do you. Your network value grows with every new station, with zero effort from you.</div></div>
+      <div class="fi"><div class="fq" onclick="faq(this)" data-i18n="fq5">When do free towing and roadside assistance kick in?<span class="fi-ico">+</span></div><div class="fa" data-i18n="fa5">Free towing unlocks when you reach 10 active invitees (Bronze Agent). Full roadside assistance unlocks at 30 invitees (Silver Agent). These are personal benefits for you — on top of everything your invitees receive.</div></div>
+      <div class="fi"><div class="fq" onclick="faq(this)" data-i18n="fq6">Is there a limit to how many people I can invite?<span class="fi-ico">+</span></div><div class="fa" data-i18n="fa6">No limit. No cap. No ceiling. RACE scales with you — the more you build your network, the more you earn and the better your agent benefits. There is no point at which more invitations stop paying.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN FORM -->
+<div id="join" class="join-outer">
+  <div class="join-wrap">
+    <div class="jcard r">
+      <div class="stag lt" style="margin-bottom:10px" data-i18n="join_tag">Apply Now · Free · 2 Minutes</div>
+      <h2 data-i18n="join_title">Become a RACE Agent</h2>
+      <p data-i18n="join_sub">Fill this in. We'll WhatsApp your personal invite code within 24 hours. No payment, no catch, no obligation.</p>
+      <div class="jg">
+        <div class="jf"><label data-i18n="jf_first">First Name</label><input type="text" id="jFirst" placeholder="Ahmad"/></div>
+        <div class="jf"><label data-i18n="jf_last">Last Name</label><input type="text" id="jLast" placeholder="Karimi"/></div>
+        <div class="jf full"><label data-i18n="jf_wa">WhatsApp Number</label><input type="tel" id="jWa" placeholder="+964 750 000 0000"/></div>
+        <div class="jf full"><label data-i18n="jf_city">City / Area</label><input type="text" id="jCity" placeholder="Erbil, Ankawa..."/></div>
+        <div class="jf full"><label data-i18n="jf_strat">Your invite strategy</label>
+          <select id="jStrat">
+            <option value="" data-i18n="js0">Select...</option>
+            <option data-i18n="js1">Friends & family — personal network</option>
+            <option data-i18n="js2">Fleet companies & businesses</option>
+            <option data-i18n="js3">WhatsApp groups & social media</option>
+            <option data-i18n="js4">In-person / community</option>
+            <option data-i18n="js5">All of the above</option>
+          </select>
+        </div>
+        <div class="jf full"><label data-i18n="jf_vol">Expected invites in first 30 days</label>
+          <select id="jVol">
+            <option value="" data-i18n="jv0">Choose range...</option>
+            <option data-i18n="jv1">1–10 drivers</option>
+            <option data-i18n="jv2">10–30 drivers</option>
+            <option data-i18n="jv3">30–100 drivers</option>
+            <option data-i18n="jv4">100+ / fleet-focused</option>
+          </select>
+        </div>
+      </div>
+      <button class="jsub" id="jBtn" onclick="submitForm()" data-i18n="join_btn">Submit My Application →</button>
+      <div class="jnote" data-i18n="join_note">We'll contact you on WhatsApp within 24 hours. No spam, ever.</div>
+
+      <!-- POST-SUBMIT FUTURE EXPERIENCE -->
+      <div id="futureUnlock">
+        <div class="fu-burst">
+          <div class="fu-check">🏁</div>
+          <div class="fu-title" id="fuTitle">Welcome to RACE, Agent.</div>
+          <div class="fu-sub" id="fuSub">Your application is in. Your agent code is being prepared. Here is exactly what happens next — and what your future looks like.</div>
+        </div>
+
+        <div class="fu-steps">
+          <div class="fu-step"><div class="fu-step-n">1</div><div><h4 id="fuS1h">Your Code Arrives on WhatsApp</h4><p id="fuS1p">Within 24 hours, you receive your personal agent invite code + onboarding guide. This code is yours forever — every person who joins with it is permanently linked to your wallet.</p></div></div>
+          <div class="fu-step"><div class="fu-step-n">2</div><div><h4 id="fuS2h">Your First 10 — Start With Who You Know</h4><p id="fuS2p">Family, friends, coworkers who drive. Tell them one sentence: "Join RACE free with my code — you get cashback on every fill plus free roadside services." Your first 10 unlocks your free towing.</p></div></div>
+          <div class="fu-step"><div class="fu-step-n">3</div><div><h4 id="fuS3h">Then Go Where the Money Is — Fleets</h4><p id="fuS3p">One company with 20 vehicles is worth more than 100 individual invites. Taxi offices, delivery companies, construction firms. Your Gold Agent path opens fleet referral rights.</p></div></div>
+        </div>
+
+        <div class="fu-timeline">
+          <div class="fu-tl-title" id="fuTlTitle">Your projected future with RACE</div>
+          <div class="fu-tl-row"><span class="fu-tl-when" id="fuT1w">Week 1</span><span class="fu-tl-what" id="fuT1d">Code active · First invites sent</span></div>
+          <div class="fu-tl-row"><span class="fu-tl-when" id="fuT2w">Month 1</span><span class="fu-tl-what" id="fuT2d">10 invitees → <em>🚛 Free Towing unlocked</em></span></div>
+          <div class="fu-tl-row"><span class="fu-tl-when" id="fuT3w">Month 3</span><span class="fu-tl-what" id="fuT3d">30 invitees → <em>🔧 Roadside + ~92K IQD/mo</em></span></div>
+          <div class="fu-tl-row"><span class="fu-tl-when" id="fuT4w">Month 6</span><span class="fu-tl-what" id="fuT4d">75 invitees → <em>🏆 Gold Agent + 230K+ IQD/mo</em></span></div>
+          <div class="fu-tl-row"><span class="fu-tl-when" id="fuT5w">Year 1</span><span class="fu-tl-what" id="fuT5d">+ 1 fleet account → <em>💰 1M+ IQD/mo passive</em></span></div>
+        </div>
+
+        <button class="fu-cta" id="fuCta" onclick="shareRace()">📲 Tell Your First Friend About RACE Now</button>
+        <div class="fu-note" id="fuNote">The agents who win are the ones who send their first invite today — not tomorrow.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="flogo">RACE</div>
+  <p>Erbil, Kurdistan Region of Iraq &nbsp;·&nbsp; <a href="mailto:hello@getrace.app">hello@getrace.app</a></p>
+  <p>© 2026 RACE Network</p>
+</footer>
+
+<script>
+// ── I18N ──
+const T={
+  en:{
+    nav_how:"How It Works",nav_benefits:"Your Benefits",nav_stations:"Stations",nav_earn:"Earnings",nav_apply:"Apply",nav_cta:"Apply Now →",
+    hero_tag:"Now Recruiting Agents — Erbil, Kurdistan",hero_h1_1:"They fill up,",hero_h1_2:"",hero_h1_3:"you earn every time.",
+    hero_sub:"RACE is Erbil's closed-loop fuel network. Your invitees already go to these stations. Every time they fill up, 0.32% lands in your wallet — automatically, permanently, forever.",
+    hero_btn1:"Calculate My Earnings",hero_btn2:"See My Benefits",
+    stat1:"Live Stations",stat2:"Active Drivers",stat3:"Per Fill · Forever",stat4:"Cost to Join",
+    hero_card_lbl:"Monthly Earning Estimate",hero_card_per:"IQD / month · passive income",hero_card_note:"Based on 30 invitees × 4 fills/mo × 100K IQD avg fill",
+    how_tag:"The Model",how_title:"Simple to start.<br/>Powerful to scale.",how_sub:"You don't sell anything. You invite people to a network that rewards their fuel habits — and every time they fill up at any RACE station, your wallet grows.",
+    vc1_h:"They Already Fill Up Here",vc1_p:'Your contacts fill up at <span class="acc">these exact RACE stations</span> right now. Before RACE, you earned nothing from it.',
+    vc2_h:"You Give Them Your Code",vc2_p:"One share. Their plate is linked to your agent code. No app needed from them — it activates automatically at the pump.",
+    vc3_h:"You Earn Forever",vc3_p:'Every fill, at any RACE station, for life — <span class="acc">0.32% lands in your wallet automatically.</span>',
+    already_tag:"The Insight",already_title:"They were always going<br/>to fill up anyway.",already_sub:"RACE doesn't ask your invitees to change a single habit. Same stations they already visit — now with real value for every fill.",
+    ali1_h:"They Already Use These Stations",ali1_p:"BM Oil, North Light, Sher, Syar, Lawand, Viva, and 14 more — all already Erbil's most-used stations.",
+    ali2_h:"Now Their Fills Have Value",ali2_p:"0.32% cashback, streak rewards, emergency services — all unlocked just by fueling at RACE stations.",
+    ali3_h:"And You Earn From Every One",ali3_p:"Every visit. Every fill. Every time. As long as they're in RACE, you earn from their habits.",
+    ab_title:"What your invitees unlock just by joining RACE:",
+    ab1:"0.32% RACE Credits back on every fill",ab2:"Streak multiplier — earn more the more consistent they are",ab3:"One-tap towing inside the RACE app",ab4:"Free roadside assistance — unlocked by milestone",ab5:"RACE Score — fuel behavior as credit history",ab6:"All from stations they're <em>already visiting</em>",
+    ms_tag:"Your Agent Journey",ms_title:"The more you invite,<br/>the more you unlock.",ms_sub:"Earnings grow with every invitee. But your personal benefits unlock at milestones — real services worth serious money, all free.",
+    ms1_title:"First Fill — Day 1",ms1_badge:"Starter",ms1_desc:"Your wallet activates the moment your first invitee fuels up. 0.32% on that fill — and every fill they ever make, permanently.",ms1_p1:"RACE Wallet Activated",ms1_p2:"0.32% Per Fill, Forever",ms1_p3:"Earnings Dashboard",
+    ms2_title:"10 Active Invitees",ms2_badge:"Bronze Agent",ms2_desc:"Reach 10 invitees and RACE unlocks free towing for you — anywhere in Erbil, one tap inside the app. No callout fee, no membership, just tap and we come.",ms2_p1:"FREE Towing — One Tap",ms2_p2:"Priority Agent Support",ms2_p3:"~30,000 IQD/month passive",
+    ms3_title:"30 Active Invitees",ms3_badge:"Silver Agent",ms3_desc:"30 invitees = full roadside assistance. Flat tires, dead battery, out-of-fuel. All covered, all free, all one tap away.",ms3_p1:"FREE Roadside Assistance",ms3_p2:"Battery Jump-Start",ms3_p3:"Flat Tire Service",ms3_p4:"Emergency Fuel Delivery",ms3_p5:"~92,000 IQD/month passive",
+    ms4_title:"75 Active Invitees",ms4_badge:"Gold Agent",ms4_desc:"Gold agents get mechanical referral discounts, priority processing, and fleet consultation rights — opening the highest-value invite tier.",ms4_p1:"Gold Badge + Certificate",ms4_p2:"Mechanical Service Discounts",ms4_p3:"Fleet Account Referral Rights",ms4_p4:"~230,000+ IQD/month passive",
+    ms5_title:"Fleet Invitation — Maximum Value",ms5_badge:"No Cap",ms5_desc:"One fleet company. 20 vehicles, 15 fills per month — one invitation that pays you every month, for years.",ms5_p1:"20 vehicles × 15 fills = 300 events/mo",ms5_p2:"300 × 150K × 0.32% = 144,000 IQD/mo",ms5_p3:"From one company. One invite.",
+    st_tag:"Live Network",st_title:"20+ stations across Erbil.<br/>All live. All earning for you.",st_sub:"Every fill at any of these stations earns you 0.32%. New stations joining = automatic boost for all agents.",st_next:"Station #21+",st_soon:"Onboarding",st_grow:"Growing",
+    oc_tag:"Built Into the RACE App",oc_title:"Stranded? One tap.<br/>Help is on the way.",oc_sub:"Every RACE member gets one-tap roadside assistance directly inside the platform. Tap once, GPS shared, driver dispatched.",
+    oc_app_sub:"Emergency Services",oc_member:"Ahmad K. · Bronze Agent",oc_tier:"BRONZE",oc_loc:"📍 Detecting location...",oc_tow:"Towing",oc_tow_sub:"Free · Erbil",oc_road:"Roadside",oc_road_sub:"Tire · Battery",oc_fuel:"Fuel",oc_fuel_sub:"Emergency delivery",oc_bat:"Battery",oc_bat_sub:"Jump start",oc_driver:"Driver: Karwan · ⭐ 4.9",oc_cancel:"Cancel Request",oc_footer:"Free for qualifying RACE members",
+    oc_f1_h:"Location Auto-Detected",oc_f1_p:"The moment you tap, GPS coordinates are sent to the nearest service driver — no typing, no explaining where you are.",
+    oc_f2_h:"Under 15-Minute Response",oc_f2_p:"RACE service drivers are positioned across Erbil. Average dispatch-to-arrival under 15 minutes.",
+    oc_f3_h:"Free for Qualifying Members",oc_f3_p:"Towing unlocks at 10 invitees. Full roadside at 30. Your invitees get access through their RACE membership.",
+    oc_f4_h:"Tied to Your Milestone",oc_f4_p:"The more people you invite, the more services you personally unlock. Every 10 invitees is a new tier of road protection.",
+    ub_lbl:"Service unlock progress",ub0:"Join",ub10:"🚛 Towing",ub30:"🔧 Roadside",ub75:"🏆 Full Cover",
+    calc_tag:"Earnings Calculator",calc_title:"Build your real number.",calc_sub:"Dial in your scenario — see exactly what lands in your wallet.",
+    c_lbl1:"Number of People You Invite",c_lbl2:"Average Fill Amount (IQD)",c_lbl3:"Fills Per Person Per Month",
+    calc_tip:"💡 <strong>Fleet tip:</strong> One company with 20 vehicles at 200K/fill = <strong>1,920,000 IQD/month</strong> from one invitation.",
+    rb_lbl:"Monthly Passive Earnings",rb_yr:"Annual earnings",rb_pf:"Per fill credit",rb_ev:"Fill events / month",rb_ml:"Agent milestone",rb_cta:"Claim This Income →",
+    inv_tag:"Your Playbook",inv_title:"5 steps from signup<br/>to passive income.",
+    i1_h:"Apply Below",i1_p:"Fill the form. Our team reviews and WhatsApps your invite code within 24 hours. Free, instant.",
+    i2_h:"Share Your Code",i2_p:"WhatsApp it, share in-person, post online. Give people a reason — cashback + free road services.",
+    i3_h:"They Register at Station",i3_p:"Invitee goes to any RACE station. Plate scanned — account auto-creates, linked to your code. Done.",
+    i4_h:"Every Fill Pays You",i4_p:"0.32% fires into your wallet on every fill they ever make. Automatic. Permanent. No action needed.",
+    i5_h:"Withdraw Anytime",i5_p:"Your wallet, your money. Request withdrawal whenever — no minimum trap, no waiting period.",
+    faq_tag:"Questions",faq_title:"Every question<br/>you might have.",
+    fq1:"Does it cost anything to become an agent?",fa1:"Nothing. Zero. RACE earns from the platform fee stations pay — agents never pay to join, operate, or withdraw.",
+    fq2:"How long do I earn from each person I invite?",fa2:"Permanently. Once registered under your code, they're linked for life. No expiry. As long as they fill up at RACE stations, you earn.",
+    fq3:"Can I invite companies and fleet accounts?",fa3:"Yes — fleet accounts are the highest-value invitations. One company with 20 vehicles can generate 1,000,000+ IQD/month to your wallet.",
+    fq4:"What happens when new stations join RACE?",fa4:"Your existing invitees automatically earn at new stations the moment they go live — and so do you. Zero effort required.",
+    fq5:"When do free towing and roadside assistance kick in?",fa5:"Free towing at 10 active invitees (Bronze). Full roadside at 30 (Silver). These are personal benefits for you as the agent.",
+    fq6:"Is there a limit to how many people I can invite?",fa6:"No limit. No cap. No ceiling. RACE scales with you — the more you build your network, the more you earn.",
+    join_tag:"Apply Now · Free · 2 Minutes",join_title:"Become a RACE Agent",join_sub:"Fill this in. We'll WhatsApp your invite code within 24 hours. No payment, no catch.",
+    jf_first:"First Name",jf_last:"Last Name",jf_wa:"WhatsApp Number",jf_city:"City / Area",jf_strat:"Your invite strategy",jf_vol:"Expected invites in first 30 days",
+    js0:"Select...",js1:"Friends & family",js2:"Fleet companies & businesses",js3:"WhatsApp groups & social media",js4:"In-person / community",js5:"All of the above",
+    jv0:"Choose range...",jv1:"1–10 drivers",jv2:"10–30 drivers",jv3:"30–100 drivers",jv4:"100+ / fleet-focused",
+    join_btn:"Submit My Application →",join_note:"We'll contact you on WhatsApp within 24 hours. No spam, ever.",fee_note:"Your 0.32% = 32% of RACE's 0.78% platform fee — your share of every transaction at every station, automatically."
+  },
+  ku:{
+    nav_how:"چۆنییەتی",nav_benefits:"فایدەکانت",nav_stations:"ئیستگەکان",nav_earn:"قازانج",nav_apply:"تۆمارکردن",nav_cta:"تۆمار بکە ←",
+    hero_tag:"ئێستا نوێنەر دەپەیدا دەکرێت — هەولێر، کوردستان",hero_h1_1:"ئەوان پڕ دەکەن،",hero_h1_2:"",hero_h1_3:"تۆ هەر جارێک قازانج دەکەیت.",
+    hero_sub:"RACE تۆڕی سووتەمەنی داخراوی هەولێرە. دەوعدارەکانت ئێستاش دەچنە ئەم ئیستگەیانە. هەر جارێک پڕیان کرد، %0.32 دەکەوێتە جزدانەکەت — بەخۆی، بۆ هەمیشە.",
+    hero_btn1:"قازانجەکەم حیساب بکە",hero_btn2:"فایدەکانم ببینە",
+    stat1:"ئیستگەی ژیو",stat2:"شوفێری چالاک",stat3:"بۆ هەر پڕکردن — هەمیشە",stat4:"تێچووی بەشداربوون",
+    hero_card_lbl:"خەمڵاندنی قازانجی مانگانە",hero_card_per:"دینار / مانگ · داهاتی خۆکار",hero_card_note:"بناخە: ٣٠ دەوعدار × ٤ جار/مانگ × ١٠٠ هەزار دینار × %0.32",
+    how_tag:"مۆدێل",how_title:"سادەیە دەستپێکردن.<br/>بەهێزە گەشەکردن.",how_sub:"تۆ هیچ شتێک نافرۆشیت. خەڵک دەبینیت بۆ تۆڕێک کە فایدەی بەهرەی سووتەمەنییان دەدات — هەر جارێک پڕیان کرد، جزدانەکەت زیاد دەبێت.",
+    vc1_h:"ئێستاش لەم ئیستگەیانەدا پڕ دەکەن",vc1_p:'ئاشنایەکانت ئێستاش لە <span class="acc">ئیستگەی RACE</span> پڕ دەکەن. پێش RACE، هیچ قازانجت لێوە نەدەکرد.',
+    vc2_h:"کۆدەکەت پێیان دەدەیت",vc2_p:"یەک ئاراستەکردن. پلاکەکەیان بە کۆدی نوێنەرییەکەت دەبەستێت. پێویستی بە ئەپلیکەیشن نییە — بەخۆی چالاک دەبێت.",
+    vc3_h:"بۆ هەمیشە قازانج دەکەیت",vc3_p:'هەر پڕکردن، لە هەر ئیستگەیەکی RACE، بۆ هەمیشە — <span class="acc">%0.32 بەخۆی دەکەوێتە جزدانەکەت.</span>',
+    already_tag:"تێگەیشتن",already_title:"ئەویش دەچوون<br/>پڕی دەکردن.",already_sub:"RACE داواکاری نەکردووە کە دەوعدارەکانت ئادەتێکیان بگۆڕن. هەمان ئیستگەکان — ئێستا بە بەهای ڕاستەقینە.",
+    ali1_h:"ئێستاش لەم ئیستگەیانە کاردەکەن",ali1_p:"BM Oil، North Light، Sher، Syar، Lawand، Viva، و ١٤ی تر — خۆیان ئیستگەی پربازاری هەولێرن.",
+    ali2_h:"ئێستا پڕکردنەکانیان بەها هەیە",ali2_p:"کاشبەکی %0.32، خەڵاتی ناوپیڕە، مامەڵەی جۆری بوار — هەموو بە پڕکردن لە ئیستگەی RACE.",
+    ali3_h:"تۆیش لە هەموویان قازانج دەکەیت",ali3_p:"هەر سەردان. هەر پڕکردن. هەر جار. تاوەکو لە RACE دان، تۆ لە ئادەتەکانیان قازانج دەکەیت.",
+    ab_title:"ئەوەی دەوعدارەکانت بە بەشداربووندا دەکەوێتەو:",
+    ab1:"کاشبەکی %0.32 لەسەر هەر پڕکردن",ab2:"زیادکەری نەوبەی چالاکی — زیاتر کاردەکەن، زیاتر قازانج دەکەن",ab3:"داواکردنی کێشانەوەی سەیارە بە یەک کلیک لەناو ئەپی RACE",ab4:"یارمەتیدانی ڕێگاکانار بەخۆ — لەسەر بناخەی ئاستی نوێنەر",ab5:"نمرەی RACE — مێژووی بەهرەی سووتەمەنی وەکوو سەندی باوەڕپێکراو",ab6:"هەموو لە ئیستگەیانەی <em>ئێستاش دەیبینن</em>",
+    ms_tag:"سەفەری نوێنەری تۆ",ms_title:"زیاتر دابینیت،<br/>زیاتر قازانج دەکەیت.",ms_sub:"قازانج لەگەڵ هەر دەوعدار زیاد دەبێت. بەڵام فایدەی تایبەتت لەسەر ئاستەکان دەکەوێتەوە — خزمەتگوزاری ڕاستەقینە، هەموو بەخۆ.",
+    ms1_title:"یەکەم پڕکردن — ڕۆژی یەکەم",ms1_badge:"دەستپێکەر",ms1_desc:"جزدانەکەت چالاک دەبێت ئەگینا یەکەم دەوعدارت پڕ کرد. %0.32 لەو پڕکردنە — و هەر پڕکردنێکی تر، بۆ هەمیشە.",ms1_p1:"چالاکبوونی جزدانی RACE",ms1_p2:"‎%0.32 بۆ هەر پڕکردن، هەمیشە",ms1_p3:"داشبۆردی قازانج",
+    ms2_title:"١٠ دەوعداری چالاک",ms2_badge:"نوێنەری برۆنز",ms2_desc:"١٠ دەوعدار بگەیەنیت و RACE کێشانەوەی بەخۆ بۆ تۆ کەشف دەکات — هەرکوێ لە هەولێر، بە یەک تاپکردن لەناو ئەپ. بێ کرێ.",ms2_p1:"کێشانەوەی بەخۆ — یەک تاپ",ms2_p2:"پشتیوانی نوێنەری پێشوازیکار",ms2_p3:"‎~٣٠,٠٠٠ دینار/مانگ داهاتی خۆکار",
+    ms3_title:"٣٠ دەوعداری چالاک",ms3_badge:"نوێنەری زیو",ms3_desc:"٣٠ دەوعدار = یارمەتیدانی تەواوی ڕێگاکانار. تایرەی بریندار، باتری مردوو، مەواد تەواوبوو — هەموو داپۆشراو، بەخۆ، بە یەک تاپ.",ms3_p1:"یارمەتیدانی ڕێگاکانار بەخۆ",ms3_p2:"دانانەوەی باتری",ms3_p3:"چارەسەری تایرەی بریندار",ms3_p4:"گەیاندنی سووتەمەنی فریاگوزاری",ms3_p5:"‎~٩٢,٠٠٠ دینار/مانگ داهاتی خۆکار",
+    ms4_title:"٧٥ دەوعداری چالاک",ms4_badge:"نوێنەری زێڕ",ms4_desc:"نوێنەری زێڕ دسکاوتی کەمکردنەوە لە مامەڵەی مەکانیک، پرۆسێسکردنی خێرا، و مافی کۆنسڵتاتیڤی فلیت دەگرێت.",ms4_p1:"نیشانی زێڕ + بڕوانامە",ms4_p2:"داشکاندنی خزمەتگوزاری مەکانیک",ms4_p3:"مافی ئاراستەکردنی فلیت",ms4_p4:"‎~٢٣٠,٠٠٠+ دینار/مانگ داهاتی خۆکار",
+    ms5_title:"دەوعکردنی فلیت — زۆرترین بەها",ms5_badge:"بێ سنور",ms5_desc:"یەک کۆمپانیای فلیت. ٢٠ ئۆتۆمبێل، ١٥ جار پڕکردن لەمانگدا — یەک دەوعکردن کە ماوەی ساڵان بە مانگ پارەت دەدات.",ms5_p1:"‎٢٠ ئۆتۆمبێل × ١٥ پڕکردن = ٣٠٠ ڕووداو/مانگ",ms5_p2:"‎٣٠٠ × ١٥٠ هەزار × %0.32 = ١٤٤,٠٠٠ دینار/مانگ",ms5_p3:"لە یەک کۆمپانیا. یەک دەوعکردن.",
+    st_tag:"تۆڕی ژیو",st_title:"زیاتر لە ٢٠ ئیستگە لە هەولێر.<br/>هەموو ژیون. هەموو قازانجت دەکەن.",st_sub:"هەر پڕکردن لە هەریەک لەم ئیستگەیانە %0.32 قازانجت دەکات. ئیستگەی نوێ = زیادکردنی خۆکاری قازانج.",st_next:"ئیستگەی ٢١+",st_soon:"لە پرۆسەدا",st_grow:"گەشەکردن",
+    oc_tag:"ناو ئەپی RACE",oc_title:"گیرماوی؟ یەک تاپ.<br/>یارمەت لەڕێگایە.",oc_sub:"هەر ئەندامێکی RACE دسکاوتی یارمەتیدانی ڕێگاکانار بە یەک تاپ ناو پلاتفۆرمەکەدا دەگرێت.",
+    oc_app_sub:"خزمەتگوزاری فریاگوزاری",oc_member:"ئەحمەد ک. · نوێنەری برۆنز",oc_tier:"برۆنز",oc_loc:"📍 دیاریکردنی شوێن...",oc_tow:"کێشانەوە",oc_tow_sub:"بەخۆ · هەولێر",oc_road:"ڕێگاکانار",oc_road_sub:"تایر · باتری",oc_fuel:"سووتەمەنی",oc_fuel_sub:"گەیاندن",oc_bat:"باتری",oc_bat_sub:"دانانەوە",oc_driver:"شوفێر: کارۆان · ⭐ 4.9",oc_cancel:"داواکاری پاشگەزبوونەوە",oc_footer:"بەخۆ بۆ ئەندامانی شایستەی RACE",
+    oc_f1_h:"شوێن بەخۆی دیاری دەکرێت",oc_f1_p:"بە تاپکردن، ئاهەنگەکانی GPS دەنێردرێن بۆ نزیکترین شوفێری خزمەتگوزاری — بێ تایپکردن.",
+    oc_f2_h:"وەڵامدانەوەی ژێر ١٥ خولەک",oc_f2_p:"شوفێری خزمەتگوزاری RACE بەسەر هەولێردا بڵاون. تێپەڕینی ناوەندی ژێر ١٥ خولەک.",
+    oc_f3_h:"بەخۆ بۆ ئەندامانی شایستە",oc_f3_p:"کێشانەوە لەسەر ١٠ دەوعدار کەشف دەبێت. ڕێگاکانار تەواو لەسەر ٣٠.",
+    oc_f4_h:"بەستراوە بە ئاستی تۆ",oc_f4_p:"زیاتر دابینیت، زیاتر خزمەتگوزاری کەشف دەکەیت. هەر ١٠ دەوعدار ئاستێکی نوێی پاراستنی ڕێگاست.",
+    ub_lbl:"پێشکەوتنی کەشفکردنی خزمەتگوزاری",ub0:"بەشداربوون",ub10:"🚛 کێشانەوە",ub30:"🔧 ڕێگاکانار",ub75:"🏆 داپۆشینی تەواو",
+    calc_tag:"ژمێرەری قازانج",calc_title:"ژمارەی ڕاستەقینەکەت.",calc_sub:"سیناریۆکەت ڕیک بخە — بزانە چەند دەکەوێتە جزدانەکەت.",
+    c_lbl1:"ژمارەی کەسانی دەوعدەکەیت",c_lbl2:"نرخی ناوەندی پڕکردن (دینار)",c_lbl3:"پڕکردن بۆ هەر کەس لەمانگدا",
+    calc_tip:"💡 <strong>تێبینیی فلیت:</strong> یەک کۆمپانیا لەگەڵ ٢٠ ئۆتۆمبێل بە ٢٠٠ هەزار/پڕکردن = <strong>١,٩٢٠,٠٠٠ دینار/مانگ</strong> لە یەک دەوعکردن.",
+    rb_lbl:"داهاتی خۆکاری مانگانە",rb_yr:"داهاتی ساڵانە",rb_pf:"کرێدیت بۆ هەر پڕکردن",rb_ev:"ڕووداوی پڕکردن / مانگ",rb_ml:"ئاستی نوێنەر",rb_cta:"ئەم داهاتە وەربگرە ←",
+    inv_tag:"پلانی تۆ",inv_title:"٥ هەنگاو لە تۆمارکردن<br/>بۆ داهاتی خۆکار.",
+    i1_h:"لێرە تۆمار بکە",i1_p:"فۆرمەکە پڕ بکەرەوە. تیمەکەمان کۆدی دەوعکردنت لە ٢٤ کاتژمێر دا دەنێرین.",
+    i2_h:"کۆدەکەت بڵاو بکەرەوە",i2_p:"وتساپت بکە، رووبەرووی ڕووبەرو، ئۆنلاین بڵاو بکە. بەها ڕاستەقینە پێشکەش بکە.",
+    i3_h:"لەئیستگەکەدا تۆمار دەکەن",i3_p:"دەوعدار دەچێت ئیستگەی RACE. پلاکی دەسکانرێت — هەژمار بەخۆی دروست دەبێت.",
+    i4_h:"هەر پڕکردن پارەت دەدات",i4_p:"‎%0.32 بەخۆی دەکەوێتە جزدانەکەت لەسەر هەر پڕکردنێکی تر. خۆکار. بۆ هەمیشە.",
+    i5_h:"هەر کاتێک ڕادەکێشیت",i5_p:"جزدانەکەت، پارەکەت. داواکردنی ڕاکێشانەوە هەر کاتێک.",
+    faq_tag:"پرسیارەکان",faq_title:"هەر پرسیارێک<br/>لەبیرت بوو.",
+    fq1:"ئایا تێچووی بەشداربوون هەیە؟",fa1:"هیچ. سفر. RACE لە کرێی پلاتفۆرمی ئیستگەکان قازانج دەکات — نوێنەران هەرگیز پارە نادەن.",
+    fq2:"چەند کاتێک لە هەر کەسێک قازانج دەکەم؟",fa2:"بۆ هەمیشە. کاتێک لەژێر کۆدەکەت تۆمار کرد، بۆ تەمامی ژیان بەستراوەن. بێ کاتی بەسەرچوون.",
+    fq3:"دەتوانم کۆمپانیا و فلیت دەوع بکەم؟",fa3:"بەڵێ — فلیت زۆرترین بەهای دەوعکردنە. کۆمپانیایەک لەگەڵ ٢٠ ئۆتۆمبێل دەتوانێت ١,٠٠٠,٠٠٠+ دینار/مانگ بگەیەنێت بۆ جزدانەکەت.",
+    fq4:"ئەگەر ئیستگەی نوێ بەشداری RACE بوو چی؟",fa4:"دەوعدارەکانت بەخۆی لەئیستگەی نوێ قازانج دەکەن ئەگینا ژیوی. تۆیش قازانج دەکەیت بێ هیچ کاریکردنی زیاتر.",
+    fq5:"کێشانەوە و یارمەتیدانی ڕێگاکانار کەی ئامادەدەبن؟",fa5:"کێشانەوەی بەخۆ لەسەر ١٠ دەوعداری چالاک (برۆنز). ڕێگاکانار تەواو لەسەر ٣٠ (زیو).",
+    fq6:"ئایا سنوری ژمارەی دەوعداران هەیە؟",fa6:"هیچ سنور. هیچ سقف. هیچ بەستن. RACE لەگەڵ تۆ گەشە دەکات — زیاتر دابینیت، زیاتر قازانج دەکەیت.",
+    join_tag:"ئێستا تۆمار بکە · بەخۆ · ٢ خولەک",join_title:"نوێنەری RACE بە",join_sub:"ئەمە پڕ بکەرەوە. ٢٤ کاتژمێر دا کۆدی دەوعکردنت بەپێی وتساپ دەنێرین.",
+    jf_first:"ناوی یەکەم",jf_last:"ناوی دووەم",jf_wa:"ژمارەی وتساپ",jf_city:"شار / ناوچە",jf_strat:"ستراتیژیای دەوعکردنت",jf_vol:"چەند دەوعدار لە ٣٠ ڕۆژی یەکەم",
+    js0:"هەڵبژێرە...",js1:"هاوڕێ و خێزان",js2:"کۆمپانیا و فلیت",js3:"گروپی وتساپ و سۆشیاڵ میدیا",js4:"رووبەرووی رووبەرو / کۆمەڵگا",js5:"هەموویان",
+    jv0:"ڕینجەیەک هەڵبژێرە...",jv1:"١-١٠ شوفێر",jv2:"١٠-٣٠ شوفێر",jv3:"٣٠-١٠٠ شوفێر",jv4:"١٠٠+ / تەرکیزی فلیت",
+    join_btn:"داواکاریەکەم بنێرە ←",join_note:"لە ٢٤ کاتژمێر دا لەسەر وتساپت پەیوەندی دەکەین. هیچ ئیمەیلی ناخواستی.",fee_note:"‎%0.32ی تۆ = ‎%32 لە کرێی پلاتفۆرمی RACE یە کە %0.78ە — پشکی تۆ لە هەر مامەڵەیەک لە هەر ئیستگەیەک، بەخۆی."
+  },
+  ar:{
+    nav_how:"كيف يعمل",nav_benefits:"مزاياك",nav_stations:"المحطات",nav_earn:"الأرباح",nav_apply:"التسجيل",nav_cta:"سجّل الآن ←",
+    hero_tag:"نبحث عن وكلاء الآن — أربيل، كردستان",hero_h1_1:"هم يعبّئون،",hero_h1_2:"",hero_h1_3:"أنت تربح في كل مرة.",
+    hero_sub:"RACE هي شبكة الوقود المغلقة في أربيل. من تدعوهم يزورون هذه المحطات أصلاً. في كل مرة يعبّئون، 0.32% يذهب لمحفظتك — تلقائياً، للأبد.",
+    hero_btn1:"احسب أرباحي",hero_btn2:"اطّلع على مزاياي",
+    stat1:"محطة نشطة",stat2:"سائق نشط",stat3:"لكل تعبئة — للأبد",stat4:"تكلفة الانضمام",
+    hero_card_lbl:"تقدير الأرباح الشهرية",hero_card_per:"دينار / شهر · دخل سلبي",hero_card_note:"بناءً على 30 مدعوّاً × 4 تعبئات/شهر × 100 ألف دينار × 0.32%",
+    how_tag:"النموذج",how_title:"سهل البدء.<br/>قوي في التوسع.",how_sub:"لا تبيع شيئاً. تدعو أشخاصاً لشبكة تكافئ عادات التزود بالوقود — وفي كل مرة يعبّئون في أي محطة RACE، تنمو محفظتك.",
+    vc1_h:"يعبّئون هنا أصلاً",vc1_p:'معارفك يعبّئون في <span class="acc">هذه المحطات بالضبط</span> الآن. قبل RACE، لم تكسب شيئاً من ذلك.',
+    vc2_h:"تعطيهم كودك",vc2_p:"مشاركة واحدة. لوحة سيارتهم تُربط بكود وكيلك. لا حاجة لتطبيق — يُفعَّل تلقائياً عند المضخة.",
+    vc3_h:"تربح إلى الأبد",vc3_p:'كل تعبئة، في أي محطة RACE، للأبد — <span class="acc">0.32% يصل لمحفظتك تلقائياً.</span>',
+    already_tag:"الإدراك",already_title:"كانوا سيعبّئون<br/>على أي حال.",already_sub:"RACE لا تطلب من مدعوّيك تغيير أي عادة. نفس المحطات — الآن مع قيمة حقيقية لكل تعبئة.",
+    ali1_h:"يستخدمون هذه المحطات بالفعل",ali1_p:"BM Oil وNorth Light وSher وSyar وLawand وViva و14 أخرى — كلها من أكثر المحطات ازدحاماً في أربيل.",
+    ali2_h:"الآن لتعبئاتهم قيمة",ali2_p:"كاشباك 0.32%، مكافآت التواصل، خدمات طوارئ — تُفتَح فقط بالتزود من محطات RACE.",
+    ali3_h:"وأنت تكسب من كل واحد",ali3_p:"كل زيارة. كل تعبئة. كل مرة. طالما هم في الشبكة، أنت تكسب من عاداتهم.",
+    ab_title:"ما يفتحه مدعوّوك بمجرد الانضمام لـ RACE:",
+    ab1:"كاشباك 0.32% من كل تعبئة",ab2:"مضاعف الاستمرارية — كلما انتظموا، كلما ربحوا أكثر",ab3:"طلب سحب السيارة بنقرة واحدة داخل تطبيق RACE",ab4:"مساعدة على الطريق مجاناً — تُفتَح بالمعالم",ab5:"نقاط RACE — سجل سلوك الوقود كتاريخ ائتماني",ab6:"كلها من محطات <em>يزورونها بالفعل</em>",
+    ms_tag:"رحلة وكيلك",ms_title:"كلما دعوت أكثر،<br/>فتحت أكثر.",ms_sub:"الأرباح تنمو مع كل مدعوّ. لكن مزاياك الشخصية تُفتح عند المعالم — خدمات حقيقية بقيمة كبيرة، كلها مجانية.",
+    ms1_title:"أول تعبئة — اليوم الأول",ms1_badge:"مبتدئ",ms1_desc:"محفظتك تُفعَّل فور أن يعبّئ أول مدعوّ لك. 0.32% من تلك التعبئة — وكل تعبئة يقوم بها لاحقاً، إلى الأبد.",ms1_p1:"تفعيل محفظة RACE",ms1_p2:"‎0.32% لكل تعبئة، للأبد",ms1_p3:"لوحة تحكم الأرباح",
+    ms2_title:"10 مدعوّين نشطين",ms2_badge:"وكيل برونزي",ms2_desc:"اجمع 10 مدعوّين وتُفتَح لك خدمة السحب المجانية — في أي مكان بأربيل، نقرة واحدة داخل التطبيق. بدون رسوم.",ms2_p1:"سحب مجاني — نقرة واحدة",ms2_p2:"دعم وكيل أولوية",ms2_p3:"‎~30,000 دينار/شهر دخل سلبي",
+    ms3_title:"30 مدعوّاً نشطاً",ms3_badge:"وكيل فضي",ms3_desc:"30 مدعوّاً = مساعدة كاملة على الطريق. إطار مثقوب، بطارية ميتة، نفاد الوقود — كلها مغطاة، مجانية، بنقرة واحدة.",ms3_p1:"مساعدة كاملة على الطريق",ms3_p2:"شحن البطارية",ms3_p3:"خدمة الإطار المثقوب",ms3_p4:"توصيل وقود طارئ",ms3_p5:"‎~92,000 دينار/شهر دخل سلبي",
+    ms4_title:"75 مدعوّاً نشطاً",ms4_badge:"وكيل ذهبي",ms4_desc:"الوكلاء الذهبيون يحصلون على خصومات الإحالة الميكانيكية، معالجة أولوية، وحق استشارة الأسطول لفتح أعلى مستوى دعوة.",ms4_p1:"شارة ذهبية + شهادة",ms4_p2:"خصومات خدمة ميكانيك",ms4_p3:"حقوق إحالة حسابات الأسطول",ms4_p4:"‎~230,000+ دينار/شهر دخل سلبي",
+    ms5_title:"دعوة الأسطول — أقصى قيمة",ms5_badge:"بلا سقف",ms5_desc:"شركة أسطول واحدة. 20 مركبة، 15 تعبئة شهرياً — دعوة واحدة تدفع لك كل شهر لسنوات.",ms5_p1:"‎20 مركبة × 15 تعبئة = 300 حدث/شهر",ms5_p2:"‎300 × 150 ألف × 0.32% = 144,000 دينار/شهر",ms5_p3:"من شركة واحدة. دعوة واحدة.",
+    st_tag:"الشبكة النشطة",st_title:"أكثر من 20 محطة في أربيل.<br/>كلها نشطة. كلها تربحك.",st_sub:"كل تعبئة في أي من هذه المحطات تكسبك 0.32%. محطة جديدة = دفعة تلقائية لأرباح كل الوكلاء.",st_next:"المحطة #21+",st_soon:"قيد التهيئة",st_grow:"شبكة متنامية",
+    oc_tag:"مدمج في تطبيق RACE",oc_title:"عالق؟ نقرة واحدة.<br/>المساعدة في الطريق.",oc_sub:"كل عضو في RACE يحصل على مساعدة الطريق بنقرة واحدة داخل التطبيق. اضغط مرة، GPS يُشارك، سائق يُرسَل.",
+    oc_app_sub:"خدمات الطوارئ",oc_member:"أحمد ك. · وكيل برونزي",oc_tier:"برونزي",oc_loc:"📍 تحديد الموقع...",oc_tow:"سحب",oc_tow_sub:"مجاني · أربيل",oc_road:"مساعدة الطريق",oc_road_sub:"إطار · بطارية",oc_fuel:"وقود",oc_fuel_sub:"توصيل طارئ",oc_bat:"بطارية",oc_bat_sub:"شحن",oc_driver:"السائق: كاروان · ⭐ 4.9",oc_cancel:"إلغاء الطلب",oc_footer:"مجاني للأعضاء المؤهلين",
+    oc_f1_h:"الموقع يُكتشف تلقائياً",oc_f1_p:"بمجرد الضغط، تُرسَل إحداثيات GPS لأقرب سائق — بدون كتابة، بدون شرح أين أنت.",
+    oc_f2_h:"استجابة في أقل من 15 دقيقة",oc_f2_p:"سائقو خدمة RACE منتشرون في أربيل. متوسط الوصول أقل من 15 دقيقة.",
+    oc_f3_h:"مجاني للأعضاء المؤهلين",oc_f3_p:"السحب يُفتَح عند 10 مدعوّين. المساعدة الكاملة عند 30. مدعوّوك يحصلون على الخدمة عبر عضويتهم.",
+    oc_f4_h:"مرتبط بمعلمك",oc_f4_p:"كلما دعوت أكثر، كلما فتحت خدمات أكثر. كل 10 مدعوّين = مستوى جديد من حماية الطريق.",
+    ub_lbl:"تقدم فتح الخدمات",ub0:"انضمام",ub10:"🚛 سحب",ub30:"🔧 طريق",ub75:"🏆 تغطية كاملة",
+    calc_tag:"حاسبة الأرباح",calc_title:"ابنِ رقمك الحقيقي.",calc_sub:"اضبط السيناريو — اعرف بالضبط كم يصل لمحفظتك.",
+    c_lbl1:"عدد من تدعوهم",c_lbl2:"متوسط قيمة التعبئة (دينار)",c_lbl3:"تعبئات لكل شخص شهرياً",
+    calc_tip:"💡 <strong>نصيحة الأسطول:</strong> شركة بـ 20 مركبة بـ 200 ألف/تعبئة = <strong>1,920,000 دينار/شهر</strong> من دعوة واحدة.",
+    rb_lbl:"الدخل الشهري السلبي",rb_yr:"الأرباح السنوية",rb_pf:"ائتمان لكل تعبئة",rb_ev:"أحداث التعبئة / شهر",rb_ml:"معلم الوكيل",rb_cta:"احجز هذا الدخل ←",
+    inv_tag:"خطتك",inv_title:"5 خطوات من التسجيل<br/>إلى الدخل السلبي.",
+    i1_h:"سجّل أدناه",i1_p:"أكمل النموذج. فريقنا يرسل كود الدعوة على واتساب خلال 24 ساعة. مجاني تماماً.",
+    i2_h:"شارك كودك",i2_p:"على واتساب، شخصياً، أو أونلاين. اعطِهم سبباً — كاشباك + خدمات طريق مجانية.",
+    i3_h:"يسجّلون عند المحطة",i3_p:"المدعوّ يذهب لأي محطة RACE. لوحتهم تُمسح — الحساب ينشأ تلقائياً ويُربط بكودك.",
+    i4_h:"كل تعبئة تدفعك",i4_p:"‎0.32% يصل لمحفظتك على كل تعبئة يقومون بها. تلقائي. دائم. لا حاجة لأي إجراء منك.",
+    i5_h:"اسحب في أي وقت",i5_p:"محفظتك، أموالك. اطلب السحب متى شئت — بدون حد أدنى، بدون انتظار.",
+    faq_tag:"الأسئلة الشائعة",faq_title:"كل سؤال<br/>قد يخطر ببالك.",
+    fq1:"هل هناك تكلفة لتصبح وكيلاً؟",fa1:"لا شيء. صفر. RACE تربح من رسوم المنصة التي تدفعها المحطات — الوكلاء لا يدفعون أبداً للانضمام أو التشغيل أو السحب.",
+    fq2:"كم مدة كسبي من كل شخص أدعوه؟",fa2:"إلى الأبد. حين يسجّل تحت كودك، يُربط بمحفظتك مدى الحياة. بدون انتهاء صلاحية، بدون إعادة تفعيل.",
+    fq3:"هل يمكنني دعوة شركات وأساطيل؟",fa3:"نعم — والأسطول هو أعلى دعوة قيمةً. شركة بـ 20 مركبة يمكنها توليد أكثر من 1,000,000 دينار/شهر لمحفظتك من دعوة واحدة.",
+    fq4:"ماذا يحدث حين تنضم محطة جديدة؟",fa4:"مدعوّوك الحاليون يكسبون تلقائياً من المحطات الجديدة فور تفعيلها — وأنت أيضاً. صفر جهد إضافي.",
+    fq5:"متى تُفتَح السحب المجاني والمساعدة على الطريق؟",fa5:"السحب المجاني عند 10 مدعوّين نشطين (برونزي). المساعدة الكاملة عند 30 (فضي). هذه مزايا شخصية لك كوكيل.",
+    fq6:"هل هناك حد لعدد من أدعوهم؟",fa6:"لا حد. لا سقف. لا قيود. RACE تنمو معك — كلما بنيت شبكتك أكثر، كلما ربحت أكثر.",
+    join_tag:"سجّل الآن · مجاني · دقيقتان",join_title:"كن وكيل RACE",join_sub:"أكمل هذا النموذج. سنرسل كود الدعوة على واتساب خلال 24 ساعة. بدون دفع، بدون التزام.",
+    jf_first:"الاسم الأول",jf_last:"اسم العائلة",jf_wa:"رقم واتساب",jf_city:"المدينة / المنطقة",jf_strat:"استراتيجيتك في الدعوة",jf_vol:"عدد الدعوات المتوقعة خلال 30 يوماً",
+    js0:"اختر...",js1:"الأصدقاء والعائلة",js2:"الشركات والأساطيل",js3:"مجموعات واتساب ووسائل التواصل",js4:"وجهاً لوجه / المجتمع",js5:"كل ما سبق",
+    jv0:"اختر نطاقاً...",jv1:"1-10 سائق",jv2:"10-30 سائق",jv3:"30-100 سائق",jv4:"100+ / تركيز على الأسطول",
+    join_btn:"أرسل طلبي ←",join_note:"سنتواصل معك على واتساب خلال 24 ساعة. بدون رسائل مزعجة أبداً.",fee_note:"نسبتك 0.32% = 32% من رسوم RACE البالغة 0.78% — حصتك من كل معاملة في كل محطة، تلقائياً."
+  }
+};
+
+let lang='en';
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>{b.classList.toggle('active',['en','ku','ar'][i]===l)});
+  const isRTL=(l==='ku'||l==='ar');
+  document.body.classList.toggle('rtl',isRTL);
+  document.documentElement.setAttribute('dir',isRTL?'rtl':'ltr');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(T[l]&&T[l][key]!==undefined){
+      if(el.tagName==='INPUT'||el.tagName==='OPTION'){el.textContent=T[l][key]}
+      else{el.innerHTML=T[l][key]}
+    }
+  });
+  // update placeholder text
+  const ph={jFirst:['Ahmad','ئەحمەد','أحمد'],jLast:['Karimi','کەریمی','كريمي'],jWa:['+964 750 000 0000','+964 750 000 0000','+964 750 000 0000'],jCity:['Erbil, Ankawa...','هەولێر، ئەنکاوە...','أربيل، عنكاوا...']};
+  const idx=l==='en'?0:l==='ku'?1:2;
+  Object.entries(ph).forEach(([id,arr])=>{const el=document.getElementById(id);if(el)el.placeholder=arr[idx]});
+}
+
+// ── LIVE CLOCK ──
+function updateClock(){
+  const n=new Date();
+  const t=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  const el=document.getElementById('liveClock');if(el)el.textContent=t;
+}
+updateClock();setInterval(updateClock,30000);
+
+// ── LIVE FEED ──
+const feeds=[
+  {c:'g',t:'Ahmad K. fueled at BM Oil',v:'+320 IQD'},
+  {c:'y',t:'Sarya M. filled at North Light',v:'+224 IQD'},
+  {c:'g',t:'Fleet Truck #4 — Babil Ankawa',v:'+1,120 IQD'},
+  {c:'y',t:'Karzan A. filled at Lawand Oil',v:'+288 IQD'},
+  {c:'g',t:'Dilan K. fueled at Sher Oil',v:'+192 IQD'},
+  {c:'y',t:'Fleet Car #9 — Syar Oil',v:'+576 IQD'},
+  {c:'g',t:'Omar H. filled at Jaguar Oil',v:'+256 IQD'},
+];
+let fi=0;
+function addFeed(){
+  const z=document.getElementById('feedZone');if(!z)return;
+  const f=feeds[fi%feeds.length];fi++;
+  const d=document.createElement('div');d.className='feed-item';
+  d.innerHTML='<div class="fdot '+f.c+'"></div><div class="ftxt">'+f.t+'</div><div class="fval">'+f.v+'</div>';
+  z.appendChild(d);
+  if(z.children.length>3)z.removeChild(z.children[0]);
+}
+addFeed();addFeed();addFeed();
+setInterval(addFeed,2600);
+
+// ── DISPATCH SIM ──
+const dispMap={tow:{i:'🚛',t:'Tow Truck Dispatched',e:'12'},road:{i:'🔧',t:'Roadside Tech Dispatched',e:'9'},fuel:{i:'⛽',t:'Fuel Delivery En Route',e:'14'},bat:{i:'🔋',t:'Battery Team Dispatched',e:'8'}};
+function dispatch(type){
+  const d=dispMap[type];
+  document.getElementById('phBtns').style.display='none';
+  document.getElementById('dIco').textContent=d.i;
+  document.getElementById('dTitle').textContent=d.t;
+  document.getElementById('dEta').textContent=d.e+' min';
+  const p=document.getElementById('phDispatch');p.style.display='block';
+  setTimeout(()=>{const b=document.getElementById('dBar');if(b)b.style.width='100%'},80);
+}
+function cancelDispatch(){
+  document.getElementById('phDispatch').style.display='none';
+  const b=document.getElementById('dBar');if(b){b.style.transition='none';b.style.width='0';setTimeout(()=>{b.style.transition='width 9s linear'},50)}
+  document.getElementById('phBtns').style.display='grid';
+}
+
+// ── CALCULATOR ──
+function calcUpdate(){
+  const d=+document.getElementById('rD').value;
+  const f=+document.getElementById('rF').value;
+  const fx=+document.getElementById('rFx').value;
+  document.getElementById('vD').textContent=d;
+  document.getElementById('vF').textContent=f>=1000?Math.round(f/1000)+'K':f;
+  document.getElementById('vFx').textContent=fx;
+  const pf=f*0.0032,mo=d*fx*pf,yr=mo*12,day=mo/30,ev=d*fx;
+  const fmt=n=>Math.round(n).toLocaleString();
+  document.getElementById('rbM').textContent=fmt(mo);
+  document.getElementById('rbD').textContent='~'+fmt(day)+' IQD per day';
+  document.getElementById('rbY').textContent=fmt(yr)+' IQD';
+  document.getElementById('rbPF').textContent=fmt(pf)+' IQD';
+  document.getElementById('rbEv').textContent=ev.toLocaleString();
+  let ml='🌱 Starter';
+  if(d>=75)ml='🏆 Gold Agent';
+  else if(d>=30)ml='🥈 Silver Agent';
+  else if(d>=10)ml='🥉 Bronze Agent';
+  document.getElementById('rbML').textContent=ml;
+}
+calcUpdate();
+
+
+// ═══ SCROLL PROGRESS BAR ═══
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const pct=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('scrollBar').style.width=pct+'%';
+},{passive:true});
+
+// ═══ HERO PARTICLE NETWORK (gold constellation) ═══
+(function(){
+  const cv=document.getElementById('heroCanvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,pts=[];
+  function size(){
+    const r=cv.parentElement.getBoundingClientRect();
+    W=cv.width=r.width;H=cv.height=r.height;
+  }
+  size();window.addEventListener('resize',size);
+  const N=42;
+  for(let i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.35,vy:(Math.random()-0.5)*0.35,r:Math.random()*1.8+0.6});
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    for(const p of pts){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(240,200,66,0.55)';ctx.fill();
+    }
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<130){
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle='rgba(240,200,66,'+(0.14*(1-d/130))+')';ctx.lineWidth=0.7;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// ═══ COUNT-UP STATS ON FIRST VIEW ═══
+(function(){
+  const stats=document.querySelectorAll('.hstat .n');
+  let fired=false;
+  function animate(el){
+    const txt=el.textContent.trim();
+    const m=txt.match(/^([\d,\.]+)(.*)$/);
+    if(!m)return;
+    const target=parseFloat(m[1].replace(/,/g,''));
+    const suffix=m[2]||'';
+    if(isNaN(target))return;
+    let cur=0;const steps=46;const inc=target/steps;let i=0;
+    const t=setInterval(()=>{
+      i++;cur=Math.min(cur+inc,target);
+      el.textContent=(target%1===0?Math.round(cur).toLocaleString():cur.toFixed(2))+suffix;
+      el.parentElement.classList.add('bump');
+      setTimeout(()=>el.parentElement.classList.remove('bump'),120);
+      if(i>=steps){clearInterval(t);el.textContent=txt}
+    },28);
+  }
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting&&!fired){fired=true;stats.forEach(animate)}});
+  },{threshold:0.4});
+  if(stats[0])io.observe(stats[0]);
+})();
+
+// ═══ CALCULATOR RESULT FLASH ═══
+const _origCalc=calcUpdate;
+calcUpdate=function(){
+  _origCalc();
+  const el=document.getElementById('rbM');
+  if(el){el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),320)}
+};
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0.08});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+
+// ── FAQ ──
+function faq(el){
+  const item=el.parentElement,a=item.querySelector('.fa'),open=a.classList.contains('open');
+  document.querySelectorAll('.fa.open').forEach(x=>{x.classList.remove('open');x.closest('.fi').classList.remove('on');x.previousElementSibling.classList.remove('open')});
+  if(!open){a.classList.add('open');item.classList.add('on');el.classList.add('open')}
+}
+
+// ── FORM SUBMIT ──
+
+function smoothTo(id){
+  const el=document.getElementById(id);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+
+
+const FU={
+  en:{title:"Welcome to RACE, Agent.",sub:"Your application is in. Your agent code is being prepared. Here is exactly what happens next — and what your future looks like.",
+    s1h:"Your Code Arrives on WhatsApp",s1p:"Within 24 hours, you receive your personal agent invite code + onboarding guide. This code is yours forever — every person who joins with it is permanently linked to your wallet.",
+    s2h:"Your First 10 — Start With Who You Know",s2p:"Family, friends, coworkers who drive. One sentence: \"Join RACE free with my code — cashback on every fill plus free roadside services.\" Your first 10 unlocks your free towing.",
+    s3h:"Then Go Where the Money Is — Fleets",s3p:"One company with 20 vehicles is worth more than 100 individual invites. Taxi offices, delivery companies, construction firms. Gold Agent opens fleet referral rights.",
+    tlt:"Your projected future with RACE",
+    t1w:"Week 1",t1d:"Code active · First invites sent",
+    t2w:"Month 1",t2d:"10 invitees → <em>🚛 Free Towing unlocked</em>",
+    t3w:"Month 3",t3d:"30 invitees → <em>🔧 Roadside + ~92K IQD/mo</em>",
+    t4w:"Month 6",t4d:"75 invitees → <em>🏆 Gold Agent + 230K+ IQD/mo</em>",
+    t5w:"Year 1",t5d:"+ 1 fleet account → <em>💰 1M+ IQD/mo passive</em>",
+    cta:"📲 Tell Your First Friend About RACE Now",note:"The agents who win are the ones who send their first invite today — not tomorrow.",
+    share:"I just became a RACE agent! 🏁 Join Erbil's fuel network free with my invite — you get cashback on every fill + free roadside services. I'll send you my code when it arrives!"},
+  ku:{title:"بەخێربێیت بۆ RACE، نوێنەر.",sub:"داواکاریەکەت گەیشت. کۆدی نوێنەرییەکەت ئامادە دەکرێت. ئەمە ڕوونکردنەوەی هەنگاوەکانی داهاتووە — و داهاتووت لەگەڵ RACE.",
+    s1h:"کۆدەکەت لەسەر وتساپ دەگات",s1p:"لە ماوەی ٢٤ کاتژمێر، کۆدی دەوعکردنی تایبەتیت + ڕێبەری دەستپێکردن وەردەگریت. ئەم کۆدە بۆ هەمیشە هی تۆیە.",
+    s2h:"یەکەم ١٠ — لەگەڵ ئەوانە دەست پێ بکە کە دەیانناسیت",s2p:"خێزان، هاوڕێیان، هاوکارەکان کە شۆفێرن. یەک ڕستە: \"بەخۆ بەشداری RACE ببە بە کۆدەکەم — کاشبەک لەسەر هەر پڕکردن.\" یەکەم ١٠ کێشانەوەی بەخۆت دەکاتەوە.",
+    s3h:"پاشان بڕۆ بۆ شوێنی پارە — فلیتەکان",s3p:"یەک کۆمپانیا لەگەڵ ٢٠ ئۆتۆمبێل زیاتر دەهێنێت لە ١٠٠ دەوعکردنی تاک. ئۆفیسی تەکسی، کۆمپانیای گەیاندن، کۆمپانیای بیناسازی.",
+    tlt:"داهاتووی پێشبینیکراوت لەگەڵ RACE",
+    t1w:"هەفتەی ١",t1d:"کۆد چالاکە · یەکەم دەوعکردن نێردرا",
+    t2w:"مانگی ١",t2d:"١٠ دەوعدار → <em>🚛 کێشانەوەی بەخۆ</em>",
+    t3w:"مانگی ٣",t3d:"٣٠ دەوعدار → <em>🔧 ڕێگاکانار + ~٩٢ هەزار/مانگ</em>",
+    t4w:"مانگی ٦",t4d:"٧٥ دەوعدار → <em>🏆 نوێنەری زێڕ + ٢٣٠ هەزار+/مانگ</em>",
+    t5w:"ساڵی ١",t5d:"+ ١ فلیت → <em>💰 ١ ملیۆن+ دینار/مانگ</em>",
+    cta:"📲 ئێستا یەکەم هاوڕێت ئاگادار بکەرەوە",note:"ئەو نوێنەرانە سەرکەوتوو دەبن کە ئەمڕۆ یەکەم دەوعکردنیان دەنێرن — نەک سبەینێ.",
+    share:"من بووم بە نوێنەری RACE! 🏁 بەخۆ بەشداری تۆڕی سووتەمەنی هەولێر ببە بە دەوعکردنەکەم — کاشبەک لەسەر هەر پڕکردن + خزمەتگوزاری ڕێگاکاناری بەخۆ!"},
+  ar:{title:"أهلاً بك في RACE أيها الوكيل.",sub:"تم استلام طلبك. كود الوكيل الخاص بك قيد التحضير. إليك بالضبط ما سيحدث الآن — وكيف يبدو مستقبلك.",
+    s1h:"كودك يصل على واتساب",s1p:"خلال 24 ساعة، تستلم كود الدعوة الشخصي + دليل البدء. هذا الكود لك إلى الأبد — كل من ينضم به يرتبط بمحفظتك بشكل دائم.",
+    s2h:"أول 10 — ابدأ بمن تعرفهم",s2p:"العائلة، الأصدقاء، زملاء العمل ممن يقودون. جملة واحدة: \"انضم لـ RACE مجاناً بكودي — كاشباك على كل تعبئة + خدمات طريق مجانية.\" أول 10 يفتحون سحبك المجاني.",
+    s3h:"ثم اذهب حيث المال — الأساطيل",s3p:"شركة واحدة بـ 20 مركبة تساوي أكثر من 100 دعوة فردية. مكاتب التاكسي، شركات التوصيل، شركات البناء.",
+    tlt:"مستقبلك المتوقع مع RACE",
+    t1w:"الأسبوع 1",t1d:"الكود نشط · أول دعوات أُرسلت",
+    t2w:"الشهر 1",t2d:"10 مدعوّين → <em>🚛 سحب مجاني</em>",
+    t3w:"الشهر 3",t3d:"30 مدعوّاً → <em>🔧 مساعدة طريق + ~92 ألف/شهر</em>",
+    t4w:"الشهر 6",t4d:"75 مدعوّاً → <em>🏆 وكيل ذهبي + 230 ألف+/شهر</em>",
+    t5w:"السنة 1",t5d:"+ أسطول واحد → <em>💰 مليون+ دينار/شهر</em>",
+    cta:"📲 أخبر أول صديق لك عن RACE الآن",note:"الوكلاء الفائزون هم من يرسلون أول دعوة اليوم — لا غداً.",
+    share:"أصبحت وكيل RACE! 🏁 انضم لشبكة وقود أربيل مجاناً بدعوتي — كاشباك على كل تعبئة + خدمات طريق مجانية. سأرسل لك كودي فور وصوله!"}
+};
+function applyFutureLang(){
+  const f=FU[lang]||FU.en;
+  document.getElementById('fuTitle').textContent=f.title;
+  document.getElementById('fuSub').textContent=f.sub;
+  document.getElementById('fuS1h').textContent=f.s1h;document.getElementById('fuS1p').textContent=f.s1p;
+  document.getElementById('fuS2h').textContent=f.s2h;document.getElementById('fuS2p').textContent=f.s2p;
+  document.getElementById('fuS3h').textContent=f.s3h;document.getElementById('fuS3p').textContent=f.s3p;
+  document.getElementById('fuTlTitle').textContent=f.tlt;
+  document.getElementById('fuT1w').textContent=f.t1w;document.getElementById('fuT1d').innerHTML=f.t1d;
+  document.getElementById('fuT2w').textContent=f.t2w;document.getElementById('fuT2d').innerHTML=f.t2d;
+  document.getElementById('fuT3w').textContent=f.t3w;document.getElementById('fuT3d').innerHTML=f.t3d;
+  document.getElementById('fuT4w').textContent=f.t4w;document.getElementById('fuT4d').innerHTML=f.t4d;
+  document.getElementById('fuT5w').textContent=f.t5w;document.getElementById('fuT5d').innerHTML=f.t5d;
+  document.getElementById('fuCta').textContent=f.cta;
+  document.getElementById('fuNote').textContent=f.note;
+}
+function shareRace(){
+  const f=FU[lang]||FU.en;
+  const url='https://wa.me/?text='+encodeURIComponent(f.share);
+  window.open(url,'_blank');
+}
+
+async function submitForm(){
+  const first=document.getElementById('jFirst').value.trim();
+  const last=document.getElementById('jLast').value.trim();
+  const wa=document.getElementById('jWa').value.trim();
+  const city=document.getElementById('jCity').value.trim();
+  const strat=document.getElementById('jStrat').value;
+  const vol=document.getElementById('jVol').value;
+
+  const errMsgs={en:'Please fill in your name and WhatsApp number.',ku:'تکایە ناو و ژمارەی وتساپت پڕ بکەرەوە.',ar:'يرجى ملء اسمك ورقم واتساب.'};
+  if(!first||!wa){alert(errMsgs[lang]||errMsgs.en);return;}
+
+  const btn=document.getElementById('jBtn');
+  const loadMsgs={en:'Submitting...',ku:'دەنێردرێت...',ar:'جارٍ الإرسال...'};
+  btn.textContent=loadMsgs[lang]||loadMsgs.en;
+  btn.disabled=true;
+
+  try {
+    const res=await fetch('https://zluhwkdrijrklviijuvl.supabase.co/functions/v1/agent-application',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w'},
+      body:JSON.stringify({first_name:first,last_name:last,whatsapp:wa,city,invite_strategy:strat,expected_volume:vol,language:lang})
+    });
+    const data=await res.json();
+    if(res.ok&&data.success){
+      // Hide form, reveal the Future Unlock experience
+      document.querySelectorAll('.jcard .jg, .jcard .jsub, .jcard .jnote, .jcard > p, .jcard h2, .jcard .stag').forEach(el=>el.style.display='none');
+      applyFutureLang();
+      document.getElementById('futureUnlock').style.display='block';
+      document.getElementById('futureUnlock').scrollIntoView({behavior:'smooth',block:'center'});
+    } else {
+      throw new Error(data.error||'Unknown error');
+    }
+  } catch(err){
+    console.error('Submit error:',err);
+    const failMsgs={en:'Something went wrong. Please try again.',ku:'هەڵەیەک ڕووی دا. تکایە دووبارە هەوڵ بدە.',ar:'حدث خطأ. يرجى المحاولة مجدداً.'};
+    btn.textContent=failMsgs[lang]||failMsgs.en;
+    btn.style.background='#c0392b';btn.style.color='#fdecea';
+    btn.disabled=false;
+  }
+}
+</script>
+</body>
+</html>
