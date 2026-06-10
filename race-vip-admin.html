@@ -175,6 +175,16 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 .btn-reject{padding:10px 14px;background:none;border:1px solid rgba(231,76,60,.4);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;border-radius:8px;transition:all .2s}
 .btn-reject:hover{background:var(--red);color:#fff}
 
+
+.rate-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:9px 12px;margin-bottom:8px}
+.rate-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim)}
+.rate-input{width:72px;padding:7px 10px;background:var(--bg);border:1px solid var(--b2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;outline:none;border-radius:6px;text-align:right}
+.rate-input:focus{border-color:var(--o)}
+.rate-pct{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);font-weight:600;margin-left:-4px}
+.rate-save{margin-left:auto;padding:7px 14px;background:none;border:1px solid var(--og);color:var(--o);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .2s}
+.rate-save:hover{background:var(--od)}
+.rate-save.ok{border-color:var(--green);color:var(--green)}
+
 @media(max-width:600px){.f2,.f3{grid-template-columns:1fr}.ovgrid{grid-template-columns:1fr 1fr}.pg{padding:14px}.card{padding:16px}.aquick{grid-template-columns:1fr}}
 </style>
 </head>
@@ -245,8 +255,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
       </div>
       <div class="frow f2">
         <div class="fg"><label>REFERRAL CODE *</label><input type="text" id="nr" placeholder="auto-generated if empty"></div>
-        <div class="fg"><label> </label><button class="btn-add" onclick="genCode()" style="background:var(--s2);border:1px solid var(--b2)">⚡ AUTO-GENERATE CODE</button></div>
+        <div class="fg"><label>COMMISSION RATE (%)</label><input type="number" id="ncr" value="0.32" step="0.01" min="0" placeholder="0.32"></div>
       </div>
+      <div class="frow"><button class="btn-add" onclick="genCode()" style="background:var(--s2);border:1px solid var(--b2)">⚡ AUTO-GENERATE CODE</button></div>
       <button class="btn-add" id="createBtn" onclick="createAgent()">+ CREATE AGENT</button>
     </div>
     <div class="slbl">// ALL AGENTS</div>
@@ -397,7 +408,7 @@ function loadAgentsData(){
     r[1].forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);});
     r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
     agentStats={};
-    agents.forEach(function(a){var tx=txMap[a.id]||{c:0,tot:0};agentStats[a.id]={inv:invMap[a.id]||0,fills:tx.c,spend:tx.tot,earned:tx.tot*RATE};});
+    agents.forEach(function(a){var tx=txMap[a.id]||{c:0,tot:0};var ar=(a.commission_rate!=null&&!isNaN(parseFloat(a.commission_rate)))?parseFloat(a.commission_rate):RATE;agentStats[a.id]={inv:invMap[a.id]||0,fills:tx.c,spend:tx.tot,earned:tx.tot*ar,rate:ar};});
     document.getElementById('agents-pill').textContent=agents.length+' agents';
     document.getElementById('tab-ag-badge').textContent=agents.length;
     renderAgents();
@@ -429,6 +440,8 @@ function renderAgents(){
     html+='<div class="astat"><div class="astat-v gold">'+s.fills+'</div><div class="astat-l">FILLS</div></div>';
     html+='<div class="astat"><div class="astat-v g">'+fmtE(s.earned)+'</div><div class="astat-l">EARNED IQD</div></div>';
     html+='</div>';
+    var ratePct=((s.rate!=null?s.rate:0.0032)*100).toFixed(2).replace(/\.?0+$/,'');
+    html+='<div class="rate-row"><span class="rate-lbl">COMMISSION</span><input class="rate-input" type="number" step="0.01" min="0" value="'+ratePct+'" id="rate-'+a.id+'"><span class="rate-pct">%</span><button class="rate-save" onclick="saveRate(\''+a.id+'\')">SAVE</button></div>';
     html+='<div class="lnk-row"><code>'+agentURL+'</code><button class="cpbtn" data-url="'+agentURL+'" onclick="copyLink(this)">COPY</button></div>';
     html+='<div class="aquick">';
     html+='<button class="aqbtn" onclick="quickTx(\''+a.id+'\',\''+esc(a.name).replace(/'/g,"")+'\')">⛽ Add Fill</button>';
@@ -438,6 +451,18 @@ function renderAgents(){
     html+='</div>';
   });
   el.innerHTML=html;
+}
+
+
+function saveRate(id){
+  var inp=document.getElementById('rate-'+id);
+  var pct=parseFloat(inp.value);
+  if(isNaN(pct)||pct<0){showToast('Enter a valid rate',true);return;}
+  var dec=pct/100;
+  sbFetch('vip_agents?id=eq.'+id,'PATCH',{commission_rate:dec}).then(function(){
+    showToast('✅ Rate updated to '+pct+'%');
+    loadAgentsData();
+  }).catch(function(){showToast('Error saving rate',true);});
 }
 
 function genCode(){
@@ -450,9 +475,12 @@ function createAgent(){
   var ref=document.getElementById('nr').value.trim();
   if(!name){showToast('Agent name required',true);return;}
   if(!ref){ref='RC'+Date.now().toString().slice(-9)+Math.floor(Math.random()*900+100);}
+  var crPct=parseFloat(document.getElementById('ncr').value);
+  if(isNaN(crPct)||crPct<0)crPct=0.32;
+  var crDec=crPct/100;
   var btn=document.getElementById('createBtn');btn.disabled=true;btn.textContent='CREATING...';
-  sbFetch('vip_agents','POST',{name:name,phone:phone||null,referral_code:ref}).then(function(){
-    document.getElementById('nn').value='';document.getElementById('np').value='';document.getElementById('nr').value='';
+  sbFetch('vip_agents','POST',{name:name,phone:phone||null,referral_code:ref,commission_rate:crDec}).then(function(){
+    document.getElementById('nn').value='';document.getElementById('np').value='';document.getElementById('nr').value='';document.getElementById('ncr').value='0.32';
     showToast('✅ Agent "'+name+'" created');
     btn.disabled=false;btn.textContent='+ CREATE AGENT';
     loadAgentsData();
@@ -505,7 +533,7 @@ function calcPrev(){
   var am=parseFloat(document.getElementById('tx-am').value)||0;
   var u=document.getElementById('tx-u').value.trim();
   var el=document.getElementById('calc');
-  if(am>0){el.style.display='block';el.innerHTML='→ '+(u?esc(u)+' ':'')+'spends <b>'+fmt(am)+' IQD</b> → agent earns <b style="color:var(--green)">'+fmtE(am*RATE)+' IQD</b> (0.32%)';}
+  if(am>0){el.style.display='block';var selA=document.getElementById('tx-ag').value;var pr=(selA&&agentStats[selA]&&agentStats[selA].rate!=null)?agentStats[selA].rate:RATE;el.innerHTML='→ '+(u?esc(u)+' ':'')+'spends <b>'+fmt(am)+' IQD</b> → agent earns <b style="color:var(--green)">'+fmtE(am*pr)+' IQD</b> ('+(pr*100).toFixed(2).replace(/\.?0+$/,'')+'%)';}
   else el.style.display='none';
 }
 
@@ -530,7 +558,7 @@ function loadTxs(){
   var el=document.getElementById('txlist');
   var filter=document.getElementById('tx-filt').value;
   var search=(document.getElementById('tx-search').value||'').toLowerCase();
-  var q='agent_transactions?order=created_at.desc&select=*,vip_agents(name)&limit=300';
+  var q='agent_transactions?order=created_at.desc&select=*,vip_agents(name,commission_rate)&limit=300';
   if(filter)q+='&agent_id=eq.'+filter;
   sbFetch(q).then(function(data){
     if(search)data=data.filter(function(t){return (t.race_username||'').toLowerCase().indexOf(search)>-1;});
@@ -542,7 +570,7 @@ function loadTxs(){
       h+='<td class="tu">'+esc(t.race_username)+'</td>';
       h+='<td class="td">'+esc(t.transaction_date)+'</td>';
       h+='<td>'+fmt(t.amount_spent)+'</td>';
-      h+='<td class="tg">+'+fmtE(t.amount_spent*RATE)+'</td>';
+      var trate=(t.vip_agents&&t.vip_agents.commission_rate!=null)?parseFloat(t.vip_agents.commission_rate):RATE;h+='<td class="tg">+'+fmtE(t.amount_spent*trate)+'</td>';
       h+='<td><button class="btn-del" data-id="'+t.id+'" onclick="delTx(this)">×</button></td></tr>';
     });
     h+='</tbody></table>';
@@ -597,22 +625,23 @@ function delInvite(btn){
 // OVERVIEW
 function loadOverview(){
   Promise.all([
-    sbFetch('vip_agents?select=id,name,referral_code'),
+    sbFetch('vip_agents?select=id,name,referral_code,commission_rate'),
     sbFetch('agent_transactions?select=agent_id,amount_spent'),
     sbFetch('agent_invites?select=agent_id')
   ]).then(function(r){
     var ags=r[0],txs=r[1],invs=r[2];
-    var totalSpend=0,txMap={},invMap={};
-    txs.forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);totalSpend+=parseFloat(t.amount_spent);});
+    var rateMap={};ags.forEach(function(a){rateMap[a.id]=(a.commission_rate!=null)?parseFloat(a.commission_rate):RATE;});
+    var totalSpend=0,totalEarned=0,txMap={},invMap={};
+    txs.forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);totalSpend+=parseFloat(t.amount_spent);totalEarned+=parseFloat(t.amount_spent)*(rateMap[t.agent_id]||RATE);});
     invs.forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
     document.getElementById('ov-a').textContent=ags.length;
     document.getElementById('ov-i').textContent=invs.length;
     document.getElementById('ov-t').textContent=txs.length;
-    document.getElementById('ov-e').textContent=fmtE(totalSpend*RATE);
+    document.getElementById('ov-e').textContent=fmtE(totalEarned);
     document.getElementById('ov-spend').textContent=fmt(totalSpend);
     document.getElementById('ov-avg').textContent=ags.length?(txs.length/ags.length).toFixed(1):'0';
     // top performers
-    var arr=ags.map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*RATE};});
+    var arr=ags.map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*(rateMap[a.id]||RATE)};});
     arr.sort(function(a,b){return b.earned-a.earned;});
     var top=arr.slice(0,5);
     var h='';
@@ -704,14 +733,15 @@ function delWd(btn){
 function loadLeaderboard(){
   var el=document.getElementById('lblist');
   Promise.all([
-    sbFetch('vip_agents?select=id,name'),
+    sbFetch('vip_agents?select=id,name,commission_rate'),
     sbFetch('agent_transactions?select=agent_id,amount_spent'),
     sbFetch('agent_invites?select=agent_id')
   ]).then(function(r){
-    var txMap={},invMap={};
+    var txMap={},invMap={},rateMap={};
+    r[0].forEach(function(a){rateMap[a.id]=(a.commission_rate!=null)?parseFloat(a.commission_rate):RATE;});
     r[1].forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);});
     r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
-    var arr=r[0].map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*RATE};});
+    var arr=r[0].map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*(rateMap[a.id]||RATE)};});
     arr.sort(function(a,b){return b.inv-a.inv||b.earned-a.earned;});
     if(!arr.length){el.innerHTML='<div class="empty">No agents yet.</div>';return;}
     var h='';

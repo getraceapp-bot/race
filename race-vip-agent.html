@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RACE VIP Agent</title>
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#E66A2A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -378,7 +377,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
     <div class="mission">
       <div class="mission-tag">// YOUR ONE JOB</div>
       <div class="mission-title">Invite drivers. <em>Earn forever.</em></div>
-      <div class="mission-sub">Every driver you bring earns you 0.32% of every fill they ever make — for life. Share your link. That's the whole job.</div>
+      <div class="mission-sub">Every driver you bring earns you <span id="rate-display">0.32%</span> of every fill they ever make — for life. Share your link. That's the whole job.</div>
       <div class="ref-box">
         <div class="ref-link" id="ref-link-txt">—</div>
         <button class="copy-btn" id="copy-ref-btn" onclick="copyRef()">COPY</button>
@@ -491,7 +490,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
 <script>
 const SB='https://zluhwkdrijrklviijuvl.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w';
-const RATE=0.0032;
+let RATE=0.0032; // overwritten per-agent from DB
 let refLink='',agentId='',qrDone=false,invitesData=[],lastEarned=0,prevTxCount=0;
 
 // RANK SYSTEM
@@ -589,16 +588,64 @@ function renderMiles(invCount){
   document.getElementById('milesPct').textContent=Math.round(doneCount/MILES.length*100)+'%';
 }
 
-async function boot(){
+function getCookie(name){
+  const m=document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)');
+  return m?m.pop():'';
+}
+function setCookie(name,val){
+  try{document.cookie=name+'='+val+';path=/;max-age=31536000;SameSite=Lax';}catch(e){}
+}
+function resolveAgentId(){
+  // 1. URL query ?id= or ?agent=
   const params=new URLSearchParams(window.location.search);
-  agentId=params.get('id');
-  // PWA fix: remember the agent ID so the home-screen app works without ?id= in the URL
-  if(agentId){
-    try{localStorage.setItem('race_agent_id',agentId);}catch(e){}
-  }else{
-    try{agentId=localStorage.getItem('race_agent_id');}catch(e){}
+  let id=params.get('id')||params.get('agent');
+  // 2. URL hash #id=xxx (survives some PWA launches)
+  if(!id&&window.location.hash){
+    const h=new URLSearchParams(window.location.hash.replace('#',''));
+    id=h.get('id')||window.location.hash.replace('#','');
   }
-  if(!agentId){showErr('No agent ID found. Please open the link your RACE admin sent you first.');return;}
+  // 3. localStorage
+  if(!id){try{id=localStorage.getItem('race_agent_id')||'';}catch(e){}}
+  // 4. cookie fallback (most reliable for iOS standalone)
+  if(!id){id=getCookie('race_agent_id');}
+  // persist everywhere we found a fresh one
+  if(id){
+    try{localStorage.setItem('race_agent_id',id);}catch(e){}
+    setCookie('race_agent_id',id);
+  }
+  return id;
+}
+
+function injectDynamicManifest(id){
+  // Build a per-agent manifest so the installed home-screen app
+  // always relaunches with this agent's id baked into start_url.
+  const manifest={
+    name:"RACE VIP",short_name:"RACE VIP",
+    description:"RACE VIP Agent — Invite drivers, earn forever.",
+    start_url:"./race-vip-agent.html?id="+id,
+    scope:"./",display:"standalone",orientation:"portrait",
+    background_color:"#070708",theme_color:"#E66A2A",
+    icons:[
+      {src:"icon-192.png",sizes:"192x192",type:"image/png",purpose:"any"},
+      {src:"icon-512.png",sizes:"512x512",type:"image/png",purpose:"any"},
+      {src:"icon-maskable-512.png",sizes:"512x512",type:"image/png",purpose:"maskable"}
+    ]
+  };
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  let link=document.querySelector('link[rel="manifest"]');
+  if(!link){link=document.createElement('link');link.rel='manifest';document.head.appendChild(link);}
+  link.href=url;
+  // also update apple-touch start url hint
+  const aTitle=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if(aTitle)aTitle.content='RACE VIP';
+}
+
+async function boot(){
+  agentId=resolveAgentId();
+  if(!agentId){showErr('No agent ID found. Please open the original link your RACE admin sent you (in your browser), then add to home screen.');return;}
+  // Bake this agent's id into a dynamic manifest for correct PWA relaunch
+  injectDynamicManifest(agentId);
   try{
     const [agents,txs,invites]=await Promise.all([
       sb('vip_agents?id=eq.'+agentId+'&select=*'),
@@ -607,6 +654,8 @@ async function boot(){
     ]);
     if(!agents.length){showErr('Agent not found. Contact RACE admin.');return;}
     const agent=agents[0];
+    if(agent.commission_rate!=null&&!isNaN(parseFloat(agent.commission_rate))){RATE=parseFloat(agent.commission_rate);}
+    var rd=document.getElementById('rate-display');if(rd)rd.textContent=(RATE*100).toFixed(2).replace(/\.?0+$/,'')+'%';
     invitesData=invites;
     prevTxCount=txs.length;
     await loadWithdrawals();
