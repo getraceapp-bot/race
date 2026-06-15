@@ -6,7 +6,7 @@
 <title>RACE — Applicants Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;700;800;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#07080a;--card:#11141a;--card2:#181c24;--gold:#f0c842;--gold-d:#c8972a;--green:#00e5a0;--red:#ff5e5e;--blue:#6ba3ff;--txt:#e8e6e1;--muted:#7a7f8a;--border:rgba(255,255,255,0.08)}
+:root{--bg:#07080a;--card:#11141a;--card2:#181c24;--gold:#f0c842;--gold-d:#c8972a;--green:#00e5a0;--red:#ff5e5e;--blue:#6ba3ff;--purple:#a78bfa;--txt:#e8e6e1;--muted:#7a7f8a;--border:rgba(255,255,255,0.08)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:'Instrument Sans',sans-serif;min-height:100vh}
 /* LOGIN */
@@ -34,6 +34,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);padding:18px
 .stat.green .n{color:var(--green)}
 .stat.blue .n{color:var(--blue)}
 .stat.red .n{color:var(--red)}
+.stat.purple .n{color:var(--purple)}
 .filters{display:flex;gap:8px;padding:0 32px 18px;flex-wrap:wrap}
 .fbtn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;cursor:pointer;transition:all 0.15s}
 .fbtn.on{background:var(--gold);color:#000;border-color:var(--gold)}
@@ -42,13 +43,16 @@ header{background:var(--card);border-bottom:1px solid var(--border);padding:18px
 .list{padding:0 32px;display:flex;flex-direction:column;gap:10px}
 .app-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;transition:border-color 0.15s}
 .app-card:hover{border-color:rgba(240,200,66,0.3)}
+.app-card.referred{border-left:3px solid var(--purple)}
 .ac-main{display:flex;flex-direction:column;gap:6px}
 .ac-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:18px}
 .ac-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .ac-meta .wa{color:var(--gold);font-weight:600}
 .ac-meta a{color:var(--gold);text-decoration:none}
+.ac-ref{font-size:12px;color:var(--purple);font-weight:600;display:flex;align-items:center;gap:6px}
 .ac-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .tag{font-size:11px;background:var(--card2);border:1px solid var(--border);border-radius:100px;padding:3px 10px;color:var(--muted)}
+.tag.ref{background:rgba(167,139,250,0.12);border-color:rgba(167,139,250,0.3);color:var(--purple)}
 .ac-side{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
 .status-pill{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:100px}
 .st-new{background:rgba(240,200,66,0.15);color:var(--gold);border:1px solid rgba(240,200,66,0.3)}
@@ -95,6 +99,7 @@ header{background:var(--card);border-bottom:1px solid var(--border);padding:18px
     <div class="stat blue"><div class="n" id="stContacted">0</div><div class="l">Contacted</div></div>
     <div class="stat green"><div class="n" id="stApproved">0</div><div class="l">Approved</div></div>
     <div class="stat red"><div class="n" id="stRejected">0</div><div class="l">Rejected</div></div>
+    <div class="stat purple"><div class="n" id="stReferred">0</div><div class="l">Referred by Agent</div></div>
   </div>
 
   <div class="filters">
@@ -103,10 +108,11 @@ header{background:var(--card);border-bottom:1px solid var(--border);padding:18px
     <button class="fbtn" data-f="contacted" onclick="setFilter('contacted',this)">Contacted</button>
     <button class="fbtn" data-f="approved" onclick="setFilter('approved',this)">Approved</button>
     <button class="fbtn" data-f="rejected" onclick="setFilter('rejected',this)">Rejected</button>
+    <button class="fbtn" data-f="referred" onclick="setFilter('referred',this)">🤝 Referred only</button>
   </div>
 
   <div class="search-row">
-    <input type="text" id="search" placeholder="🔍 Search name, WhatsApp, city..." oninput="render()"/>
+    <input type="text" id="search" placeholder="🔍 Search name, WhatsApp, city, referrer..." oninput="render()"/>
   </div>
 
   <div class="list" id="list"><div class="loading">Loading applications...</div></div>
@@ -137,7 +143,8 @@ if(sessionStorage.getItem('race_admin')==='1'){
 
 async function loadApps(){
   try{
-    const res=await fetch(`${SB_URL}/rest/v1/agent_applications?select=*&order=created_at.desc`,{
+    // applications_tracked resolves the recruiter's name from invited_by_code
+    const res=await fetch(`${SB_URL}/rest/v1/applications_tracked?select=*&order=created_at.desc`,{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
     });
     apps=await res.json();
@@ -154,6 +161,7 @@ function updateStats(){
   document.getElementById('stContacted').textContent=apps.filter(a=>a.status==='contacted').length;
   document.getElementById('stApproved').textContent=apps.filter(a=>a.status==='approved').length;
   document.getElementById('stRejected').textContent=apps.filter(a=>a.status==='rejected').length;
+  document.getElementById('stReferred').textContent=apps.filter(a=>a.invited_by_code).length;
 }
 
 function setFilter(f,btn){
@@ -166,14 +174,17 @@ function setFilter(f,btn){
 function render(){
   const q=(document.getElementById('search').value||'').toLowerCase();
   let rows=apps;
-  if(filter!=='all')rows=rows.filter(a=>a.status===filter);
-  if(q)rows=rows.filter(a=>((a.first_name||'')+' '+(a.last_name||'')+' '+(a.whatsapp||'')+' '+(a.city||'')).toLowerCase().includes(q));
+  if(filter==='referred')rows=rows.filter(a=>a.invited_by_code);
+  else if(filter!=='all')rows=rows.filter(a=>a.status===filter);
+  if(q)rows=rows.filter(a=>((a.first_name||'')+' '+(a.last_name||'')+' '+(a.whatsapp||'')+' '+(a.city||'')+' '+(a.invited_by_name||'')+' '+(a.invited_by_code||'')).toLowerCase().includes(q));
   const list=document.getElementById('list');
   if(!rows.length){list.innerHTML='<div class="empty"><div class="big">📭</div>No applications here yet.</div>';return}
   list.innerHTML=rows.map(a=>{
     const d=new Date(a.created_at).toLocaleString('en-GB',{timeZone:'Asia/Baghdad',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
     const waClean=(a.whatsapp||'').replace(/[^0-9+]/g,'');
-    return `<div class="app-card">
+    const referred=!!a.invited_by_code;
+    const refName=a.invited_by_name||a.invited_by_code;
+    return `<div class="app-card${referred?' referred':''}">
       <div class="ac-main">
         <div class="ac-name">${esc(a.first_name)} ${esc(a.last_name||'')}</div>
         <div class="ac-meta">
@@ -181,9 +192,11 @@ function render(){
           <span>📍 ${esc(a.city||'—')}</span>
           <span>🌐 ${(a.language||'en').toUpperCase()}</span>
         </div>
+        ${referred?`<div class="ac-ref">🤝 Referred by <b>${esc(refName)}</b>${a.invited_by_name?` <span style="color:var(--muted);font-weight:400">(${esc(a.invited_by_code)})</span>`:''}</div>`:''}
         <div class="ac-tags">
           ${a.invite_strategy?`<span class="tag">${esc(a.invite_strategy)}</span>`:''}
           ${a.expected_volume?`<span class="tag">${esc(a.expected_volume)}</span>`:''}
+          ${referred?`<span class="tag ref">recruited agent</span>`:''}
         </div>
       </div>
       <div class="ac-side">
@@ -214,9 +227,9 @@ async function setStatus(id,status){
 }
 
 function exportCSV(){
-  const head=['Date','First Name','Last Name','WhatsApp','City','Strategy','Volume','Language','Status'];
+  const head=['Date','First Name','Last Name','WhatsApp','City','Strategy','Volume','Language','Status','Referred By (name)','Referred By (code)'];
   const rows=apps.map(a=>[
-    new Date(a.created_at).toISOString(),a.first_name,a.last_name,a.whatsapp,a.city,a.invite_strategy,a.expected_volume,a.language,a.status
+    new Date(a.created_at).toISOString(),a.first_name,a.last_name,a.whatsapp,a.city,a.invite_strategy,a.expected_volume,a.language,a.status,a.invited_by_name,a.invited_by_code
   ].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(','));
   const csv=[head.join(','),...rows].join('\n');
   const blob=new Blob([csv],{type:'text/csv'});
