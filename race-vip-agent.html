@@ -2,760 +2,925 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>RACE VIP — Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RACE VIP Agent</title>
+<meta name="theme-color" content="#E66A2A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RACE VIP">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
-<meta name="theme-color" content="#E66A2A">
-<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
-  --o:#E66A2A;--o2:#ff8444;--od:rgba(230,106,42,0.13);--og:rgba(230,106,42,0.3);
-  --gold:#f0c842;
-  --bg:#070708;--s1:#0e0e10;--s2:#151518;--s3:#1d1d20;
+  --o:#E66A2A;--o2:#ff8444;--ol:#ffa05e;--od:rgba(230,106,42,0.13);--og:rgba(230,106,42,0.3);
+  --gold:#f0c842;--gold-d:#c8972a;
+  --bg:#070708;--s1:#0e0e10;--s2:#15151820;--s2s:#151518;--s3:#1d1d20;
   --b1:#222226;--b2:#2e2e33;
-  --txt:#f5f5f5;--dim:#888;--dim2:#9a9a9a;
-  --green:#2ecc71;--gd:rgba(46,204,113,0.12);--gg:rgba(46,204,113,0.3);
-  --red:#e74c3c;--rd:rgba(231,76,60,0.1);
-  --blue:#5b9bff;
+  --txt:#f5f5f5;--dim:#777;--dim2:#9a9a9a;
+  --green:#2ecc71;--gd:rgba(46,204,113,0.13);--gg:rgba(46,204,113,0.3);
+  --red:#e74c3c;--blue:#5b9bff;--purple:#a78bfa;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
-.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.bg::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(230,106,42,0.07) 0%,transparent 65%);top:-150px;right:-150px;animation:orb 10s ease-in-out infinite}
-.bg::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(240,200,66,0.04) 0%,transparent 65%);bottom:-80px;left:-80px;animation:orb 13s ease-in-out infinite reverse}
-.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(230,106,42,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(230,106,42,0.025) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse at 50% 0%,#000,transparent 78%)}
-@keyframes orb{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
 
-/* LOGIN */
-#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
-.lbox{width:100%;max-width:400px;background:var(--s1);border:1px solid var(--b1);padding:38px 30px;border-radius:16px;position:relative;overflow:hidden}
-.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--o),var(--gold),var(--o));background-size:200%;animation:sh 3s linear infinite}
-@keyframes sh{0%{background-position:0%}100%{background-position:200%}}
-.lbox-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.lbox-logo{width:50px;height:50px;border-radius:12px;background:#fff;padding:7px;flex-shrink:0}
-.lbox-logo img{width:100%;height:100%;object-fit:contain}
-.lbox-title{font-family:'Cabinet Grotesk';font-size:24px;font-weight:900;letter-spacing:-0.5px}
-.lbox-title span{color:var(--o)}
-.lbox-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:26px;letter-spacing:1px}
-.pw-wrap{position:relative;margin-bottom:14px}
-.pw-wrap input{width:100%;padding:14px 56px 14px 16px;background:var(--bg);border:1px solid var(--b2);color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:15px;outline:none;border-radius:10px;letter-spacing:2px;transition:border-color .2s}
-.pw-wrap input::placeholder{letter-spacing:0;font-size:13px;color:var(--dim);font-family:'Outfit',sans-serif}
-.pw-wrap input:focus{border-color:var(--o)}
-.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px;letter-spacing:.5px}
-.btn-login{width:100%;padding:15px;background:var(--o);border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:14px;font-weight:800;cursor:pointer;border-radius:10px;letter-spacing:1px;transition:all .2s}
-.btn-login:hover{background:var(--o2)}
-.btn-login:active{transform:scale(.98)}
-.lerr{margin-top:12px;padding:10px 14px;background:var(--rd);border:1px solid rgba(231,76,60,.3);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:8px;display:none}
+/* ANIMATED BG */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-orb1{position:absolute;width:520px;height:520px;background:radial-gradient(circle,rgba(230,106,42,0.1) 0%,transparent 64%);top:-160px;right:-160px;animation:orb1 11s ease-in-out infinite}
+.bg-orb2{position:absolute;width:380px;height:380px;background:radial-gradient(circle,rgba(240,200,66,0.05) 0%,transparent 64%);bottom:-100px;left:-100px;animation:orb2 14s ease-in-out infinite}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(230,106,42,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(230,106,42,0.022) 1px,transparent 1px);background-size:38px 38px;mask-image:radial-gradient(ellipse at 50% 0%,#000,transparent 75%)}
+@keyframes orb1{0%,100%{transform:scale(1) translate(0,0);opacity:.65}50%{transform:scale(1.18) translate(-24px,22px);opacity:1}}
+@keyframes orb2{0%,100%{transform:scale(1) translate(0,0);opacity:.45}50%{transform:scale(1.22) translate(18px,-18px);opacity:.85}}
+#fxCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.6}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;gap:22px}
+.ld-logo-txt{width:74px;height:74px;border-radius:18px;background:linear-gradient(135deg,var(--o),var(--o2));color:#fff;font-family:'Cabinet Grotesk';font-size:38px;font-weight:900;display:flex;align-items:center;justify-content:center;animation:lp 1.5s ease-in-out infinite;box-shadow:0 0 50px rgba(230,106,42,0.4)}
+@keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.8;transform:scale(0.94)}}
+.load-bar{width:170px;height:2px;background:var(--b2);border-radius:2px;overflow:hidden}
+.load-bar-inner{width:40%;height:100%;background:linear-gradient(90deg,var(--o),var(--gold));animation:loadslide 1.2s ease-in-out infinite;border-radius:2px}
+@keyframes loadslide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.load-text{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px}
+
+/* ERROR */
+#error{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;z-index:300;gap:14px;padding:24px;text-align:center}
+.err-icon{font-size:44px}
+.err-txt{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);max-width:300px;line-height:1.7}
 
 /* APP */
 #app{display:none;position:relative;z-index:1}
-.topbar{padding:14px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(7,7,8,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:100}
-.topbar-l{display:flex;align-items:center;gap:11px}
-.topbar-logo{width:34px;height:34px;border-radius:8px;background:#fff;padding:5px;flex-shrink:0}
-.topbar-logo img{width:100%;height:100%;object-fit:contain}
-.topbar-title{font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;letter-spacing:-.3px}
-.topbar-title span{color:var(--o)}
-.topbar-title .adm{color:var(--dim);font-weight:400;font-size:12px}
-.topbar-r{display:flex;align-items:center;gap:8px}
-.pill{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--o);background:var(--od);border:1px solid var(--og);padding:5px 11px;border-radius:20px}
-.btn-logout{background:none;border:1px solid var(--b2);color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:10px;padding:5px 11px;cursor:pointer;border-radius:20px;transition:all .2s}
-.btn-logout:hover{border-color:var(--red);color:var(--red)}
 
-/* TABS */
-.tabs{display:flex;border-bottom:1px solid var(--b1);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:63px;background:rgba(7,7,8,.95);backdrop-filter:blur(14px);z-index:99}
-.tabs::-webkit-scrollbar{display:none}
-.tb{flex-shrink:0;padding:14px 18px;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--dim);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;font-family:'Outfit';transition:all .2s;white-space:nowrap}
-.tb.on{color:var(--o);border-bottom-color:var(--o)}
-.tb .badge{display:inline-block;margin-left:5px;font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--s3);color:var(--dim2);padding:1px 6px;border-radius:10px}
-.tb.on .badge{background:var(--od);color:var(--o)}
+/* HEADER */
+.hdr{padding:16px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(7,7,8,0.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:100}
+.hdr-left{display:flex;align-items:center;gap:11px}
+.hdr-logo-txt{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--o),var(--o2));color:#fff;font-family:'Cabinet Grotesk';font-size:19px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(230,106,42,0.3)}
+.hdr-title{font-family:'Cabinet Grotesk';font-size:17px;font-weight:800;letter-spacing:-0.3px}
+.hdr-title span{color:var(--o)}
+.hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);background:rgba(240,200,66,0.1);border:1px solid rgba(240,200,66,0.3);padding:5px 12px;border-radius:20px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.hdr-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
-.pg{display:none;padding:20px;max-width:820px;margin:0 auto;padding-bottom:50px}
-.pg.on{display:block;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.slbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
-.card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:20px;margin-bottom:16px}
-.frow{display:grid;gap:10px;margin-bottom:12px}
-.f2{grid-template-columns:1fr 1fr}
-.f3{grid-template-columns:1fr 1fr 1fr}
-.fg{display:flex;flex-direction:column;gap:5px}
-.fg label{font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
-.fg input,.fg select{padding:12px;background:var(--bg);border:1px solid var(--b2);color:var(--txt);font-family:'Outfit';font-size:14px;outline:none;border-radius:9px;transition:border-color .2s;width:100%}
-.fg input:focus,.fg select:focus{border-color:var(--o)}
-.fg select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23888' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
-.fg select option{background:var(--s1)}
-.btn-add{padding:13px 22px;background:var(--o);border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:13px;font-weight:800;cursor:pointer;border-radius:9px;transition:all .2s;letter-spacing:.5px}
-.btn-add:hover{background:var(--o2)}
-.btn-add:active{transform:scale(.98)}
-.btn-add:disabled{opacity:.5;cursor:not-allowed}
-.btn-del{padding:7px 12px;background:none;border:1px solid rgba(231,76,60,.4);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;border-radius:7px;transition:all .2s}
-.btn-del:hover{background:var(--red);color:#fff;border-color:var(--red)}
+/* MAIN */
+main{padding:20px;max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-bottom:90px}
 
-/* AGENT CARD */
-.acard{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px;margin-bottom:12px;transition:border-color .2s}
-.acard:hover{border-color:var(--og)}
-.acard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-.aname{font-family:'Cabinet Grotesk';font-size:18px;font-weight:800;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.arank{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600}
-.aref{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--o);background:var(--od);padding:3px 9px;border-radius:20px}
-.aphone{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-top:5px}
-.acard-actions{display:flex;gap:6px;flex-shrink:0}
-.astats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.astat{background:var(--s2);border-radius:9px;padding:11px;text-align:center}
-.astat-v{font-family:'Cabinet Grotesk';font-size:17px;font-weight:800;margin-bottom:2px}
-.astat-v.o{color:var(--o)}
-.astat-v.g{color:var(--green)}
-.astat-v.gold{color:var(--gold)}
-.astat-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
-.lnk-row{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--og);border-radius:9px;padding:10px 12px;margin-bottom:8px}
-.lnk-row code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--o);flex:1;word-break:break-all;line-height:1.4}
-.cpbtn{flex-shrink:0;padding:7px 12px;background:none;border:1px solid var(--og);color:var(--o);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;border-radius:7px;transition:all .2s}
-.cpbtn:hover{background:var(--od)}
-.cpbtn.ok{border-color:var(--green);color:var(--green)}
-.aquick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.aqbtn{padding:10px;background:var(--s2);border:1px solid var(--b2);color:var(--txt);font-family:'Outfit';font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
-.aqbtn:hover{border-color:var(--og);background:var(--od)}
-.aqbtn.wa:hover{border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.1)}
+/* RANK BANNER */
+.rank-banner{background:linear-gradient(135deg,var(--s1),rgba(230,106,42,0.04));border:1px solid var(--b1);border-radius:14px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden}
+.rank-banner::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--rankc,var(--o)),transparent);animation:scan 3s linear infinite}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.rank-left{display:flex;align-items:center;gap:14px}
+.rank-medal{font-size:34px;filter:drop-shadow(0 0 12px var(--rankc,rgba(230,106,42,0.5)));animation:medalFloat 3s ease-in-out infinite}
+@keyframes medalFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
+.rank-info .rank-name{font-family:'Cabinet Grotesk';font-size:18px;font-weight:900;color:var(--rankc,var(--o));line-height:1}
+.rank-info .rank-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:4px;letter-spacing:0.5px}
+.rank-next{text-align:right;flex-shrink:0}
+.rank-next-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:4px}
+.rank-prog{width:90px;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;margin-left:auto}
+.rank-prog-bar{height:100%;background:linear-gradient(90deg,var(--rankc,var(--o)),var(--gold));border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.rank-next-txt{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim2);margin-top:5px}
 
-/* TABLE */
-.ttbl{width:100%;border-collapse:collapse;min-width:480px}
-.ttbl th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);text-align:left;padding:11px 12px;border-bottom:1px solid var(--b1)}
-.ttbl td{padding:12px;border-bottom:1px solid var(--s3);font-size:13px;vertical-align:middle}
-.ttbl tr:last-child td{border-bottom:none}
-.ttbl tr:hover td{background:var(--s2)}
-.tu{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--o)}
-.tg{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);font-weight:600}
-.td{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim)}
-.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.calc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);padding:10px 14px;background:var(--gd);border:1px solid var(--gg);border-radius:8px;margin-top:10px;display:none;line-height:1.5}
+/* EARNINGS HERO */
+.earn-hero{background:linear-gradient(160deg,var(--s1),rgba(230,106,42,0.05));border:1px solid var(--b1);border-radius:16px;padding:26px 24px;position:relative;overflow:hidden}
+.earn-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--o),var(--gold),var(--o));background-size:200%;animation:shimmer 3s linear infinite}
+.earn-hero::after{content:'';position:absolute;top:-90px;right:-90px;width:270px;height:270px;background:radial-gradient(circle,rgba(230,106,42,0.1) 0%,transparent 64%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+@keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+.earn-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.earn-lbl .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.5s infinite}
+.earn-num{font-family:'Cabinet Grotesk';font-size:54px;font-weight:900;letter-spacing:-2.5px;line-height:1;background:linear-gradient(135deg,var(--o),var(--ol),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:1}
+.earn-num sup{font-family:'Outfit';font-size:18px;font-weight:600;color:var(--dim);letter-spacing:0;vertical-align:super;margin-left:5px;-webkit-text-fill-color:var(--dim)}
+.earn-desc{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-top:16px;line-height:1.6}
+.earn-desc strong{color:var(--txt)}
+.earn-pulse{position:absolute;bottom:18px;right:20px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);display:flex;align-items:center;gap:5px;opacity:0;transition:opacity 0.4s}
+.earn-pulse.show{opacity:1}
 
-/* OVERVIEW */
-.ovgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.ovc{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px;position:relative;overflow:hidden}
-.ovc .ovic{position:absolute;top:14px;right:14px;font-size:18px;opacity:.4}
-.ovv{font-family:'Cabinet Grotesk';font-size:28px;font-weight:900;margin-bottom:4px}
-.ovv.o{color:var(--o)}
-.ovv.g{color:var(--green)}
-.ovv.gold{color:var(--gold)}
-.ovv.blue{color:var(--blue)}
-.ovl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat-card{background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:16px 12px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s}
+.stat-card:active{transform:scale(0.97)}
+.stat-card .stat-ic{font-size:16px;margin-bottom:6px;opacity:0.9}
+.stat-v{font-family:'Cabinet Grotesk';font-size:24px;font-weight:800;margin-bottom:3px;line-height:1}
+.stat-v.o{color:var(--o)}
+.stat-v.g{color:var(--green)}
+.stat-v.gold{color:var(--gold)}
+.stat-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.5px}
 
-/* LEADERBOARD */
-.lb-row{display:flex;align-items:center;gap:14px;padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;margin-bottom:8px;transition:border-color .2s}
-.lb-row:hover{border-color:var(--og)}
-.lb-rank{font-family:'Cabinet Grotesk';font-size:22px;font-weight:900;width:36px;text-align:center;flex-shrink:0}
-.lb-rank.gold{color:var(--gold)}.lb-rank.silver{color:#c0c0c0}.lb-rank.bronze{color:#cd7f32}
-.lb-body{flex:1;min-width:0}
-.lb-name{font-family:'Cabinet Grotesk';font-size:15px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lb-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
-.lb-earn{text-align:right;flex-shrink:0}
-.lb-earn-v{font-family:'Cabinet Grotesk';font-size:17px;font-weight:800;color:var(--green)}
-.lb-earn-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
+/* PRIMARY MISSION CTA */
+.mission{background:linear-gradient(135deg,rgba(230,106,42,0.14),rgba(240,200,66,0.06));border:1px solid var(--og);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.mission::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(230,106,42,0.12),transparent 60%);pointer-events:none}
+.mission-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--o);margin-bottom:10px;font-weight:600}
+.mission-title{font-family:'Cabinet Grotesk';font-size:22px;font-weight:900;letter-spacing:-0.8px;line-height:1.1;margin-bottom:8px}
+.mission-title em{font-style:normal;color:var(--o)}
+.mission-sub{font-size:13px;color:var(--dim2);line-height:1.55;margin-bottom:18px}
 
-.empty{padding:44px 20px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);line-height:1.8}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--s1);border:1px solid var(--green);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:12px;padding:12px 22px;z-index:999;border-radius:30px;transition:transform .35s cubic-bezier(.34,1.4,.64,1);box-shadow:0 8px 30px rgba(0,0,0,.5);max-width:90%;text-align:center}
-.toast.err{border-color:var(--red);color:var(--red)}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.filt{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.filt select,.filt input{padding:8px 12px;background:var(--s2);border:1px solid var(--b1);color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:8px;outline:none}
-.filt select{cursor:pointer;appearance:none;-webkit-appearance:none;padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23888' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
-.filt input{flex:1;min-width:140px}
-.search-bar{width:100%;padding:11px 16px;background:var(--s1);border:1px solid var(--b1);color:var(--txt);font-size:14px;border-radius:10px;outline:none;margin-bottom:14px}
-.search-bar:focus{border-color:var(--og)}
+/* REF BOX */
+.ref-box{background:var(--bg);border:1px solid var(--og);border-radius:10px;padding:13px 15px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ref-link{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--o);flex:1;word-break:break-all;line-height:1.5}
+.copy-btn{flex-shrink:0;padding:9px 15px;background:var(--o);border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;border-radius:6px;transition:all 0.2s;letter-spacing:0.5px}
+.copy-btn:active{transform:scale(0.94)}
+.copy-btn.ok{background:var(--green)}
+
+/* SHARE */
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.share-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border:1px solid var(--b2);background:var(--s2s);color:var(--txt);font-family:'Outfit';font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;border-radius:10px;transition:all 0.2s}
+.share-btn:active{transform:scale(0.97)}
+.share-btn.wa{border-color:rgba(37,211,102,0.4);background:rgba(37,211,102,0.08)}
+.share-btn.wa:active{background:rgba(37,211,102,0.16)}
+
+/* QR */
+.qr-toggle-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 0 2px;background:none;border:none;cursor:pointer;color:var(--txt);margin-top:6px}
+.qr-toggle-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1.5px}
+.qr-arrow{color:var(--dim);font-size:13px;transition:transform 0.3s}
+.qr-body{display:none;padding-top:18px;text-align:center}
+.qr-body.open{display:block}
+#qr-code{display:inline-block;padding:14px;background:#fff;border-radius:10px}
+.qr-cap{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:10px;letter-spacing:1px}
+
+/* SECTION TITLE */
+.sec-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin:8px 4px 0;font-weight:600}
+
+/* MY ARMY BUTTON */
+.invites-btn{width:100%;padding:18px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s;color:var(--txt)}
+.invites-btn:active{transform:scale(0.98)}
+.invites-btn-left{display:flex;align-items:center;gap:13px}
+.invites-icon{width:44px;height:44px;background:var(--od);border:1px solid var(--og);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.invites-btn-title{font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;margin-bottom:2px}
+.invites-btn-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+.invites-count-badge{font-family:'Cabinet Grotesk';font-size:26px;font-weight:900;color:var(--o)}
+
+/* MILESTONE TRACK */
+.miles{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:20px}
+.miles-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.miles-title{font-family:'Cabinet Grotesk';font-size:15px;font-weight:800}
+.miles-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--o)}
+.mile-row{display:flex;align-items:center;gap:14px;padding:11px 0;position:relative}
+.mile-dot{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:1px solid var(--b2);background:var(--s2s);transition:all 0.3s}
+.mile-dot.done{background:var(--od);border-color:var(--og);box-shadow:0 0 16px rgba(230,106,42,0.2)}
+.mile-dot.done.gold{background:rgba(240,200,66,0.12);border-color:rgba(240,200,66,0.4);box-shadow:0 0 16px rgba(240,200,66,0.2)}
+.mile-body{flex:1}
+.mile-name{font-family:'Cabinet Grotesk';font-size:14px;font-weight:700;margin-bottom:2px}
+.mile-req{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+.mile-check{font-size:16px;flex-shrink:0}
+.mile-lock{font-size:13px;opacity:0.4;flex-shrink:0}
+
+/* TX SECTION */
+.tx-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden}
+.tx-hdr{padding:18px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.tx-hdr-title{font-family:'Cabinet Grotesk';font-size:15px;font-weight:800}
+.tx-hdr-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);background:var(--s2s);padding:4px 10px;border-radius:20px}
+.tx-list{max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tx-list::-webkit-scrollbar{width:4px}
+.tx-list::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.tx-row{padding:14px 20px;border-bottom:1px solid var(--s3);display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;transition:background 0.15s}
+.tx-row:last-child{border-bottom:none}
+.tx-row:active{background:var(--s2s)}
+.tx-user{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--o);margin-bottom:3px}
+.tx-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+.tx-spent{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-bottom:3px;text-align:right}
+.tx-earn{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--green);font-weight:600;text-align:right}
+.tx-empty{padding:44px 20px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);line-height:1.9}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.86);z-index:200;backdrop-filter:blur(7px);align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--s1);border:1px solid var(--b1);border-radius:18px 18px 0 0;width:100%;max-width:660px;max-height:82vh;display:flex;flex-direction:column;animation:slideup 0.38s cubic-bezier(0.34,1.4,0.64,1)}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:42px;height:4px;background:var(--b2);border-radius:2px;margin:12px auto 0}
+.modal-hdr{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:'Cabinet Grotesk';font-size:17px;font-weight:800}
+.modal-count{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--o);background:var(--od);padding:4px 11px;border-radius:20px}
+.modal-close{background:none;border:none;color:var(--dim);font-size:24px;cursor:pointer;padding:4px;line-height:1}
+.modal-body{flex:1;overflow-y:auto;padding:14px 20px 28px;-webkit-overflow-scrolling:touch}
+.modal-body::-webkit-scrollbar{width:4px}
+.modal-body::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.invite-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--b1)}
+.invite-row:last-child{border-bottom:none}
+.inv-name{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--o)}
+.inv-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:2px}
+.inv-joined{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);background:rgba(240,200,66,0.08);padding:4px 9px;border-radius:10px}
+
+/* FOOTER */
+footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--b2);letter-spacing:1px}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--s3);border:1px solid var(--og);color:var(--txt);padding:13px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:400;transition:transform 0.4s cubic-bezier(.34,1.4,.64,1);box-shadow:0 8px 30px rgba(0,0,0,0.5);display:flex;align-items:center;gap:8px;max-width:90%}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* STICKY BOTTOM CTA */
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;padding:14px 20px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:90;max-width:660px;margin:0 auto}
+.sticky-cta-btn{width:100%;padding:17px;background:linear-gradient(135deg,#25D366,#1da851);border:none;border-radius:14px;color:#fff;font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 30px rgba(37,211,102,0.3);transition:transform 0.2s}
+.sticky-cta-btn:active{transform:scale(0.98)}
 
 
-.wdreq{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--s1);border:1px solid rgba(240,200,66,0.25);border-radius:12px;margin-bottom:10px}
-.wdreq-info{flex:1;min-width:0}
-.wdreq-name{font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;margin-bottom:3px}
-.wdreq-amt{font-family:'Cabinet Grotesk';font-size:20px;font-weight:900;color:var(--gold)}
-.wdreq-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:3px}
-.wdreq-actions{display:flex;gap:8px;flex-shrink:0}
-.btn-approve{padding:10px 16px;background:var(--green);border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:12px;font-weight:800;cursor:pointer;border-radius:8px;transition:all .2s}
-.btn-approve:hover{opacity:.85}
-.btn-reject{padding:10px 14px;background:none;border:1px solid rgba(231,76,60,.4);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;border-radius:8px;transition:all .2s}
-.btn-reject:hover{background:var(--red);color:#fff}
 
+/* WITHDRAWAL */
+.wd-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.wd-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.wd-box{background:var(--s2s);border:1px solid var(--b1);border-radius:12px;padding:16px;text-align:center}
+.wd-box.avail{border-color:var(--og);background:linear-gradient(135deg,rgba(230,106,42,0.08),transparent)}
+.wd-box-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);margin-bottom:7px}
+.wd-box-v{font-family:'Cabinet Grotesk';font-size:24px;font-weight:900;line-height:1}
+.wd-box-v.g{color:var(--green)}
+.wd-box-v.o{color:var(--o)}
+.wd-input-row{display:flex;gap:8px;margin-bottom:12px}
+.wd-input-row input{flex:1;padding:14px 16px;background:var(--bg);border:1px solid var(--b2);color:var(--txt);font-family:'Outfit';font-size:15px;outline:none;border-radius:10px;transition:border-color 0.2s}
+.wd-input-row input:focus{border-color:var(--o)}
+.wd-btn{padding:14px 20px;background:linear-gradient(135deg,var(--o),var(--o2));border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:14px;font-weight:800;cursor:pointer;border-radius:10px;transition:all 0.2s;white-space:nowrap}
+.wd-btn:active{transform:scale(0.97)}
+.wd-btn:disabled{opacity:0.5;cursor:not-allowed}
+.wd-hint{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);line-height:1.5;text-align:center}
+.wd-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.wd-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2s);border:1px solid var(--b1);border-radius:10px}
+.wd-item-amt{font-family:'Cabinet Grotesk';font-size:15px;font-weight:800}
+.wd-item-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-top:2px}
+.wd-status{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:20px}
+.wd-status.pending{background:rgba(240,200,66,0.12);color:var(--gold);border:1px solid rgba(240,200,66,0.3)}
+.wd-status.paid{background:var(--gd);color:var(--green);border:1px solid var(--gg)}
+.wd-status.rejected{background:rgba(231,76,60,0.1);color:var(--red);border:1px solid rgba(231,76,60,0.3)}
 
-.rate-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:9px 12px;margin-bottom:8px}
-.rate-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim)}
-.rate-input{width:72px;padding:7px 10px;background:var(--bg);border:1px solid var(--b2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;outline:none;border-radius:6px;text-align:right}
-.rate-input:focus{border-color:var(--o)}
-.rate-pct{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);font-weight:600;margin-left:-4px}
-.rate-save{margin-left:auto;padding:7px 14px;background:none;border:1px solid var(--og);color:var(--o);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .2s}
-.rate-save:hover{background:var(--od)}
-.rate-save.ok{border-color:var(--green);color:var(--green)}
+/* INSTALL PROMPT */
+.install-banner{background:linear-gradient(135deg,rgba(230,106,42,0.16),rgba(240,200,66,0.06));border:1px solid var(--og);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform 0.2s;position:relative;overflow:hidden}
+.install-banner:active{transform:scale(0.98)}
+.install-banner::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.12),transparent);animation:btnSweep 3.5s ease-in-out infinite}
+@keyframes btnSweep{0%{left:-100%}55%,100%{left:170%}}
+.install-ic{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:7px;box-shadow:0 4px 14px rgba(0,0,0,0.3)}
+.install-ic img{width:100%;height:100%;object-fit:contain}
+.install-body{flex:1}
+.install-title{font-family:'Cabinet Grotesk';font-size:15px;font-weight:800;margin-bottom:2px}
+.install-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);line-height:1.4}
+.install-arrow{font-size:20px;color:var(--o)}
+.install-banner.hidden{display:none}
 
-@media(max-width:600px){.f2,.f3{grid-template-columns:1fr}.ovgrid{grid-template-columns:1fr 1fr}.pg{padding:14px}.card{padding:16px}.aquick{grid-template-columns:1fr}}
+/* INSTALL MODAL */
+.imodal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:250;backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px}
+.imodal.open{display:flex}
+.imodal-card{background:var(--s1);border:1px solid var(--b1);border-radius:20px;max-width:380px;width:100%;padding:28px;text-align:center;animation:popIn 0.35s cubic-bezier(.34,1.4,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.imodal-logo{width:72px;height:72px;border-radius:18px;background:#fff;padding:11px;margin:0 auto 16px;box-shadow:0 8px 26px rgba(230,106,42,0.25)}
+.imodal-logo img{width:100%;height:100%;object-fit:contain}
+.imodal-title{font-family:'Cabinet Grotesk';font-size:22px;font-weight:900;margin-bottom:6px}
+.imodal-sub{font-size:13px;color:var(--dim2);margin-bottom:22px;line-height:1.5}
+.itab-row{display:flex;gap:8px;margin-bottom:20px}
+.itab{flex:1;padding:10px;background:var(--s2s);border:1px solid var(--b2);border-radius:10px;font-family:'Outfit';font-size:13px;font-weight:700;color:var(--dim2);cursor:pointer;transition:all 0.2s}
+.itab.on{background:var(--od);border-color:var(--og);color:var(--o)}
+.isteps{text-align:left;display:none}
+.isteps.on{display:block}
+.istep{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--b1)}
+.istep:last-child{border-bottom:none}
+.istep-n{width:26px;height:26px;border-radius:8px;background:var(--od);border:1px solid var(--og);color:var(--o);font-family:'Cabinet Grotesk';font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.istep-txt{font-size:13px;color:var(--txt);line-height:1.5;padding-top:2px}
+.istep-txt b{color:var(--o)}
+.imodal-close{margin-top:20px;width:100%;padding:13px;background:var(--o);border:none;border-radius:11px;color:#fff;font-family:'Cabinet Grotesk';font-weight:800;font-size:15px;cursor:pointer}
+.imodal-native{margin-top:12px;width:100%;padding:14px;background:linear-gradient(135deg,var(--o),var(--o2));border:none;border-radius:11px;color:#fff;font-family:'Cabinet Grotesk';font-weight:800;font-size:15px;cursor:pointer;display:none}
+.imodal-native.show{display:block}
+
+@media(max-width:420px){
+  .earn-num{font-size:44px}
+  main{padding:14px;gap:12px;padding-bottom:90px}
+  .mission-title{font-size:20px}
+}
 </style>
 </head>
 <body>
-<div class="bg"><div class="bg-grid"></div></div>
+<div class="bg"><div class="bg-orb1"></div><div class="bg-orb2"></div><div class="bg-grid"></div></div>
+<canvas id="fxCanvas"></canvas>
 
-<div id="login">
-  <div class="lbox">
-    <div class="lbox-head">
-      <div class="lbox-logo"><img src="icon-192.png" alt="R" onerror="this.parentElement.style.background='var(--o)';this.outerHTML='<span style=\'color:#fff;font-family:Cabinet Grotesk;font-size:26px;font-weight:900;display:flex;width:100%;height:100%;align-items:center;justify-content:center\'>R</span>'"></div>
-      <div class="lbox-title">RACE <span>VIP</span></div>
-    </div>
-    <div class="lbox-sub">// ADMIN ACCESS — RESTRICTED</div>
-    <div class="pw-wrap">
-      <input type="password" id="pw" placeholder="Enter admin password" autocomplete="current-password" spellcheck="false">
-      <button class="pw-toggle" type="button" id="pw-eye" onclick="pwToggle()">SHOW</button>
-    </div>
-    <button class="btn-login" onclick="doLogin()">ENTER ADMIN</button>
-    <div class="lerr" id="lerr"></div>
-  </div>
+<div id="loading">
+  <div class="ld-logo-txt">R</div>
+  <div class="load-bar"><div class="load-bar-inner"></div></div>
+  <div class="load-text">LOADING YOUR EMPIRE...</div>
+</div>
+
+<div id="error">
+  <div class="err-icon">⚠</div>
+  <div class="err-txt" id="err-msg">Agent not found. Please use the link provided by RACE admin.</div>
 </div>
 
 <div id="app">
-  <div class="topbar">
-    <div class="topbar-l">
-      <div class="topbar-logo"><img src="icon-192.png" alt="R" onerror="this.parentElement.style.background='var(--o)';this.outerHTML='<span style=\'color:#fff;font-family:Cabinet Grotesk;font-size:16px;font-weight:900;display:flex;width:100%;height:100%;align-items:center;justify-content:center\'>R</span>'"></div>
-      <div class="topbar-title">RACE <span>VIP</span> <span class="adm">/ Admin</span></div>
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo-txt">R</div>
+      <div class="hdr-title">RACE <span>VIP</span></div>
     </div>
-    <div class="topbar-r">
-      <div class="pill" id="agents-pill">0 agents</div>
-      <button class="btn-logout" onclick="doLogout()">LOGOUT</button>
-    </div>
+    <div class="hdr-badge" id="hdr-name">—</div>
   </div>
 
-  <div class="tabs">
-    <button class="tb on" onclick="goTab('overview',this)">📊 OVERVIEW</button>
-    <button class="tb" onclick="goTab('agents',this)">👤 AGENTS<span class="badge" id="tab-ag-badge">0</span></button>
-    <button class="tb" onclick="goTab('txs',this)">⛽ FILLS</button>
-    <button class="tb" onclick="goTab('invites',this)">👥 INVITES</button>
-    <button class="tb" onclick="goTab('withdrawals',this)">💸 WITHDRAWALS<span class="badge" id="tab-wd-badge">0</span></button>
-    <button class="tb" onclick="goTab('leaderboard',this)">🏆 RANKINGS</button>
-  </div>
-
-  <!-- OVERVIEW -->
-  <div class="pg on" id="pg-overview">
-    <div class="slbl">// NETWORK SNAPSHOT <span id="ov-refresh" style="cursor:pointer;color:var(--o)">↻ refresh</span></div>
-    <div class="ovgrid">
-      <div class="ovc"><div class="ovic">👤</div><div class="ovv o" id="ov-a">—</div><div class="ovl">VIP AGENTS</div></div>
-      <div class="ovc"><div class="ovic">👥</div><div class="ovv blue" id="ov-i">—</div><div class="ovl">DRIVERS RECRUITED</div></div>
-      <div class="ovc"><div class="ovic">⛽</div><div class="ovv gold" id="ov-t">—</div><div class="ovl">TOTAL FILLS</div></div>
-      <div class="ovc"><div class="ovic">💰</div><div class="ovv g" id="ov-e">—</div><div class="ovl">AGENT EARNINGS IQD</div></div>
-    </div>
-    <div class="ovgrid">
-      <div class="ovc"><div class="ovic">📈</div><div class="ovv" id="ov-spend">—</div><div class="ovl">TOTAL IQD MOVED</div></div>
-      <div class="ovc"><div class="ovic">⚡</div><div class="ovv o" id="ov-avg">—</div><div class="ovl">AVG FILLS / AGENT</div></div>
-    </div>
-    <div class="slbl">// TOP PERFORMERS</div>
-    <div id="ov-top"><div class="empty">Loading...</div></div>
-  </div>
-
-  <!-- AGENTS -->
-  <div class="pg" id="pg-agents">
-    <div class="slbl">// CREATE NEW VIP AGENT</div>
-    <div class="card">
-      <div class="frow f2">
-        <div class="fg"><label>AGENT NAME *</label><input type="text" id="nn" placeholder="e.g. Ahmed Hassan"></div>
-        <div class="fg"><label>PHONE (WhatsApp)</label><input type="text" id="np" placeholder="e.g. 0750 123 4567"></div>
+  <main>
+    <!-- RANK BANNER -->
+    <div class="rank-banner" id="rankBanner">
+      <div class="rank-left">
+        <div class="rank-medal" id="rankMedal">🥉</div>
+        <div class="rank-info">
+          <div class="rank-name" id="rankName">Bronze Agent</div>
+          <div class="rank-sub" id="rankSub">Your current rank</div>
+        </div>
       </div>
-      <div class="frow f2">
-        <div class="fg"><label>REFERRAL CODE *</label><input type="text" id="nr" placeholder="auto-generated if empty"></div>
-        <div class="fg"><label>COMMISSION RATE (%)</label><input type="number" id="ncr" value="0.32" step="0.01" min="0" placeholder="0.32"></div>
+      <div class="rank-next">
+        <div class="rank-next-lbl">NEXT RANK</div>
+        <div class="rank-prog"><div class="rank-prog-bar" id="rankBar"></div></div>
+        <div class="rank-next-txt" id="rankNextTxt">—</div>
       </div>
-      <div class="frow"><button class="btn-add" onclick="genCode()" style="background:var(--s2);border:1px solid var(--b2)">⚡ AUTO-GENERATE CODE</button></div>
-      <button class="btn-add" id="createBtn" onclick="createAgent()">+ CREATE AGENT</button>
     </div>
-    <div class="slbl">// ALL AGENTS</div>
-    <input class="search-bar" id="agentSearch" placeholder="🔍 Search agents by name, code, phone..." oninput="renderAgents()">
-    <div id="alist"><div class="empty">Loading...</div></div>
-  </div>
 
-  <!-- FILLS / TRANSACTIONS -->
-  <div class="pg" id="pg-txs">
-    <div class="slbl">// ADD FILL (TRANSACTION)</div>
-    <div class="card">
-      <div class="frow f2">
-        <div class="fg"><label>VIP AGENT *</label><select id="tx-ag" onchange="loadAgentInvitees()"><option value="">Select agent...</option></select></div>
-        <div class="fg"><label>RACE DRIVER (invitee) *</label><input type="text" id="tx-u" list="tx-u-list" placeholder="username" oninput="calcPrev()"><datalist id="tx-u-list"></datalist></div>
+
+    <!-- INSTALL BANNER -->
+    <div class="install-banner hidden" id="installBanner" onclick="openInstall()">
+      <div class="install-ic"><img src="icon-192.png" alt="RACE"></div>
+      <div class="install-body">
+        <div class="install-title">📲 Install RACE VIP App</div>
+        <div class="install-sub">Add to home screen · Open like a real app</div>
       </div>
-      <div class="frow f2">
-        <div class="fg"><label>AMOUNT SPENT (IQD) *</label><input type="number" id="tx-am" placeholder="e.g. 50000" oninput="calcPrev()"></div>
-        <div class="fg"><label>DATE *</label><input type="date" id="tx-dt"></div>
+      <div class="install-arrow">›</div>
+    </div>
+
+    <!-- EARNINGS -->
+    <div class="earn-hero">
+      <div class="earn-lbl"><span class="live-dot"></span>YOUR TOTAL EARNINGS</div>
+      <div class="earn-num" id="earn-total">0<sup>IQD</sup></div>
+      <div class="earn-desc" id="earn-desc">Loading your data...</div>
+      <div class="earn-pulse" id="earnPulse">● updated</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-ic">👥</div><div class="stat-v o" id="st-invites">0</div><div class="stat-l">DRIVERS</div></div>
+      <div class="stat-card"><div class="stat-ic">⛽</div><div class="stat-v gold" id="st-txs">0</div><div class="stat-l">FILLS</div></div>
+      <div class="stat-card"><div class="stat-ic">💰</div><div class="stat-v g" id="st-spend">0</div><div class="stat-l">IQD MOVED</div></div>
+    </div>
+
+
+    <!-- WITHDRAWAL -->
+    <div class="wd-card">
+      <div class="card-sec-lbl" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:16px">// YOUR WALLET</div>
+      <div class="wd-split">
+        <div class="wd-box">
+          <div class="wd-box-lbl">TOTAL EARNED</div>
+          <div class="wd-box-v g" id="wd-earned">0</div>
+        </div>
+        <div class="wd-box avail">
+          <div class="wd-box-lbl">AVAILABLE TO WITHDRAW</div>
+          <div class="wd-box-v o" id="wd-avail">0</div>
+        </div>
       </div>
-      <div class="calc" id="calc"></div>
-      <div style="margin-top:12px"><button class="btn-add" id="txBtn" onclick="addTx()">+ ADD FILL</button></div>
-    </div>
-    <div class="slbl">// RECENT FILLS</div>
-    <div class="filt">
-      <select id="tx-filt" onchange="loadTxs()"><option value="">All agents</option></select>
-      <input id="tx-search" placeholder="Search driver..." oninput="loadTxs()">
-    </div>
-    <div class="card" style="padding:0;overflow:hidden"><div class="tscroll"><div id="txlist"><div class="empty">Loading...</div></div></div></div>
-  </div>
-
-  <!-- INVITES -->
-  <div class="pg" id="pg-invites">
-    <div class="slbl">// ADD DRIVER INVITE</div>
-    <div class="card">
-      <div class="frow f3">
-        <div class="fg"><label>VIP AGENT *</label><select id="inv-ag"><option value="">Select agent...</option></select></div>
-        <div class="fg"><label>RACE DRIVER USERNAME *</label><input type="text" id="inv-u" placeholder="e.g. UserB61F11"></div>
-        <div class="fg"><label>JOINED DATE *</label><input type="date" id="inv-dt"></div>
+      <div class="wd-input-row">
+        <input type="number" id="wd-amount" placeholder="Amount in IQD" min="0">
+        <button class="wd-btn" id="wd-btn" onclick="requestWithdraw()">Withdraw</button>
       </div>
-      <button class="btn-add" id="invBtn" onclick="addInvite()">+ ADD INVITE</button>
+      <div class="wd-hint" id="wd-hint">Request a withdrawal — RACE admin will process it.</div>
+      <div class="wd-list" id="wd-list"></div>
     </div>
-    <div class="slbl">// ALL INVITES</div>
-    <div class="filt">
-      <select id="inv-filt" onchange="loadInvites()"><option value="">All agents</option></select>
-      <input id="inv-search" placeholder="Search driver..." oninput="loadInvites()">
+
+    <!-- MISSION / INVITE -->
+    <div class="mission">
+      <div class="mission-tag">// YOUR ONE JOB</div>
+      <div class="mission-title">Invite drivers. <em>Earn forever.</em></div>
+      <div class="mission-sub">Every driver you bring earns you <span id="rate-display">0.32%</span> of every fill they ever make — for life. Share your link. That's the whole job.</div>
+      <div class="ref-box">
+        <div class="ref-link" id="ref-link-txt">—</div>
+        <button class="copy-btn" id="copy-ref-btn" onclick="copyRef()">COPY</button>
+      </div>
+      <div class="share-grid">
+        <a class="share-btn wa" id="wa-btn" href="#" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WHATSAPP
+        </a>
+        <button class="share-btn" onclick="shareLink()">📲 SHARE</button>
+      </div>
+      <button class="qr-toggle-btn" onclick="toggleQR()">
+        <span class="qr-toggle-lbl">// SHOW QR CODE</span>
+        <span class="qr-arrow" id="qr-arrow">▾</span>
+      </button>
+      <div class="qr-body" id="qr-body">
+        <div id="qr-code"></div>
+        <div class="qr-cap">SCAN TO JOIN YOUR NETWORK</div>
+      </div>
     </div>
-    <div class="card" style="padding:0;overflow:hidden"><div class="tscroll"><div id="invlist"><div class="empty">Loading...</div></div></div></div>
-  </div>
 
+    <!-- MY ARMY -->
+    <button class="invites-btn" onclick="openInvites()">
+      <div class="invites-btn-left">
+        <div class="invites-icon">👥</div>
+        <div>
+          <div class="invites-btn-title">My Driver Army</div>
+          <div class="invites-btn-sub">Tap to see everyone you recruited</div>
+        </div>
+      </div>
+      <div class="invites-count-badge" id="inv-count-badge">0</div>
+    </button>
 
-  <!-- WITHDRAWALS -->
-  <div class="pg" id="pg-withdrawals">
-    <div class="slbl">// PENDING WITHDRAWAL REQUESTS <span id="wd-refresh" style="cursor:pointer;color:var(--o)">↻ refresh</span></div>
-    <div id="wd-pending"><div class="empty">Loading...</div></div>
-    <div class="slbl" style="margin-top:20px">// WITHDRAWAL HISTORY</div>
-    <div class="card" style="padding:0;overflow:hidden"><div class="tscroll"><div id="wd-history"><div class="empty">Loading...</div></div></div></div>
-  </div>
+    <!-- MILESTONES -->
+    <div class="miles">
+      <div class="miles-hdr">
+        <div class="miles-title">🏆 Your Rank Path</div>
+        <div class="miles-pct" id="milesPct">0%</div>
+      </div>
+      <div id="milesList"></div>
+    </div>
 
-  <!-- LEADERBOARD -->
-  <div class="pg" id="pg-leaderboard">
-    <div class="slbl">// AGENT RANKINGS — BY DRIVERS RECRUITED</div>
-    <div id="lblist"><div class="empty">Loading...</div></div>
+    <!-- TX HISTORY -->
+    <div class="sec-title">// EARNING ACTIVITY</div>
+    <div class="tx-card">
+      <div class="tx-hdr">
+        <div class="tx-hdr-title">⚡ Live Earnings Feed</div>
+        <div class="tx-hdr-count" id="tx-count-badge">0 FILLS</div>
+      </div>
+      <div class="tx-list" id="tx-list">
+        <div class="tx-empty">No fills yet.<br>The moment your drivers fuel up,<br>your earnings appear here live.</div>
+      </div>
+    </div>
+
+    <footer>RACE VIP NETWORK · ERBIL · POWERED BY RACE</footer>
+  </main>
+
+  <!-- STICKY CTA -->
+  <div class="sticky-cta">
+    <button class="sticky-cta-btn" onclick="waShare()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Invite a Driver Now
+    </button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- INVITES MODAL -->
+<div class="modal-overlay" id="inv-modal" onclick="closeInvitesOutside(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-hdr">
+      <div class="modal-title">👥 My Driver Army</div>
+      <div class="modal-count" id="modal-inv-count">0 invites</div>
+      <button class="modal-close" onclick="closeInvites()">×</button>
+    </div>
+    <div class="modal-body" id="modal-inv-body">
+      <div class="tx-empty">No invites yet.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- INSTALL MODAL -->
+<div class="imodal" id="iModal" onclick="if(event.target===this)closeInstall()">
+  <div class="imodal-card">
+    <div class="imodal-logo"><img src="icon-192.png" alt="RACE VIP"></div>
+    <div class="imodal-title">Install RACE VIP</div>
+    <div class="imodal-sub">Get the full app experience — fullscreen, fast, right on your home screen.</div>
+    <button class="imodal-native" id="iNative" onclick="triggerNativeInstall()">⚡ Install Now</button>
+    <div class="itab-row">
+      <button class="itab on" id="tabIos" onclick="switchTab('ios')">📱 iPhone</button>
+      <button class="itab" id="tabAnd" onclick="switchTab('and')">🤖 Android</button>
+    </div>
+    <div class="isteps on" id="stepsIos">
+      <div class="istep"><div class="istep-n">1</div><div class="istep-txt">Tap the <b>Share</b> button <b>⎙</b> at the bottom of Safari</div></div>
+      <div class="istep"><div class="istep-n">2</div><div class="istep-txt">Scroll down and tap <b>"Add to Home Screen"</b></div></div>
+      <div class="istep"><div class="istep-n">3</div><div class="istep-txt">Tap <b>"Add"</b> — the RACE logo appears on your home screen ✅</div></div>
+    </div>
+    <div class="isteps" id="stepsAnd">
+      <div class="istep"><div class="istep-n">1</div><div class="istep-txt">Tap the <b>⋮ menu</b> (top right of Chrome)</div></div>
+      <div class="istep"><div class="istep-n">2</div><div class="istep-txt">Tap <b>"Add to Home screen"</b> or <b>"Install app"</b></div></div>
+      <div class="istep"><div class="istep-n">3</div><div class="istep-txt">Tap <b>"Install"</b> — RACE VIP installs like a real app ✅</div></div>
+    </div>
+    <button class="imodal-close" onclick="closeInstall()">Got it</button>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
-var SB='https://zluhwkdrijrklviijuvl.supabase.co';
-var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w';
-var PASS='race2024admin';
-var RATE=0.0032;
-var agents=[],agentStats={},allAgentsCache=[];
+const SB='https://zluhwkdrijrklviijuvl.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w';
+let RATE=0.0032; // overwritten per-agent from DB
+let refLink='',agentId='',qrDone=false,invitesData=[],lastEarned=0,prevTxCount=0;
 
-var RANKS=[
-  {name:'Rookie',min:0,color:'#9a9a9a'},
-  {name:'Bronze',min:10,color:'#cd7f32'},
-  {name:'Silver',min:30,color:'#c0c0c0'},
-  {name:'Gold',min:75,color:'#f0c842'},
-  {name:'Diamond',min:150,color:'#5b9bff'},
-  {name:'Legend',min:300,color:'#a78bfa'}
+// RANK SYSTEM
+const RANKS=[
+  {name:'Rookie Agent',medal:'🌱',min:0,color:'#9a9a9a'},
+  {name:'Bronze Agent',medal:'🥉',min:10,color:'#cd7f32'},
+  {name:'Silver Agent',medal:'🥈',min:30,color:'#c0c0c0'},
+  {name:'Gold Agent',medal:'🥇',min:75,color:'#f0c842'},
+  {name:'Diamond Agent',medal:'💎',min:150,color:'#5b9bff'},
+  {name:'RACE Legend',medal:'👑',min:300,color:'#a78bfa'}
 ];
-function rankFor(n){var r=RANKS[0];for(var i=0;i<RANKS.length;i++){if(n>=RANKS[i].min)r=RANKS[i];}return r;}
+const MILES=[
+  {name:'First Driver',req:'1 driver recruited',n:1,ic:'🌱',gold:false},
+  {name:'Bronze · Free Towing',req:'10 drivers → free towing for you',n:10,ic:'🥉',gold:false},
+  {name:'Silver · Roadside Cover',req:'30 drivers → full roadside assist',n:30,ic:'🥈',gold:false},
+  {name:'Gold · Fleet Rights',req:'75 drivers → fleet referral access',n:75,ic:'🥇',gold:true},
+  {name:'Diamond Elite',req:'150 drivers → top-tier status',n:150,ic:'💎',gold:true},
+  {name:'RACE Legend',req:'300 drivers → legendary rank',n:300,ic:'👑',gold:true}
+];
 
-function sbFetch(path,method,body){
-  var opts={method:method||'GET',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'}};
-  if(body)opts.body=JSON.stringify(body);
-  return fetch(SB+'/rest/v1/'+path,opts).then(function(r){
-    if(!r.ok)return r.text().then(function(t){throw new Error(t);});
-    return r.text().then(function(t){return t?JSON.parse(t):[];});
-  });
+async function sb(p){
+  const r=await fetch(SB+'/rest/v1/'+p,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
+  if(!r.ok)throw new Error(await r.text());
+  return r.json();
 }
-function fmt(n){return Math.round(n).toLocaleString('en-US');}
-function fmtE(n){return (Math.round(n*10)/10).toLocaleString('en-US',{minimumFractionDigits:1});}
-function esc(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
-function showToast(msg,isErr){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isErr?' err':'');setTimeout(function(){t.className='toast'+(isErr?' err':'');},3000);}
+function fmt(n){return Math.round(n).toLocaleString('en-US')}
+function fmtE(n){return (Math.round(n*10)/10).toLocaleString('en-US',{minimumFractionDigits:1})}
 
-// LOGIN
-function pwToggle(){var i=document.getElementById('pw'),b=document.getElementById('pw-eye');if(i.type==='password'){i.type='text';b.textContent='HIDE';}else{i.type='password';b.textContent='SHOW';}}
-document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('login').style.display!=='none')doLogin();});
-function doLogin(){
-  var i=document.getElementById('pw'),err=document.getElementById('lerr');
-  if(i.value.trim()===PASS){
-    document.getElementById('login').style.display='none';
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.innerHTML=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// Count-up animation
+function countUp(el,target,suffix,decimals){
+  const start=parseFloat((el.dataset.cur||'0'));
+  if(start===target){el.innerHTML=(decimals?fmtE(target):fmt(target))+(suffix||'');return}
+  const dur=900;const t0=performance.now();
+  function step(t){
+    const p=Math.min((t-t0)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    const v=start+(target-start)*ease;
+    el.innerHTML=(decimals?fmtE(v):fmt(Math.round(v)))+(suffix||'');
+    if(p<1)requestAnimationFrame(step);else el.dataset.cur=target;
+  }
+  requestAnimationFrame(step);
+}
+
+function computeRank(n){
+  let cur=RANKS[0],next=null;
+  for(let i=0;i<RANKS.length;i++){
+    if(n>=RANKS[i].min)cur=RANKS[i];
+  }
+  for(let i=0;i<RANKS.length;i++){
+    if(RANKS[i].min>n){next=RANKS[i];break}
+  }
+  return {cur,next};
+}
+
+function renderRank(invCount){
+  const {cur,next}=computeRank(invCount);
+  document.getElementById('rankMedal').textContent=cur.medal;
+  document.getElementById('rankName').textContent=cur.name;
+  document.getElementById('rankBanner').style.setProperty('--rankc',cur.color);
+  document.getElementById('rankName').style.color=cur.color;
+  if(next){
+    const span=next.min-cur.min;
+    const prog=Math.min(((invCount-cur.min)/span)*100,100);
+    document.getElementById('rankBar').style.width=prog+'%';
+    const need=next.min-invCount;
+    document.getElementById('rankSub').textContent='Recruiting in progress';
+    document.getElementById('rankNextTxt').textContent=need+' more → '+next.name;
+  }else{
+    document.getElementById('rankBar').style.width='100%';
+    document.getElementById('rankSub').textContent='Maximum rank achieved';
+    document.getElementById('rankNextTxt').textContent='👑 LEGEND';
+  }
+}
+
+function renderMiles(invCount){
+  const html=MILES.map(m=>{
+    const done=invCount>=m.n;
+    return `<div class="mile-row">
+      <div class="mile-dot ${done?'done':''} ${m.gold&&done?'gold':''}">${m.ic}</div>
+      <div class="mile-body">
+        <div class="mile-name">${m.name}</div>
+        <div class="mile-req">${m.req}</div>
+      </div>
+      ${done?'<div class="mile-check">✅</div>':'<div class="mile-lock">🔒</div>'}
+    </div>`;
+  }).join('');
+  document.getElementById('milesList').innerHTML=html;
+  const doneCount=MILES.filter(m=>invCount>=m.n).length;
+  document.getElementById('milesPct').textContent=Math.round(doneCount/MILES.length*100)+'%';
+}
+
+function getCookie(name){
+  const m=document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)');
+  return m?m.pop():'';
+}
+function setCookie(name,val){
+  try{document.cookie=name+'='+val+';path=/;max-age=31536000;SameSite=Lax';}catch(e){}
+}
+function resolveAgentId(){
+  // 1. URL query ?id= or ?agent=
+  const params=new URLSearchParams(window.location.search);
+  let id=params.get('id')||params.get('agent');
+  // 2. URL hash #id=xxx (survives some PWA launches)
+  if(!id&&window.location.hash){
+    const h=new URLSearchParams(window.location.hash.replace('#',''));
+    id=h.get('id')||window.location.hash.replace('#','');
+  }
+  // 3. localStorage
+  if(!id){try{id=localStorage.getItem('race_agent_id')||'';}catch(e){}}
+  // 4. cookie fallback (most reliable for iOS standalone)
+  if(!id){id=getCookie('race_agent_id');}
+  // persist everywhere we found a fresh one
+  if(id){
+    try{localStorage.setItem('race_agent_id',id);}catch(e){}
+    setCookie('race_agent_id',id);
+  }
+  return id;
+}
+
+function injectDynamicManifest(id){
+  // Build a per-agent manifest so the installed home-screen app
+  // always relaunches with this agent's id baked into start_url.
+  const manifest={
+    name:"RACE VIP",short_name:"RACE VIP",
+    description:"RACE VIP Agent — Invite drivers, earn forever.",
+    start_url:"./race-vip-agent.html?id="+id,
+    scope:"./",display:"standalone",orientation:"portrait",
+    background_color:"#070708",theme_color:"#E66A2A",
+    icons:[
+      {src:"icon-192.png",sizes:"192x192",type:"image/png",purpose:"any"},
+      {src:"icon-512.png",sizes:"512x512",type:"image/png",purpose:"any"},
+      {src:"icon-maskable-512.png",sizes:"512x512",type:"image/png",purpose:"maskable"}
+    ]
+  };
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  let link=document.querySelector('link[rel="manifest"]');
+  if(!link){link=document.createElement('link');link.rel='manifest';document.head.appendChild(link);}
+  link.href=url;
+  // also update apple-touch start url hint
+  const aTitle=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if(aTitle)aTitle.content='RACE VIP';
+}
+
+async function boot(){
+  agentId=resolveAgentId();
+  if(!agentId){showErr('No agent ID found. Please open the original link your RACE admin sent you (in your browser), then add to home screen.');return;}
+  // Bake this agent's id into a dynamic manifest for correct PWA relaunch
+  injectDynamicManifest(agentId);
+  try{
+    const [agents,txs,invites]=await Promise.all([
+      sb('vip_agents?id=eq.'+agentId+'&select=*'),
+      sb('agent_transactions?agent_id=eq.'+agentId+'&order=created_at.desc&select=*'),
+      sb('agent_invites?agent_id=eq.'+agentId+'&order=joined_date.desc&select=*')
+    ]);
+    if(!agents.length){showErr('Agent not found. Contact RACE admin.');return;}
+    const agent=agents[0];
+    if(agent.commission_rate!=null&&!isNaN(parseFloat(agent.commission_rate))){RATE=parseFloat(agent.commission_rate);}
+    var rd=document.getElementById('rate-display');if(rd)rd.textContent=(RATE*100).toFixed(2).replace(/\.?0+$/,'')+'%';
+    invitesData=invites;
+    prevTxCount=txs.length;
+    await loadWithdrawals();
+
+    document.getElementById('hdr-name').textContent=agent.name.toUpperCase();
+    document.title=agent.name+' — RACE VIP';
+
+    refLink='https://app.getrace.app/join/'+agent.referral_code;
+    document.getElementById('ref-link-txt').textContent=refLink;
+
+    buildWa();
+
+    renderAll(txs,invites,false);
+
+    document.getElementById('loading').style.display='none';
     document.getElementById('app').style.display='block';
-    try{sessionStorage.setItem('rva','1');}catch(e){}
-    boot();
-  }else{err.style.display='block';err.textContent='Wrong password. Please try again.';i.focus();i.select();}
-}
-function doLogout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('pw').value='';document.getElementById('lerr').style.display='none';try{sessionStorage.removeItem('rva');}catch(e){}}
-try{if(sessionStorage.getItem('rva')==='1'){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';boot();}}catch(e){}
 
-// TABS
-function goTab(id,el){
-  var tabs=document.querySelectorAll('.tb');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('on');
-  var pgs=document.querySelectorAll('.pg');for(var j=0;j<pgs.length;j++)pgs[j].classList.remove('on');
-  el.classList.add('on');
-  document.getElementById('pg-'+id).classList.add('on');
-  if(id==='txs'){populateSels();loadTxs();}
-  if(id==='invites'){populateSels();loadInvites();}
-  if(id==='overview'){loadOverview();}
-  if(id==='leaderboard'){loadLeaderboard();}
-  if(id==='withdrawals'){loadWithdrawals();}
+    setInterval(refresh,20000);
+  }catch(e){showErr('Error loading data: '+e.message);}
 }
 
-// BOOT
-function boot(){
-  var d=new Date();
-  document.getElementById('tx-dt').valueAsDate=d;
-  document.getElementById('inv-dt').valueAsDate=d;
-  loadOverview();
-  loadAgentsData();
-  // load pending withdrawal badge
-  sbFetch('agent_withdrawals?status=eq.pending&select=id').then(function(d){document.getElementById('tab-wd-badge').textContent=d.length;}).catch(function(){});
-}
-document.getElementById('ov-refresh').onclick=function(){loadOverview();loadAgentsData();showToast('Refreshed');};
-document.getElementById('wd-refresh').onclick=function(){loadWithdrawals();showToast('Refreshed');};
-
-// Central data loader
-function loadAgentsData(){
-  return Promise.all([
-    sbFetch('vip_agents?order=created_at.desc&select=*'),
-    sbFetch('agent_transactions?select=agent_id,amount_spent'),
-    sbFetch('agent_invites?select=agent_id')
-  ]).then(function(r){
-    agents=r[0];allAgentsCache=r[0];
-    var txMap={},invMap={};
-    r[1].forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);});
-    r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
-    agentStats={};
-    agents.forEach(function(a){var tx=txMap[a.id]||{c:0,tot:0};var ar=(a.commission_rate!=null&&!isNaN(parseFloat(a.commission_rate)))?parseFloat(a.commission_rate):RATE;agentStats[a.id]={inv:invMap[a.id]||0,fills:tx.c,spend:tx.tot,earned:tx.tot*ar,rate:ar};});
-    document.getElementById('agents-pill').textContent=agents.length+' agents';
-    document.getElementById('tab-ag-badge').textContent=agents.length;
-    renderAgents();
-  }).catch(function(e){document.getElementById('alist').innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
+function buildWa(){
+  const waMsg=encodeURIComponent('🚗 Join RACE — Erbil\'s fuel rewards network!\n\n✅ Free emergency roadside cover\n✅ Cashback every time you fill up\n✅ One-tap towing & service\n\nJoin free with my link:\n'+refLink);
+  document.getElementById('wa-btn').href='https://wa.me/?text='+waMsg;
 }
 
-// AGENTS RENDER
-function renderAgents(){
-  var el=document.getElementById('alist');
-  var q=(document.getElementById('agentSearch').value||'').toLowerCase();
-  var list=agents.filter(function(a){return !q||((a.name||'')+' '+(a.referral_code||'')+' '+(a.phone||'')).toLowerCase().indexOf(q)>-1;});
-  if(!list.length){el.innerHTML='<div class="empty">'+(q?'No agents match your search.':'No agents yet. Create your first above.')+'</div>';return;}
-  var baseURL=window.location.origin+window.location.pathname.replace('race-vip-admin.html','');
-  var html='';
-  list.forEach(function(a){
-    var s=agentStats[a.id]||{inv:0,fills:0,spend:0,earned:0};
-    var rk=rankFor(s.inv);
-    var agentURL=baseURL+'race-vip-agent.html?id='+a.id;
-    var waPhone=(a.phone||'').replace(/[^0-9]/g,'');
-    var waMsg=encodeURIComponent('🏁 Welcome to RACE VIP, '+a.name+'!\n\nYour personal agent dashboard is ready. Track your earnings live and start inviting drivers:\n\n'+agentURL+'\n\nEvery driver you invite earns you 0.32% of every fill they make — forever. Let\'s go! 🚗💰');
-    html+='<div class="acard">';
-    html+='<div class="acard-top"><div>';
-    html+='<div class="aname">'+esc(a.name)+'<span class="arank" style="background:'+rk.color+'22;color:'+rk.color+';border:1px solid '+rk.color+'44">'+rk.name+'</span></div>';
-    html+='<div class="aref">'+esc(a.referral_code)+'</div>';
-    if(a.phone)html+='<div class="aphone">📱 '+esc(a.phone)+'</div>';
-    html+='</div><div class="acard-actions"><button class="btn-del" data-id="'+a.id+'" data-name="'+esc(a.name)+'" onclick="delAgent(this)">DELETE</button></div></div>';
-    html+='<div class="astats">';
-    html+='<div class="astat"><div class="astat-v o">'+s.inv+'</div><div class="astat-l">DRIVERS</div></div>';
-    html+='<div class="astat"><div class="astat-v gold">'+s.fills+'</div><div class="astat-l">FILLS</div></div>';
-    html+='<div class="astat"><div class="astat-v g">'+fmtE(s.earned)+'</div><div class="astat-l">EARNED IQD</div></div>';
-    html+='</div>';
-    var ratePct=((s.rate!=null?s.rate:0.0032)*100).toFixed(2).replace(/\.?0+$/,'');
-    html+='<div class="rate-row"><span class="rate-lbl">COMMISSION</span><input class="rate-input" type="number" step="0.01" min="0" value="'+ratePct+'" id="rate-'+a.id+'"><span class="rate-pct">%</span><button class="rate-save" onclick="saveRate(\''+a.id+'\')">SAVE</button></div>';
-    html+='<div class="lnk-row"><code>'+agentURL+'</code><button class="cpbtn" data-url="'+agentURL+'" onclick="copyLink(this)">COPY</button></div>';
-    html+='<div class="aquick">';
-    html+='<button class="aqbtn" onclick="quickTx(\''+a.id+'\',\''+esc(a.name).replace(/'/g,"")+'\')">⛽ Add Fill</button>';
-    if(waPhone)html+='<a class="aqbtn wa" href="https://wa.me/'+waPhone+'?text='+waMsg+'" target="_blank" rel="noopener">📲 Send Link</a>';
-    else html+='<button class="aqbtn" onclick="quickInv(\''+a.id+'\')">👥 Add Invite</button>';
-    html+='</div>';
-    html+='</div>';
-  });
-  el.innerHTML=html;
+function renderAll(txs,invites,isRefresh){
+  const totalSpend=txs.reduce((s,t)=>s+parseFloat(t.amount_spent),0);
+  const totalEarned=totalSpend*RATE;
+
+  countUp(document.getElementById('earn-total'),totalEarned,'<sup>IQD</sup>',true);
+  renderWallet(totalEarned);
+  document.getElementById('earn-desc').innerHTML='<strong>'+txs.length+' fills</strong> · '+invites.length+' drivers recruited · <strong>'+fmt(totalSpend)+' IQD</strong> total moved';
+  countUp(document.getElementById('st-invites'),invites.length,'',false);
+  countUp(document.getElementById('st-txs'),txs.length,'',false);
+  countUp(document.getElementById('st-spend'),totalSpend,'',false);
+  document.getElementById('inv-count-badge').textContent=invites.length;
+  document.getElementById('tx-count-badge').textContent=txs.length+' FILLS';
+
+  renderRank(invites.length);
+  renderMiles(invites.length);
+
+  const txEl=document.getElementById('tx-list');
+  if(txs.length){
+    txEl.innerHTML=txs.map(t=>`
+      <div class="tx-row">
+        <div><div class="tx-user">${esc(t.race_username)}</div><div class="tx-date">${esc(t.transaction_date)}</div></div>
+        <div><div class="tx-spent">${fmt(t.amount_spent)} IQD spent</div><div class="tx-earn">+${fmtE(parseFloat(t.amount_spent)*RATE)} IQD</div></div>
+      </div>`).join('');
+  }
+
+  updateInvitesModal();
+
+  // New earning detection
+  if(isRefresh&&txs.length>prevTxCount){
+    const newOnes=txs.length-prevTxCount;
+    const gained=totalEarned-lastEarned;
+    triggerCoins();
+    toast('💰 +'+fmtE(gained)+' IQD · '+newOnes+' new fill'+(newOnes>1?'s':'')+'!');
+    document.getElementById('earnPulse').classList.add('show');
+    setTimeout(()=>document.getElementById('earnPulse').classList.remove('show'),3000);
+  }
+  prevTxCount=txs.length;
+  lastEarned=totalEarned;
 }
 
-
-function saveRate(id){
-  var inp=document.getElementById('rate-'+id);
-  var pct=parseFloat(inp.value);
-  if(isNaN(pct)||pct<0){showToast('Enter a valid rate',true);return;}
-  var dec=pct/100;
-  sbFetch('vip_agents?id=eq.'+id,'PATCH',{commission_rate:dec}).then(function(){
-    showToast('✅ Rate updated to '+pct+'%');
-    loadAgentsData();
-  }).catch(function(){showToast('Error saving rate',true);});
+async function refresh(){
+  try{
+    const [txs,invites]=await Promise.all([
+      sb('agent_transactions?agent_id=eq.'+agentId+'&order=created_at.desc&select=*'),
+      sb('agent_invites?agent_id=eq.'+agentId+'&order=joined_date.desc&select=*')
+    ]);
+    invitesData=invites;
+    await loadWithdrawals();
+    renderAll(txs,invites,true);
+  }catch(e){}
 }
 
-function genCode(){
-  var c='RC'+Date.now().toString().slice(-9)+Math.floor(Math.random()*900+100);
-  document.getElementById('nr').value=c;
+function esc(s){return String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
+
+function updateInvitesModal(){
+  document.getElementById('modal-inv-count').textContent=invitesData.length+' invites';
+  const body=document.getElementById('modal-inv-body');
+  if(!invitesData.length){
+    body.innerHTML='<div class="tx-empty">No drivers recruited yet.<br>Share your link to start<br>building your army.</div>';
+    return;
+  }
+  body.innerHTML=invitesData.map((inv,i)=>`
+    <div class="invite-row">
+      <div><div class="inv-name">${esc(inv.race_username)}</div><div class="inv-date">Joined ${esc(inv.joined_date)}</div></div>
+      <div class="inv-joined">#${invitesData.length-i}</div>
+    </div>`).join('');
 }
-function createAgent(){
-  var name=document.getElementById('nn').value.trim();
-  var phone=document.getElementById('np').value.trim();
-  var ref=document.getElementById('nr').value.trim();
-  if(!name){showToast('Agent name required',true);return;}
-  if(!ref){ref='RC'+Date.now().toString().slice(-9)+Math.floor(Math.random()*900+100);}
-  var crPct=parseFloat(document.getElementById('ncr').value);
-  if(isNaN(crPct)||crPct<0)crPct=0.32;
-  var crDec=crPct/100;
-  var btn=document.getElementById('createBtn');btn.disabled=true;btn.textContent='CREATING...';
-  sbFetch('vip_agents','POST',{name:name,phone:phone||null,referral_code:ref,commission_rate:crDec}).then(function(){
-    document.getElementById('nn').value='';document.getElementById('np').value='';document.getElementById('nr').value='';document.getElementById('ncr').value='0.32';
-    showToast('✅ Agent "'+name+'" created');
-    btn.disabled=false;btn.textContent='+ CREATE AGENT';
-    loadAgentsData();
-  }).catch(function(e){
-    btn.disabled=false;btn.textContent='+ CREATE AGENT';
-    showToast(e.message.indexOf('duplicate')>-1||e.message.indexOf('unique')>-1?'Referral code already exists':'Error creating agent',true);
+
+function showErr(msg){
+  document.getElementById('loading').style.display='none';
+  const e=document.getElementById('error');
+  e.style.display='flex';
+  document.getElementById('err-msg').textContent=msg;
+}
+
+function copyRef(){
+  navigator.clipboard.writeText(refLink).then(()=>{
+    const b=document.getElementById('copy-ref-btn');
+    b.textContent='COPIED!';b.classList.add('ok');
+    toast('🔗 Link copied — go share it!');
+    setTimeout(()=>{b.textContent='COPY';b.classList.remove('ok');},2500);
   });
 }
-function delAgent(btn){
-  var id=btn.getAttribute('data-id'),name=btn.getAttribute('data-name');
-  if(!confirm('Delete agent "'+name+'"?\n\nThis removes the agent. Their invites & fills stay in the database unless deleted separately.'))return;
-  sbFetch('vip_agents?id=eq.'+id,'DELETE').then(function(){showToast('Agent deleted');loadAgentsData();}).catch(function(){showToast('Error deleting',true);});
+function shareLink(){
+  if(navigator.share){navigator.share({title:'Join RACE',text:'🚗 Join RACE — fuel rewards for Erbil drivers!',url:refLink});}
+  else{copyRef();}
 }
-function copyLink(btn){
-  var url=btn.getAttribute('data-url');
-  navigator.clipboard.writeText(url).then(function(){btn.textContent='COPIED!';btn.classList.add('ok');setTimeout(function(){btn.textContent='COPY';btn.classList.remove('ok');},2500);});
-}
-
-// Quick actions jump to tab with agent preselected
-function quickTx(id){
-  var t=document.querySelectorAll('.tb')[2];goTab('txs',t);
-  setTimeout(function(){document.getElementById('tx-ag').value=id;loadAgentInvitees();document.getElementById('tx-u').focus();},100);
-}
-function quickInv(id){
-  var t=document.querySelectorAll('.tb')[3];goTab('invites',t);
-  setTimeout(function(){document.getElementById('inv-ag').value=id;document.getElementById('inv-u').focus();},100);
+function waShare(){
+  buildWa();
+  window.open(document.getElementById('wa-btn').href,'_blank');
 }
 
-// SELECTS
-function populateSels(){
-  var sel='<option value="">Select agent...</option>',all='<option value="">All agents</option>';
-  agents.forEach(function(a){var o='<option value="'+a.id+'">'+esc(a.name)+'</option>';sel+=o;all+=o;});
-  document.getElementById('tx-ag').innerHTML=sel;
-  document.getElementById('inv-ag').innerHTML=sel;
-  document.getElementById('tx-filt').innerHTML=all;
-  document.getElementById('inv-filt').innerHTML=all;
+function toggleQR(){
+  const body=document.getElementById('qr-body'),arrow=document.getElementById('qr-arrow');
+  const open=body.classList.toggle('open');
+  arrow.style.transform=open?'rotate(180deg)':'';
+  if(open&&!qrDone&&refLink){
+    document.getElementById('qr-code').innerHTML='';
+    new QRCode(document.getElementById('qr-code'),{text:refLink,width:200,height:200,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});
+    qrDone=true;
+  }
 }
 
-// Autocomplete invitees for fills
-function loadAgentInvitees(){
-  var aid=document.getElementById('tx-ag').value;
-  var dl=document.getElementById('tx-u-list');dl.innerHTML='';
-  if(!aid)return;
-  sbFetch('agent_invites?agent_id=eq.'+aid+'&select=race_username&order=joined_date.desc').then(function(d){
-    dl.innerHTML=d.map(function(i){return '<option value="'+esc(i.race_username)+'">';}).join('');
-  }).catch(function(){});
+function openInvites(){document.getElementById('inv-modal').classList.add('open');document.body.style.overflow='hidden';}
+function closeInvites(){document.getElementById('inv-modal').classList.remove('open');document.body.style.overflow='';}
+function closeInvitesOutside(e){if(e.target===document.getElementById('inv-modal'))closeInvites();}
+
+// COIN BURST FX
+const cv=document.getElementById('fxCanvas');
+const ctx=cv.getContext('2d');
+let coins=[];
+function sizeCv(){cv.width=innerWidth;cv.height=innerHeight;}
+sizeCv();addEventListener('resize',sizeCv);
+function triggerCoins(){
+  for(let i=0;i<28;i++){
+    coins.push({x:innerWidth/2+(Math.random()-0.5)*120,y:innerHeight*0.3,vx:(Math.random()-0.5)*7,vy:-Math.random()*9-4,g:0.32,life:1,rot:Math.random()*6,vr:(Math.random()-0.5)*0.4,sz:Math.random()*8+10});
+  }
+}
+function fxLoop(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  coins=coins.filter(c=>c.life>0);
+  for(const c of coins){
+    c.vy+=c.g;c.x+=c.vx;c.y+=c.vy;c.rot+=c.vr;c.life-=0.012;
+    ctx.save();ctx.translate(c.x,c.y);ctx.rotate(c.rot);ctx.globalAlpha=Math.max(c.life,0);
+    ctx.font=c.sz+'px serif';ctx.textAlign='center';ctx.fillText('🪙',0,0);ctx.restore();
+  }
+  requestAnimationFrame(fxLoop);
+}
+fxLoop();
+
+
+
+// ═══ WITHDRAWAL SYSTEM ═══
+let withdrawalsData=[];
+
+async function loadWithdrawals(){
+  try{
+    withdrawalsData=await sb('agent_withdrawals?agent_id=eq.'+agentId+'&order=requested_at.desc&select=*');
+  }catch(e){withdrawalsData=[];}
 }
 
-function calcPrev(){
-  var am=parseFloat(document.getElementById('tx-am').value)||0;
-  var u=document.getElementById('tx-u').value.trim();
-  var el=document.getElementById('calc');
-  if(am>0){el.style.display='block';var selA=document.getElementById('tx-ag').value;var pr=(selA&&agentStats[selA]&&agentStats[selA].rate!=null)?agentStats[selA].rate:RATE;el.innerHTML='→ '+(u?esc(u)+' ':'')+'spends <b>'+fmt(am)+' IQD</b> → agent earns <b style="color:var(--green)">'+fmtE(am*pr)+' IQD</b> ('+(pr*100).toFixed(2).replace(/\.?0+$/,'')+'%)';}
-  else el.style.display='none';
+function renderWallet(totalEarned){
+  // Sum pending + paid withdrawals
+  let withdrawn=0,pending=0;
+  withdrawalsData.forEach(w=>{
+    const amt=parseFloat(w.amount)||0;
+    if(w.status==='paid'||w.status==='confirmed'||w.status==='approved')withdrawn+=amt;
+    else if(w.status==='pending')pending+=amt;
+  });
+  const available=Math.max(totalEarned-withdrawn-pending,0);
+  countUp(document.getElementById('wd-earned'),totalEarned,'',true);
+  countUp(document.getElementById('wd-avail'),available,'',true);
+  window._available=available;
+
+  const list=document.getElementById('wd-list');
+  if(!withdrawalsData.length){list.innerHTML='';return;}
+  list.innerHTML=withdrawalsData.map(w=>{
+    const st=w.status==='pending'?'pending':(w.status==='rejected'?'rejected':'paid');
+    const lbl=st==='pending'?'⏳ Pending':(st==='rejected'?'✕ Rejected':'✓ Paid');
+    const d=new Date(w.requested_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    return `<div class="wd-item">
+      <div><div class="wd-item-amt">${fmt(w.amount)} IQD</div><div class="wd-item-date">Requested ${d}</div></div>
+      <div class="wd-status ${st}">${lbl}</div>
+    </div>`;
+  }).join('');
 }
 
-// TRANSACTIONS
-function addTx(){
-  var aid=document.getElementById('tx-ag').value;
-  var user=document.getElementById('tx-u').value.trim();
-  var amount=parseFloat(document.getElementById('tx-am').value);
-  var date=document.getElementById('tx-dt').value;
-  if(!aid||!user||!amount||!date){showToast('All fields required',true);return;}
-  var btn=document.getElementById('txBtn');btn.disabled=true;btn.textContent='ADDING...';
-  sbFetch('agent_transactions','POST',{agent_id:aid,race_username:user,amount_spent:amount,transaction_date:date}).then(function(){
-    document.getElementById('tx-u').value='';document.getElementById('tx-am').value='';
-    document.getElementById('calc').style.display='none';
-    document.getElementById('tx-dt').valueAsDate=new Date();
-    btn.disabled=false;btn.textContent='+ ADD FILL';
-    showToast('💰 Fill added — agent earns +'+fmtE(amount*RATE)+' IQD');
-    loadTxs();loadAgentsData();
-  }).catch(function(e){btn.disabled=false;btn.textContent='+ ADD FILL';showToast('Error: '+e.message,true);});
-}
-function loadTxs(){
-  var el=document.getElementById('txlist');
-  var filter=document.getElementById('tx-filt').value;
-  var search=(document.getElementById('tx-search').value||'').toLowerCase();
-  var q='agent_transactions?order=created_at.desc&select=*,vip_agents(name,commission_rate)&limit=300';
-  if(filter)q+='&agent_id=eq.'+filter;
-  sbFetch(q).then(function(data){
-    if(search)data=data.filter(function(t){return (t.race_username||'').toLowerCase().indexOf(search)>-1;});
-    if(!data.length){el.innerHTML='<div class="empty">No fills found.</div>';return;}
-    var tot=0;data.forEach(function(t){tot+=parseFloat(t.amount_spent);});
-    var h='<table class="ttbl"><thead><tr><th>AGENT</th><th>DRIVER</th><th>DATE</th><th>SPENT</th><th>EARNED</th><th></th></tr></thead><tbody>';
-    data.forEach(function(t){
-      h+='<tr><td style="font-size:12px">'+esc(t.vip_agents?t.vip_agents.name:'—')+'</td>';
-      h+='<td class="tu">'+esc(t.race_username)+'</td>';
-      h+='<td class="td">'+esc(t.transaction_date)+'</td>';
-      h+='<td>'+fmt(t.amount_spent)+'</td>';
-      var trate=(t.vip_agents&&t.vip_agents.commission_rate!=null)?parseFloat(t.vip_agents.commission_rate):RATE;h+='<td class="tg">+'+fmtE(t.amount_spent*trate)+'</td>';
-      h+='<td><button class="btn-del" data-id="'+t.id+'" onclick="delTx(this)">×</button></td></tr>';
+async function requestWithdraw(){
+  const inp=document.getElementById('wd-amount');
+  const amt=parseFloat(inp.value);
+  const avail=window._available||0;
+  if(!amt||amt<=0){toast('⚠️ Enter a valid amount');return;}
+  if(amt>avail){toast('⚠️ Max available: '+fmt(avail)+' IQD');return;}
+  const btn=document.getElementById('wd-btn');
+  btn.disabled=true;btn.textContent='...';
+  try{
+    const r=await fetch(SB+'/rest/v1/agent_withdrawals',{
+      method:'POST',
+      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify({agent_id:agentId,amount:amt,status:'pending'})
     });
-    h+='</tbody></table>';
-    el.innerHTML=h;
-  }).catch(function(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
-}
-function delTx(btn){
-  if(!confirm('Delete this fill?'))return;
-  sbFetch('agent_transactions?id=eq.'+btn.getAttribute('data-id'),'DELETE').then(function(){showToast('Fill deleted');loadTxs();loadAgentsData();}).catch(function(){showToast('Error',true);});
-}
-
-// INVITES
-function addInvite(){
-  var aid=document.getElementById('inv-ag').value;
-  var user=document.getElementById('inv-u').value.trim();
-  var date=document.getElementById('inv-dt').value;
-  if(!aid||!user||!date){showToast('All fields required',true);return;}
-  var btn=document.getElementById('invBtn');btn.disabled=true;btn.textContent='ADDING...';
-  sbFetch('agent_invites','POST',{agent_id:aid,race_username:user,joined_date:date}).then(function(){
-    document.getElementById('inv-u').value='';
-    document.getElementById('inv-dt').valueAsDate=new Date();
-    btn.disabled=false;btn.textContent='+ ADD INVITE';
-    showToast('👥 Driver invite added');
-    loadInvites();loadAgentsData();
-  }).catch(function(e){btn.disabled=false;btn.textContent='+ ADD INVITE';showToast('Error: '+e.message,true);});
-}
-function loadInvites(){
-  var el=document.getElementById('invlist');
-  var filter=document.getElementById('inv-filt').value;
-  var search=(document.getElementById('inv-search').value||'').toLowerCase();
-  var q='agent_invites?order=created_at.desc&select=*,vip_agents(name)&limit=300';
-  if(filter)q+='&agent_id=eq.'+filter;
-  sbFetch(q).then(function(data){
-    if(search)data=data.filter(function(i){return (i.race_username||'').toLowerCase().indexOf(search)>-1;});
-    if(!data.length){el.innerHTML='<div class="empty">No invites found.</div>';return;}
-    var h='<table class="ttbl"><thead><tr><th>AGENT</th><th>DRIVER USERNAME</th><th>JOINED</th><th></th></tr></thead><tbody>';
-    data.forEach(function(i){
-      h+='<tr><td style="font-size:12px">'+esc(i.vip_agents?i.vip_agents.name:'—')+'</td>';
-      h+='<td class="tu">'+esc(i.race_username)+'</td>';
-      h+='<td class="td">'+esc(i.joined_date)+'</td>';
-      h+='<td><button class="btn-del" data-id="'+i.id+'" onclick="delInvite(this)">×</button></td></tr>';
-    });
-    h+='</tbody></table>';
-    el.innerHTML=h;
-  }).catch(function(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
-}
-function delInvite(btn){
-  if(!confirm('Remove this invite?'))return;
-  sbFetch('agent_invites?id=eq.'+btn.getAttribute('data-id'),'DELETE').then(function(){showToast('Invite removed');loadInvites();loadAgentsData();}).catch(function(){showToast('Error',true);});
+    if(!r.ok)throw new Error(await r.text());
+    inp.value='';
+    btn.disabled=false;btn.textContent='Withdraw';
+    toast('✅ Withdrawal requested — pending approval');
+    await loadWithdrawals();
+    refresh();
+  }catch(e){
+    btn.disabled=false;btn.textContent='Withdraw';
+    toast('⚠️ Could not submit. Try again.');
+  }
 }
 
-// OVERVIEW
-function loadOverview(){
-  Promise.all([
-    sbFetch('vip_agents?select=id,name,referral_code,commission_rate'),
-    sbFetch('agent_transactions?select=agent_id,amount_spent'),
-    sbFetch('agent_invites?select=agent_id')
-  ]).then(function(r){
-    var ags=r[0],txs=r[1],invs=r[2];
-    var rateMap={};ags.forEach(function(a){rateMap[a.id]=(a.commission_rate!=null)?parseFloat(a.commission_rate):RATE;});
-    var totalSpend=0,totalEarned=0,txMap={},invMap={};
-    txs.forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);totalSpend+=parseFloat(t.amount_spent);totalEarned+=parseFloat(t.amount_spent)*(rateMap[t.agent_id]||RATE);});
-    invs.forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
-    document.getElementById('ov-a').textContent=ags.length;
-    document.getElementById('ov-i').textContent=invs.length;
-    document.getElementById('ov-t').textContent=txs.length;
-    document.getElementById('ov-e').textContent=fmtE(totalEarned);
-    document.getElementById('ov-spend').textContent=fmt(totalSpend);
-    document.getElementById('ov-avg').textContent=ags.length?(txs.length/ags.length).toFixed(1):'0';
-    // top performers
-    var arr=ags.map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*(rateMap[a.id]||RATE)};});
-    arr.sort(function(a,b){return b.earned-a.earned;});
-    var top=arr.slice(0,5);
-    var h='';
-    if(!top.length||top[0].earned===0&&top[0].inv===0){h='<div class="empty">No activity yet.<br>Create agents and add their invites & fills.</div>';}
-    else{
-      top.forEach(function(a,i){
-        var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
-        var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-        h+='<div class="lb-row"><div class="lb-rank '+cls+'">'+medal+'</div>';
-        h+='<div class="lb-body"><div class="lb-name">'+esc(a.name)+'</div><div class="lb-meta">'+a.inv+' drivers · '+a.fills+' fills</div></div>';
-        h+='<div class="lb-earn"><div class="lb-earn-v">'+fmtE(a.earned)+'</div><div class="lb-earn-l">IQD EARNED</div></div></div>';
-      });
-    }
-    document.getElementById('ov-top').innerHTML=h;
-  }).catch(function(e){document.getElementById('ov-top').innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
+// ═══ PWA INSTALL SYSTEM ═══
+let deferredPrompt=null;
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  const nb=document.getElementById('iNative');if(nb)nb.classList.add('show');
+});
+
+function showInstallBanner(){
+  if(isStandalone)return; // already installed
+  const b=document.getElementById('installBanner');
+  if(b)b.classList.remove('hidden');
+  // default tab to user's platform
+  if(isIOS)switchTab('ios');else switchTab('and');
+}
+function openInstall(){document.getElementById('iModal').classList.add('open');document.body.style.overflow='hidden';}
+function closeInstall(){document.getElementById('iModal').classList.remove('open');document.body.style.overflow='';}
+function switchTab(t){
+  document.getElementById('tabIos').classList.toggle('on',t==='ios');
+  document.getElementById('tabAnd').classList.toggle('on',t==='and');
+  document.getElementById('stepsIos').classList.toggle('on',t==='ios');
+  document.getElementById('stepsAnd').classList.toggle('on',t==='and');
+}
+async function triggerNativeInstall(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const {outcome}=await deferredPrompt.userChoice;
+    deferredPrompt=null;
+    if(outcome==='accepted'){closeInstall();toast('🎉 RACE VIP installed!');}
+  }
+}
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('installBanner')?.classList.add('hidden');
+  toast('🎉 RACE VIP added to your home screen!');
+});
+
+// Register service worker for offline + installability
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 
-
-// WITHDRAWALS
-function loadWithdrawals(){
-  var pend=document.getElementById('wd-pending');
-  var hist=document.getElementById('wd-history');
-  Promise.all([
-    sbFetch('agent_withdrawals?order=requested_at.desc&select=*,vip_agents(name,phone)'),
-    sbFetch('vip_agents?select=id,name')
-  ]).then(function(r){
-    var wds=r[0];
-    var pending=wds.filter(function(w){return w.status==='pending';});
-    var done=wds.filter(function(w){return w.status!=='pending';});
-    document.getElementById('tab-wd-badge').textContent=pending.length;
-
-    // Pending cards
-    if(!pending.length){pend.innerHTML='<div class="empty">No pending requests. 🎉</div>';}
-    else{
-      var ph='';
-      pending.forEach(function(w){
-        var nm=w.vip_agents?w.vip_agents.name:'Unknown';
-        var d=new Date(w.requested_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-        ph+='<div class="wdreq"><div class="wdreq-info">';
-        ph+='<div class="wdreq-name">'+esc(nm)+'</div>';
-        ph+='<div class="wdreq-amt">'+fmt(w.amount)+' IQD</div>';
-        ph+='<div class="wdreq-meta">Requested '+d+'</div>';
-        ph+='</div><div class="wdreq-actions">';
-        ph+='<button class="btn-approve" onclick="approveWd(\''+w.id+'\')">✓ Mark Paid</button>';
-        ph+='<button class="btn-reject" onclick="rejectWd(\''+w.id+'\')">Reject</button>';
-        ph+='</div></div>';
-      });
-      pend.innerHTML=ph;
-    }
-
-    // History table
-    if(!done.length){hist.innerHTML='<div class="empty">No processed withdrawals yet.</div>';}
-    else{
-      var hh='<table class="ttbl"><thead><tr><th>AGENT</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead><tbody>';
-      done.forEach(function(w){
-        var nm=w.vip_agents?w.vip_agents.name:'—';
-        var stColor=w.status==='rejected'?'var(--red)':'var(--green)';
-        var stLbl=w.status==='rejected'?'✕ Rejected':'✓ Paid';
-        var d=new Date(w.requested_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-        hh+='<tr><td style="font-size:12px">'+esc(nm)+'</td>';
-        hh+='<td class="tg">'+fmt(w.amount)+' IQD</td>';
-        hh+='<td style="font-family:JetBrains Mono;font-size:11px;color:'+stColor+'">'+stLbl+'</td>';
-        hh+='<td class="td">'+d+'</td>';
-        hh+='<td><button class="btn-del" data-id="'+w.id+'" onclick="delWd(this)">×</button></td></tr>';
-      });
-      hh+='</tbody></table>';
-      hist.innerHTML=hh;
-    }
-  }).catch(function(e){pend.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
-}
-function approveWd(id){
-  if(!confirm('Mark this withdrawal as PAID?\n\nConfirm you have sent the money to the agent.'))return;
-  sbFetch('agent_withdrawals?id=eq.'+id,'PATCH',{status:'paid',confirmed_at:new Date().toISOString()}).then(function(){
-    showToast('✅ Marked as paid');loadWithdrawals();
-  }).catch(function(){showToast('Error',true);});
-}
-function rejectWd(id){
-  if(!confirm('Reject this withdrawal request?\n\nThe amount returns to the agent\'s available balance.'))return;
-  sbFetch('agent_withdrawals?id=eq.'+id,'PATCH',{status:'rejected'}).then(function(){
-    showToast('Request rejected');loadWithdrawals();
-  }).catch(function(){showToast('Error',true);});
-}
-function delWd(btn){
-  if(!confirm('Delete this withdrawal record permanently?'))return;
-  sbFetch('agent_withdrawals?id=eq.'+btn.getAttribute('data-id'),'DELETE').then(function(){showToast('Deleted');loadWithdrawals();}).catch(function(){showToast('Error',true);});
-}
-
-// LEADERBOARD
-function loadLeaderboard(){
-  var el=document.getElementById('lblist');
-  Promise.all([
-    sbFetch('vip_agents?select=id,name,commission_rate'),
-    sbFetch('agent_transactions?select=agent_id,amount_spent'),
-    sbFetch('agent_invites?select=agent_id')
-  ]).then(function(r){
-    var txMap={},invMap={},rateMap={};
-    r[0].forEach(function(a){rateMap[a.id]=(a.commission_rate!=null)?parseFloat(a.commission_rate):RATE;});
-    r[1].forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);});
-    r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
-    var arr=r[0].map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*(rateMap[a.id]||RATE)};});
-    arr.sort(function(a,b){return b.inv-a.inv||b.earned-a.earned;});
-    if(!arr.length){el.innerHTML='<div class="empty">No agents yet.</div>';return;}
-    var h='';
-    arr.forEach(function(a,i){
-      var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-      var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-      var rk=rankFor(a.inv);
-      h+='<div class="lb-row"><div class="lb-rank '+cls+'">'+medal+'</div>';
-      h+='<div class="lb-body"><div class="lb-name">'+esc(a.name)+' <span class="arank" style="background:'+rk.color+'22;color:'+rk.color+';border:1px solid '+rk.color+'44;font-size:9px">'+rk.name+'</span></div><div class="lb-meta">'+a.inv+' drivers · '+a.fills+' fills</div></div>';
-      h+='<div class="lb-earn"><div class="lb-earn-v">'+fmtE(a.earned)+'</div><div class="lb-earn-l">IQD EARNED</div></div></div>';
-    });
-    el.innerHTML=h;
-  }).catch(function(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
-}
+showInstallBanner();
+boot();
 </script>
 </body>
 </html>
