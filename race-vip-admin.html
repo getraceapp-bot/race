@@ -17,7 +17,7 @@
   --txt:#f5f5f5;--dim:#888;--dim2:#9a9a9a;
   --green:#2ecc71;--gd:rgba(46,204,113,0.12);--gg:rgba(46,204,113,0.3);
   --red:#e74c3c;--rd:rgba(231,76,60,0.1);
-  --blue:#5b9bff;
+  --blue:#5b9bff;--purple:#a78bfa;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
@@ -94,11 +94,17 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 /* AGENT CARD */
 .acard{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px;margin-bottom:12px;transition:border-color .2s}
 .acard:hover{border-color:var(--og)}
+.acard.is-agent{border-left:3px solid var(--blue)}
+.acard.is-vip{border-left:3px solid var(--gold)}
 .acard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
 .aname{font-family:'Cabinet Grotesk';font-size:18px;font-weight:800;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .arank{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600}
+.role-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.5px}
+.role-badge.vip{background:rgba(240,200,66,0.13);color:var(--gold);border:1px solid rgba(240,200,66,0.3)}
+.role-badge.agent{background:rgba(91,155,255,0.13);color:var(--blue);border:1px solid rgba(91,155,255,0.3)}
 .aref{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--o);background:var(--od);padding:3px 9px;border-radius:20px}
 .aphone{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-top:5px}
+.aparent{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue);margin-top:5px}
 .acard-actions{display:flex;gap:6px;flex-shrink:0}
 .astats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .astat{background:var(--s2);border-radius:9px;padding:11px;text-align:center}
@@ -107,6 +113,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 .astat-v.g{color:var(--green)}
 .astat-v.gold{color:var(--gold)}
 .astat-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
+.abreak{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim2);background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:9px 12px;margin-bottom:10px;line-height:1.7}
+.abreak .up{color:var(--blue)}
+.abreak .ov{color:var(--green)}
 .lnk-row{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--og);border-radius:9px;padding:10px 12px;margin-bottom:8px}
 .lnk-row code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--o);flex:1;word-break:break-all;line-height:1.4}
 .cpbtn{flex-shrink:0;padding:7px 12px;background:none;border:1px solid var(--og);color:var(--o);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;border-radius:7px;transition:all .2s}
@@ -125,9 +134,11 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 .ttbl tr:hover td{background:var(--s2)}
 .tu{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--o)}
 .tg{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);font-weight:600}
+.tb-blue{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);font-weight:600}
 .td{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim)}
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.calc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);padding:10px 14px;background:var(--gd);border:1px solid var(--gg);border-radius:8px;margin-top:10px;display:none;line-height:1.5}
+.calc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);padding:12px 14px;background:var(--gd);border:1px solid var(--gg);border-radius:8px;margin-top:10px;display:none;line-height:1.7}
+.calc .split-line{color:var(--blue)}
 
 /* OVERVIEW */
 .ovgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
@@ -163,7 +174,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 .search-bar{width:100%;padding:11px 16px;background:var(--s1);border:1px solid var(--b1);color:var(--txt);font-size:14px;border-radius:10px;outline:none;margin-bottom:14px}
 .search-bar:focus{border-color:var(--og)}
 
-
 .wdreq{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--s1);border:1px solid rgba(240,200,66,0.25);border-radius:12px;margin-bottom:10px}
 .wdreq-info{flex:1;min-width:0}
 .wdreq-name{font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;margin-bottom:3px}
@@ -175,11 +185,12 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 .btn-reject{padding:10px 14px;background:none;border:1px solid rgba(231,76,60,.4);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;border-radius:8px;transition:all .2s}
 .btn-reject:hover{background:var(--red);color:#fff}
 
-
-.rate-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:9px 12px;margin-bottom:8px}
+.rate-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:9px 12px;margin-bottom:8px;flex-wrap:wrap}
 .rate-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim)}
 .rate-input{width:72px;padding:7px 10px;background:var(--bg);border:1px solid var(--b2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;outline:none;border-radius:6px;text-align:right}
 .rate-input:focus{border-color:var(--o)}
+.rate-input.blue{color:var(--blue)}
+.rate-sel{flex:1;min-width:120px;padding:7px 10px;background:var(--bg);border:1px solid var(--b2);color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;border-radius:6px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23888' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px}
 .rate-pct{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);font-weight:600;margin-left:-4px}
 .rate-save{margin-left:auto;padding:7px 14px;background:none;border:1px solid var(--og);color:var(--o);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .2s}
 .rate-save:hover{background:var(--od)}
@@ -232,14 +243,14 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
   <div class="pg on" id="pg-overview">
     <div class="slbl">// NETWORK SNAPSHOT <span id="ov-refresh" style="cursor:pointer;color:var(--o)">↻ refresh</span></div>
     <div class="ovgrid">
-      <div class="ovc"><div class="ovic">👤</div><div class="ovv o" id="ov-a">—</div><div class="ovl">VIP AGENTS</div></div>
+      <div class="ovc"><div class="ovic">👑</div><div class="ovv gold" id="ov-vip">—</div><div class="ovl">VIP AGENTS (TOP TIER)</div></div>
+      <div class="ovc"><div class="ovic">🤝</div><div class="ovv blue" id="ov-sub">—</div><div class="ovl">RECRUITED AGENTS</div></div>
       <div class="ovc"><div class="ovic">👥</div><div class="ovv blue" id="ov-i">—</div><div class="ovl">DRIVERS RECRUITED</div></div>
       <div class="ovc"><div class="ovic">⛽</div><div class="ovv gold" id="ov-t">—</div><div class="ovl">TOTAL FILLS</div></div>
-      <div class="ovc"><div class="ovic">💰</div><div class="ovv g" id="ov-e">—</div><div class="ovl">AGENT EARNINGS IQD</div></div>
     </div>
     <div class="ovgrid">
+      <div class="ovc"><div class="ovic">💰</div><div class="ovv g" id="ov-e">—</div><div class="ovl">TOTAL AGENT PAYOUT IQD</div></div>
       <div class="ovc"><div class="ovic">📈</div><div class="ovv" id="ov-spend">—</div><div class="ovl">TOTAL IQD MOVED</div></div>
-      <div class="ovc"><div class="ovic">⚡</div><div class="ovv o" id="ov-avg">—</div><div class="ovl">AVG FILLS / AGENT</div></div>
     </div>
     <div class="slbl">// TOP PERFORMERS</div>
     <div id="ov-top"><div class="empty">Loading...</div></div>
@@ -247,7 +258,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
 
   <!-- AGENTS -->
   <div class="pg" id="pg-agents">
-    <div class="slbl">// CREATE NEW VIP AGENT</div>
+    <div class="slbl">// CREATE AGENT</div>
     <div class="card">
       <div class="frow f2">
         <div class="fg"><label>AGENT NAME *</label><input type="text" id="nn" placeholder="e.g. Ahmed Hassan"></div>
@@ -257,11 +268,33 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
         <div class="fg"><label>REFERRAL CODE *</label><input type="text" id="nr" placeholder="auto-generated if empty"></div>
         <div class="fg"><label>COMMISSION RATE (%)</label><input type="number" id="ncr" value="0.32" step="0.01" min="0" placeholder="0.32"></div>
       </div>
+      <div class="frow f2">
+        <div class="fg"><label>ROLE *</label>
+          <select id="nrole" onchange="toggleParentFields()">
+            <option value="vip">👑 VIP Agent — top tier, no parent</option>
+            <option value="agent">🤝 Agent — recruited by a parent</option>
+          </select>
+        </div>
+        <div class="fg" id="parentWrap" style="display:none"><label>PARENT (WHO RECRUITED THEM) *</label>
+          <select id="nparent"><option value="">Select parent agent...</option></select>
+        </div>
+      </div>
+      <div class="frow f2" id="splitWrap" style="display:none">
+        <div class="fg"><label>PARENT'S SHARE OF THIS AGENT'S COMMISSION (%)</label><input type="number" id="nsplit" value="30" step="1" min="0" max="100" placeholder="30"></div>
+        <div class="fg" style="justify-content:flex-end"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim2);line-height:1.5;padding-bottom:4px" id="splitHint">Parent takes 30% · agent keeps 70% of their own commission.</div></div>
+      </div>
       <div class="frow"><button class="btn-add" onclick="genCode()" style="background:var(--s2);border:1px solid var(--b2)">⚡ AUTO-GENERATE CODE</button></div>
       <button class="btn-add" id="createBtn" onclick="createAgent()">+ CREATE AGENT</button>
     </div>
     <div class="slbl">// ALL AGENTS</div>
-    <input class="search-bar" id="agentSearch" placeholder="🔍 Search agents by name, code, phone..." oninput="renderAgents()">
+    <div class="filt">
+      <select id="roleFilt" onchange="renderAgents()">
+        <option value="all">All roles</option>
+        <option value="vip">👑 VIP Agents only</option>
+        <option value="agent">🤝 Recruited Agents only</option>
+      </select>
+      <input class="search-bar" id="agentSearch" placeholder="🔍 Search agents by name, code, phone..." oninput="renderAgents()" style="margin-bottom:0;flex:1;min-width:160px">
+    </div>
     <div id="alist"><div class="empty">Loading...</div></div>
   </div>
 
@@ -270,7 +303,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
     <div class="slbl">// ADD FILL (TRANSACTION)</div>
     <div class="card">
       <div class="frow f2">
-        <div class="fg"><label>VIP AGENT *</label><select id="tx-ag" onchange="loadAgentInvitees()"><option value="">Select agent...</option></select></div>
+        <div class="fg"><label>AGENT *</label><select id="tx-ag" onchange="loadAgentInvitees();calcPrev()"><option value="">Select agent...</option></select></div>
         <div class="fg"><label>RACE DRIVER (invitee) *</label><input type="text" id="tx-u" list="tx-u-list" placeholder="username" oninput="calcPrev()"><datalist id="tx-u-list"></datalist></div>
       </div>
       <div class="frow f2">
@@ -293,7 +326,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
     <div class="slbl">// ADD DRIVER INVITE</div>
     <div class="card">
       <div class="frow f3">
-        <div class="fg"><label>VIP AGENT *</label><select id="inv-ag"><option value="">Select agent...</option></select></div>
+        <div class="fg"><label>AGENT *</label><select id="inv-ag"><option value="">Select agent...</option></select></div>
         <div class="fg"><label>RACE DRIVER USERNAME *</label><input type="text" id="inv-u" placeholder="e.g. UserB61F11"></div>
         <div class="fg"><label>JOINED DATE *</label><input type="date" id="inv-dt"></div>
       </div>
@@ -306,7 +339,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-h
     </div>
     <div class="card" style="padding:0;overflow:hidden"><div class="tscroll"><div id="invlist"><div class="empty">Loading...</div></div></div></div>
   </div>
-
 
   <!-- WITHDRAWALS -->
   <div class="pg" id="pg-withdrawals">
@@ -330,7 +362,7 @@ var SB='https://zluhwkdrijrklviijuvl.supabase.co';
 var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w';
 var PASS='race2024admin';
 var RATE=0.0032;
-var agents=[],agentStats={},allAgentsCache=[];
+var agents=[],agentStats={},agentNameById={};
 
 var RANKS=[
   {name:'Rookie',min:0,color:'#9a9a9a'},
@@ -390,25 +422,39 @@ function boot(){
   document.getElementById('inv-dt').valueAsDate=d;
   loadOverview();
   loadAgentsData();
-  // load pending withdrawal badge
   sbFetch('agent_withdrawals?status=eq.pending&select=id').then(function(d){document.getElementById('tab-wd-badge').textContent=d.length;}).catch(function(){});
 }
 document.getElementById('ov-refresh').onclick=function(){loadOverview();loadAgentsData();showToast('Refreshed');};
 document.getElementById('wd-refresh').onclick=function(){loadWithdrawals();showToast('Refreshed');};
 
-// Central data loader
+// Central data loader — now OVERRIDE-AWARE via agent_team_earnings view
 function loadAgentsData(){
   return Promise.all([
     sbFetch('vip_agents?order=created_at.desc&select=*'),
-    sbFetch('agent_transactions?select=agent_id,amount_spent'),
+    sbFetch('agent_team_earnings?select=*'),
     sbFetch('agent_invites?select=agent_id')
   ]).then(function(r){
-    agents=r[0];allAgentsCache=r[0];
-    var txMap={},invMap={};
-    r[1].forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);});
-    r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
+    agents=r[0];
+    var teamMap={};r[1].forEach(function(t){teamMap[t.agent_id]=t;});
+    var invMap={};r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
+    agentNameById={};agents.forEach(function(a){agentNameById[a.id]=a.name;});
     agentStats={};
-    agents.forEach(function(a){var tx=txMap[a.id]||{c:0,tot:0};var ar=(a.commission_rate!=null&&!isNaN(parseFloat(a.commission_rate)))?parseFloat(a.commission_rate):RATE;agentStats[a.id]={inv:invMap[a.id]||0,fills:tx.c,spend:tx.tot,earned:tx.tot*ar,rate:ar};});
+    agents.forEach(function(a){
+      var t=teamMap[a.id]||{};
+      var ar=(a.commission_rate!=null&&!isNaN(parseFloat(a.commission_rate)))?parseFloat(a.commission_rate):RATE;
+      agentStats[a.id]={
+        inv:invMap[a.id]||0,
+        fills:parseInt(t.own_txns||0),
+        spend:parseFloat(t.own_volume||0),
+        own_net:parseFloat(t.own_net||0),
+        override:parseFloat(t.override_from_captains||0),
+        paid_up:parseFloat(t.paid_up_to_parent||0),
+        earned:parseFloat(t.total_earnings||0),
+        rate:ar,
+        split:parseFloat(a.parent_split_rate||0),
+        parentId:a.parent_agent_id||''
+      };
+    });
     document.getElementById('agents-pill').textContent=agents.length+' agents';
     document.getElementById('tab-ag-badge').textContent=agents.length;
     renderAgents();
@@ -419,40 +465,65 @@ function loadAgentsData(){
 function renderAgents(){
   var el=document.getElementById('alist');
   var q=(document.getElementById('agentSearch').value||'').toLowerCase();
-  var list=agents.filter(function(a){return !q||((a.name||'')+' '+(a.referral_code||'')+' '+(a.phone||'')).toLowerCase().indexOf(q)>-1;});
+  var roleF=document.getElementById('roleFilt').value;
+  var list=agents.filter(function(a){
+    if(roleF==='vip'&&a.parent_agent_id)return false;
+    if(roleF==='agent'&&!a.parent_agent_id)return false;
+    return !q||((a.name||'')+' '+(a.referral_code||'')+' '+(a.phone||'')).toLowerCase().indexOf(q)>-1;
+  });
   if(!list.length){el.innerHTML='<div class="empty">'+(q?'No agents match your search.':'No agents yet. Create your first above.')+'</div>';return;}
   var baseURL=window.location.origin+window.location.pathname.replace('race-vip-admin.html','');
+  var parentOpts=agents.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>';}).join('');
   var html='';
   list.forEach(function(a){
-    var s=agentStats[a.id]||{inv:0,fills:0,spend:0,earned:0};
+    var s=agentStats[a.id]||{inv:0,fills:0,spend:0,earned:0,own_net:0,override:0,paid_up:0,rate:RATE,split:0,parentId:''};
     var rk=rankFor(s.inv);
+    var isAgent=!!a.parent_agent_id;
     var agentURL=baseURL+'race-vip-agent.html?id='+a.id;
     var waPhone=(a.phone||'').replace(/[^0-9]/g,'');
-    var waMsg=encodeURIComponent('🏁 Welcome to RACE VIP, '+a.name+'!\n\nYour personal agent dashboard is ready. Track your earnings live and start inviting drivers:\n\n'+agentURL+'\n\nEvery driver you invite earns you 0.32% of every fill they make — forever. Let\'s go! 🚗💰');
-    html+='<div class="acard">';
+    var ratePct=((s.rate!=null?s.rate:0.0032)*100).toFixed(2).replace(/\.?0+$/,'');
+    var waMsg=encodeURIComponent('🏁 Welcome to RACE VIP, '+a.name+'!\n\nYour personal agent dashboard is ready. Track your earnings live and start inviting drivers:\n\n'+agentURL+'\n\nEvery driver you invite earns you '+ratePct+'% of every fill they make — forever. Let\'s go! 🚗💰');
+    html+='<div class="acard '+(isAgent?'is-agent':'is-vip')+'">';
     html+='<div class="acard-top"><div>';
-    html+='<div class="aname">'+esc(a.name)+'<span class="arank" style="background:'+rk.color+'22;color:'+rk.color+';border:1px solid '+rk.color+'44">'+rk.name+'</span></div>';
+    html+='<div class="aname">'+esc(a.name);
+    html+=isAgent?'<span class="role-badge agent">🤝 AGENT</span>':'<span class="role-badge vip">👑 VIP</span>';
+    html+='<span class="arank" style="background:'+rk.color+'22;color:'+rk.color+';border:1px solid '+rk.color+'44">'+rk.name+'</span></div>';
     html+='<div class="aref">'+esc(a.referral_code)+'</div>';
     if(a.phone)html+='<div class="aphone">📱 '+esc(a.phone)+'</div>';
+    if(isAgent&&s.parentId)html+='<div class="aparent">↑ recruited by '+esc(agentNameById[s.parentId]||'—')+' · they take '+s.split+'%</div>';
     html+='</div><div class="acard-actions"><button class="btn-del" data-id="'+a.id+'" data-name="'+esc(a.name)+'" onclick="delAgent(this)">DELETE</button></div></div>';
     html+='<div class="astats">';
     html+='<div class="astat"><div class="astat-v o">'+s.inv+'</div><div class="astat-l">DRIVERS</div></div>';
     html+='<div class="astat"><div class="astat-v gold">'+s.fills+'</div><div class="astat-l">FILLS</div></div>';
-    html+='<div class="astat"><div class="astat-v g">'+fmtE(s.earned)+'</div><div class="astat-l">EARNED IQD</div></div>';
+    html+='<div class="astat"><div class="astat-v g">'+fmtE(s.earned)+'</div><div class="astat-l">TAKE-HOME IQD</div></div>';
     html+='</div>';
-    var ratePct=((s.rate!=null?s.rate:0.0032)*100).toFixed(2).replace(/\.?0+$/,'');
+    // earnings breakdown
+    if(isAgent||s.override>0){
+      html+='<div class="abreak">';
+      html+='From own drivers: <b>'+fmtE(s.own_net)+' IQD</b>';
+      if(isAgent&&s.paid_up>0)html+=' <span class="up">(after '+s.split+'% → '+esc(agentNameById[s.parentId]||'parent')+': '+fmtE(s.paid_up)+')</span>';
+      if(s.override>0)html+='<br>Override from recruits: <b class="ov">+'+fmtE(s.override)+' IQD</b>';
+      html+='</div>';
+    }
+    // commission rate editor
     html+='<div class="rate-row"><span class="rate-lbl">COMMISSION</span><input class="rate-input" type="number" step="0.01" min="0" value="'+ratePct+'" id="rate-'+a.id+'"><span class="rate-pct">%</span><button class="rate-save" onclick="saveRate(\''+a.id+'\')">SAVE</button></div>';
+    // parent + split editor
+    html+='<div class="rate-row"><span class="rate-lbl">PARENT</span>';
+    html+='<select class="rate-sel" id="parent-'+a.id+'"><option value="">— none (VIP) —</option>'+parentOpts+'</select>';
+    html+='<span class="rate-lbl">TAKES</span><input class="rate-input blue" type="number" step="1" min="0" max="100" value="'+(s.split||0)+'" id="psplit-'+a.id+'"><span class="rate-pct" style="color:var(--blue)">%</span>';
+    html+='<button class="rate-save" onclick="saveParent(\''+a.id+'\')">SAVE</button></div>';
     html+='<div class="lnk-row"><code>'+agentURL+'</code><button class="cpbtn" data-url="'+agentURL+'" onclick="copyLink(this)">COPY</button></div>';
     html+='<div class="aquick">';
-    html+='<button class="aqbtn" onclick="quickTx(\''+a.id+'\',\''+esc(a.name).replace(/'/g,"")+'\')">⛽ Add Fill</button>';
+    html+='<button class="aqbtn" onclick="quickTx(\''+a.id+'\')">⛽ Add Fill</button>';
     if(waPhone)html+='<a class="aqbtn wa" href="https://wa.me/'+waPhone+'?text='+waMsg+'" target="_blank" rel="noopener">📲 Send Link</a>';
     else html+='<button class="aqbtn" onclick="quickInv(\''+a.id+'\')">👥 Add Invite</button>';
     html+='</div>';
     html+='</div>';
   });
   el.innerHTML=html;
+  // set current parent selections
+  list.forEach(function(a){var sel=document.getElementById('parent-'+a.id);if(sel)sel.value=a.parent_agent_id||'';});
 }
-
 
 function saveRate(id){
   var inp=document.getElementById('rate-'+id);
@@ -465,6 +536,35 @@ function saveRate(id){
   }).catch(function(){showToast('Error saving rate',true);});
 }
 
+function saveParent(id){
+  var psel=document.getElementById('parent-'+id);
+  var split=parseFloat(document.getElementById('psplit-'+id).value)||0;
+  var pid=psel.value||null;
+  if(pid===id){showToast('An agent can\'t be their own parent',true);return;}
+  if(split<0||split>100){showToast('Split must be 0–100%',true);return;}
+  var body={parent_agent_id:pid,parent_split_rate:pid?split:0};
+  sbFetch('vip_agents?id=eq.'+id,'PATCH',body).then(function(){
+    showToast(pid?'✅ Linked — parent takes '+split+'%':'✅ Set as VIP (no parent)');
+    loadAgentsData();loadOverview();
+  }).catch(function(){showToast('Error saving link',true);});
+}
+
+function toggleParentFields(){
+  var role=document.getElementById('nrole').value;
+  document.getElementById('parentWrap').style.display=role==='agent'?'flex':'none';
+  document.getElementById('splitWrap').style.display=role==='agent'?'grid':'none';
+  if(role==='agent'){
+    var opts='<option value="">Select parent agent...</option>'+agents.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>';}).join('');
+    document.getElementById('nparent').innerHTML=opts;
+  }
+}
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='nsplit'){
+    var v=parseFloat(e.target.value)||0;
+    var h=document.getElementById('splitHint');if(h)h.textContent='Parent takes '+v+'% · agent keeps '+(100-v)+'% of their own commission.';
+  }
+});
+
 function genCode(){
   var c='RC'+Date.now().toString().slice(-9)+Math.floor(Math.random()*900+100);
   document.getElementById('nr').value=c;
@@ -473,17 +573,30 @@ function createAgent(){
   var name=document.getElementById('nn').value.trim();
   var phone=document.getElementById('np').value.trim();
   var ref=document.getElementById('nr').value.trim();
+  var role=document.getElementById('nrole').value;
   if(!name){showToast('Agent name required',true);return;}
   if(!ref){ref='RC'+Date.now().toString().slice(-9)+Math.floor(Math.random()*900+100);}
   var crPct=parseFloat(document.getElementById('ncr').value);
   if(isNaN(crPct)||crPct<0)crPct=0.32;
   var crDec=crPct/100;
+  var body={name:name,phone:phone||null,referral_code:ref,commission_rate:crDec};
+  if(role==='agent'){
+    var pid=document.getElementById('nparent').value;
+    if(!pid){showToast('Select the parent who recruited them',true);return;}
+    var split=parseFloat(document.getElementById('nsplit').value);
+    if(isNaN(split)||split<0||split>100){showToast('Enter a valid split 0–100%',true);return;}
+    body.parent_agent_id=pid;
+    body.parent_split_rate=split;
+  }else{
+    body.parent_agent_id=null;body.parent_split_rate=0;
+  }
   var btn=document.getElementById('createBtn');btn.disabled=true;btn.textContent='CREATING...';
-  sbFetch('vip_agents','POST',{name:name,phone:phone||null,referral_code:ref,commission_rate:crDec}).then(function(){
+  sbFetch('vip_agents','POST',body).then(function(){
     document.getElementById('nn').value='';document.getElementById('np').value='';document.getElementById('nr').value='';document.getElementById('ncr').value='0.32';
-    showToast('✅ Agent "'+name+'" created');
+    document.getElementById('nrole').value='vip';toggleParentFields();
+    showToast('✅ '+(role==='agent'?'Agent':'VIP Agent')+' "'+name+'" created');
     btn.disabled=false;btn.textContent='+ CREATE AGENT';
-    loadAgentsData();
+    loadAgentsData();loadOverview();
   }).catch(function(e){
     btn.disabled=false;btn.textContent='+ CREATE AGENT';
     showToast(e.message.indexOf('duplicate')>-1||e.message.indexOf('unique')>-1?'Referral code already exists':'Error creating agent',true);
@@ -491,18 +604,17 @@ function createAgent(){
 }
 function delAgent(btn){
   var id=btn.getAttribute('data-id'),name=btn.getAttribute('data-name');
-  if(!confirm('Delete agent "'+name+'"?\n\nThis removes the agent. Their invites & fills stay in the database unless deleted separately.'))return;
-  sbFetch('vip_agents?id=eq.'+id,'DELETE').then(function(){showToast('Agent deleted');loadAgentsData();}).catch(function(){showToast('Error deleting',true);});
+  if(!confirm('Delete agent "'+name+'"?\n\nThis removes the agent. Their invites & fills stay in the database unless deleted separately. Any agents they recruited will become VIP (no parent).'))return;
+  sbFetch('vip_agents?id=eq.'+id,'DELETE').then(function(){showToast('Agent deleted');loadAgentsData();loadOverview();}).catch(function(){showToast('Error deleting',true);});
 }
 function copyLink(btn){
   var url=btn.getAttribute('data-url');
   navigator.clipboard.writeText(url).then(function(){btn.textContent='COPIED!';btn.classList.add('ok');setTimeout(function(){btn.textContent='COPY';btn.classList.remove('ok');},2500);});
 }
 
-// Quick actions jump to tab with agent preselected
 function quickTx(id){
   var t=document.querySelectorAll('.tb')[2];goTab('txs',t);
-  setTimeout(function(){document.getElementById('tx-ag').value=id;loadAgentInvitees();document.getElementById('tx-u').focus();},100);
+  setTimeout(function(){document.getElementById('tx-ag').value=id;loadAgentInvitees();calcPrev();document.getElementById('tx-u').focus();},100);
 }
 function quickInv(id){
   var t=document.querySelectorAll('.tb')[3];goTab('invites',t);
@@ -512,14 +624,13 @@ function quickInv(id){
 // SELECTS
 function populateSels(){
   var sel='<option value="">Select agent...</option>',all='<option value="">All agents</option>';
-  agents.forEach(function(a){var o='<option value="'+a.id+'">'+esc(a.name)+'</option>';sel+=o;all+=o;});
+  agents.forEach(function(a){var tag=a.parent_agent_id?' (agent)':' (VIP)';var o='<option value="'+a.id+'">'+esc(a.name)+tag+'</option>';sel+=o;all+=o;});
   document.getElementById('tx-ag').innerHTML=sel;
   document.getElementById('inv-ag').innerHTML=sel;
   document.getElementById('tx-filt').innerHTML=all;
   document.getElementById('inv-filt').innerHTML=all;
 }
 
-// Autocomplete invitees for fills
 function loadAgentInvitees(){
   var aid=document.getElementById('tx-ag').value;
   var dl=document.getElementById('tx-u-list');dl.innerHTML='';
@@ -529,11 +640,27 @@ function loadAgentInvitees(){
   }).catch(function(){});
 }
 
+// SPLIT-AWARE calculator preview
 function calcPrev(){
   var am=parseFloat(document.getElementById('tx-am').value)||0;
   var u=document.getElementById('tx-u').value.trim();
   var el=document.getElementById('calc');
-  if(am>0){el.style.display='block';var selA=document.getElementById('tx-ag').value;var pr=(selA&&agentStats[selA]&&agentStats[selA].rate!=null)?agentStats[selA].rate:RATE;el.innerHTML='→ '+(u?esc(u)+' ':'')+'spends <b>'+fmt(am)+' IQD</b> → agent earns <b style="color:var(--green)">'+fmtE(am*pr)+' IQD</b> ('+(pr*100).toFixed(2).replace(/\.?0+$/,'')+'%)';}
+  var aid=document.getElementById('tx-ag').value;
+  if(am>0&&aid&&agentStats[aid]){
+    var s=agentStats[aid];
+    var pool=am*s.rate;
+    var split=s.split||0;
+    var parentCut=pool*(split/100);
+    var agentNet=pool-parentCut;
+    el.style.display='block';
+    var h='→ '+(u?esc(u)+' ':'')+'spends <b>'+fmt(am)+' IQD</b> → commission pool <b style="color:var(--green)">'+fmtE(pool)+' IQD</b> ('+(s.rate*100).toFixed(2).replace(/\.?0+$/,'')+'%)';
+    if(split>0&&s.parentId){
+      h+='<br><span class="split-line">↳ '+esc(agentNameById[aid]||'agent')+' keeps <b>'+fmtE(agentNet)+' IQD</b> · '+esc(agentNameById[s.parentId]||'parent')+' gets <b>'+fmtE(parentCut)+' IQD</b> ('+split+'%)</span>';
+    }else{
+      h+='<br><span class="split-line">↳ agent keeps all <b>'+fmtE(pool)+' IQD</b> (VIP, no split)</span>';
+    }
+    el.innerHTML=h;
+  }
   else el.style.display='none';
 }
 
@@ -550,7 +677,9 @@ function addTx(){
     document.getElementById('calc').style.display='none';
     document.getElementById('tx-dt').valueAsDate=new Date();
     btn.disabled=false;btn.textContent='+ ADD FILL';
-    showToast('💰 Fill added — agent earns +'+fmtE(amount*RATE)+' IQD');
+    var s=agentStats[aid]||{rate:RATE,split:0};
+    var pool=amount*s.rate;var net=pool*(1-(s.split||0)/100);
+    showToast('💰 Fill added — agent earns +'+fmtE(net)+' IQD'+(s.split>0?' (after '+s.split+'% to parent)':''));
     loadTxs();loadAgentsData();
   }).catch(function(e){btn.disabled=false;btn.textContent='+ ADD FILL';showToast('Error: '+e.message,true);});
 }
@@ -558,19 +687,25 @@ function loadTxs(){
   var el=document.getElementById('txlist');
   var filter=document.getElementById('tx-filt').value;
   var search=(document.getElementById('tx-search').value||'').toLowerCase();
-  var q='agent_transactions?order=created_at.desc&select=*,vip_agents(name,commission_rate)&limit=300';
+  var q='agent_transactions?order=created_at.desc&select=*,vip_agents(name,commission_rate,parent_agent_id,parent_split_rate)&limit=300';
   if(filter)q+='&agent_id=eq.'+filter;
   sbFetch(q).then(function(data){
     if(search)data=data.filter(function(t){return (t.race_username||'').toLowerCase().indexOf(search)>-1;});
     if(!data.length){el.innerHTML='<div class="empty">No fills found.</div>';return;}
-    var tot=0;data.forEach(function(t){tot+=parseFloat(t.amount_spent);});
-    var h='<table class="ttbl"><thead><tr><th>AGENT</th><th>DRIVER</th><th>DATE</th><th>SPENT</th><th>EARNED</th><th></th></tr></thead><tbody>';
+    var h='<table class="ttbl"><thead><tr><th>AGENT</th><th>DRIVER</th><th>DATE</th><th>SPENT</th><th>AGENT NET</th><th>→PARENT</th><th></th></tr></thead><tbody>';
     data.forEach(function(t){
-      h+='<tr><td style="font-size:12px">'+esc(t.vip_agents?t.vip_agents.name:'—')+'</td>';
+      var va=t.vip_agents||{};
+      var trate=(va.commission_rate!=null)?parseFloat(va.commission_rate):RATE;
+      var split=parseFloat(va.parent_split_rate||0);
+      var pool=parseFloat(t.amount_spent)*trate;
+      var parentCut=pool*(split/100);
+      var net=pool-parentCut;
+      h+='<tr><td style="font-size:12px">'+esc(va.name||'—')+'</td>';
       h+='<td class="tu">'+esc(t.race_username)+'</td>';
       h+='<td class="td">'+esc(t.transaction_date)+'</td>';
       h+='<td>'+fmt(t.amount_spent)+'</td>';
-      var trate=(t.vip_agents&&t.vip_agents.commission_rate!=null)?parseFloat(t.vip_agents.commission_rate):RATE;h+='<td class="tg">+'+fmtE(t.amount_spent*trate)+'</td>';
+      h+='<td class="tg">+'+fmtE(net)+'</td>';
+      h+='<td class="tb-blue">'+(parentCut>0?'+'+fmtE(parentCut):'—')+'</td>';
       h+='<td><button class="btn-del" data-id="'+t.id+'" onclick="delTx(this)">×</button></td></tr>';
     });
     h+='</tbody></table>';
@@ -622,58 +757,57 @@ function delInvite(btn){
   sbFetch('agent_invites?id=eq.'+btn.getAttribute('data-id'),'DELETE').then(function(){showToast('Invite removed');loadInvites();loadAgentsData();}).catch(function(){showToast('Error',true);});
 }
 
-// OVERVIEW
+// OVERVIEW — override-aware
 function loadOverview(){
   Promise.all([
-    sbFetch('vip_agents?select=id,name,referral_code,commission_rate'),
-    sbFetch('agent_transactions?select=agent_id,amount_spent'),
+    sbFetch('vip_agents?select=id,name,parent_agent_id'),
+    sbFetch('agent_team_earnings?select=*'),
     sbFetch('agent_invites?select=agent_id')
   ]).then(function(r){
-    var ags=r[0],txs=r[1],invs=r[2];
-    var rateMap={};ags.forEach(function(a){rateMap[a.id]=(a.commission_rate!=null)?parseFloat(a.commission_rate):RATE;});
-    var totalSpend=0,totalEarned=0,txMap={},invMap={};
-    txs.forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);totalSpend+=parseFloat(t.amount_spent);totalEarned+=parseFloat(t.amount_spent)*(rateMap[t.agent_id]||RATE);});
-    invs.forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
-    document.getElementById('ov-a').textContent=ags.length;
+    var ags=r[0],team=r[1],invs=r[2];
+    var teamMap={};team.forEach(function(t){teamMap[t.agent_id]=t;});
+    var vipCount=0,subCount=0,totalSpend=0,totalPayout=0,totalFills=0;
+    ags.forEach(function(a){
+      if(a.parent_agent_id)subCount++;else vipCount++;
+      var t=teamMap[a.id]||{};
+      totalSpend+=parseFloat(t.own_volume||0);
+      totalPayout+=parseFloat(t.total_earnings||0);
+      totalFills+=parseInt(t.own_txns||0);
+    });
+    document.getElementById('ov-vip').textContent=vipCount;
+    document.getElementById('ov-sub').textContent=subCount;
     document.getElementById('ov-i').textContent=invs.length;
-    document.getElementById('ov-t').textContent=txs.length;
-    document.getElementById('ov-e').textContent=fmtE(totalEarned);
+    document.getElementById('ov-t').textContent=totalFills;
+    document.getElementById('ov-e').textContent=fmtE(totalPayout);
     document.getElementById('ov-spend').textContent=fmt(totalSpend);
-    document.getElementById('ov-avg').textContent=ags.length?(txs.length/ags.length).toFixed(1):'0';
-    // top performers
-    var arr=ags.map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*(rateMap[a.id]||RATE)};});
+    // top performers by take-home
+    var invMap={};invs.forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
+    var arr=ags.map(function(a){var t=teamMap[a.id]||{};return {name:a.name,isAgent:!!a.parent_agent_id,inv:invMap[a.id]||0,fills:parseInt(t.own_txns||0),earned:parseFloat(t.total_earnings||0)};});
     arr.sort(function(a,b){return b.earned-a.earned;});
     var top=arr.slice(0,5);
     var h='';
-    if(!top.length||top[0].earned===0&&top[0].inv===0){h='<div class="empty">No activity yet.<br>Create agents and add their invites & fills.</div>';}
+    if(!top.length||(top[0].earned===0&&top[0].inv===0)){h='<div class="empty">No activity yet.<br>Create agents and add their invites & fills.</div>';}
     else{
       top.forEach(function(a,i){
         var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
         var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
         h+='<div class="lb-row"><div class="lb-rank '+cls+'">'+medal+'</div>';
-        h+='<div class="lb-body"><div class="lb-name">'+esc(a.name)+'</div><div class="lb-meta">'+a.inv+' drivers · '+a.fills+' fills</div></div>';
-        h+='<div class="lb-earn"><div class="lb-earn-v">'+fmtE(a.earned)+'</div><div class="lb-earn-l">IQD EARNED</div></div></div>';
+        h+='<div class="lb-body"><div class="lb-name">'+esc(a.name)+' '+(a.isAgent?'<span class="role-badge agent">🤝</span>':'<span class="role-badge vip">👑</span>')+'</div><div class="lb-meta">'+a.inv+' drivers · '+a.fills+' fills</div></div>';
+        h+='<div class="lb-earn"><div class="lb-earn-v">'+fmtE(a.earned)+'</div><div class="lb-earn-l">IQD TAKE-HOME</div></div></div>';
       });
     }
     document.getElementById('ov-top').innerHTML=h;
   }).catch(function(e){document.getElementById('ov-top').innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
 }
 
-
 // WITHDRAWALS
 function loadWithdrawals(){
   var pend=document.getElementById('wd-pending');
   var hist=document.getElementById('wd-history');
-  Promise.all([
-    sbFetch('agent_withdrawals?order=requested_at.desc&select=*,vip_agents(name,phone)'),
-    sbFetch('vip_agents?select=id,name')
-  ]).then(function(r){
-    var wds=r[0];
+  sbFetch('agent_withdrawals?order=requested_at.desc&select=*,vip_agents(name,phone)').then(function(wds){
     var pending=wds.filter(function(w){return w.status==='pending';});
     var done=wds.filter(function(w){return w.status!=='pending';});
     document.getElementById('tab-wd-badge').textContent=pending.length;
-
-    // Pending cards
     if(!pending.length){pend.innerHTML='<div class="empty">No pending requests. 🎉</div>';}
     else{
       var ph='';
@@ -691,8 +825,6 @@ function loadWithdrawals(){
       });
       pend.innerHTML=ph;
     }
-
-    // History table
     if(!done.length){hist.innerHTML='<div class="empty">No processed withdrawals yet.</div>';}
     else{
       var hh='<table class="ttbl"><thead><tr><th>AGENT</th><th>AMOUNT</th><th>STATUS</th><th>DATE</th><th></th></tr></thead><tbody>';
@@ -729,19 +861,17 @@ function delWd(btn){
   sbFetch('agent_withdrawals?id=eq.'+btn.getAttribute('data-id'),'DELETE').then(function(){showToast('Deleted');loadWithdrawals();}).catch(function(){showToast('Error',true);});
 }
 
-// LEADERBOARD
+// LEADERBOARD — override-aware take-home
 function loadLeaderboard(){
   var el=document.getElementById('lblist');
   Promise.all([
-    sbFetch('vip_agents?select=id,name,commission_rate'),
-    sbFetch('agent_transactions?select=agent_id,amount_spent'),
+    sbFetch('vip_agents?select=id,name,parent_agent_id'),
+    sbFetch('agent_team_earnings?select=*'),
     sbFetch('agent_invites?select=agent_id')
   ]).then(function(r){
-    var txMap={},invMap={},rateMap={};
-    r[0].forEach(function(a){rateMap[a.id]=(a.commission_rate!=null)?parseFloat(a.commission_rate):RATE;});
-    r[1].forEach(function(t){if(!txMap[t.agent_id])txMap[t.agent_id]={c:0,tot:0};txMap[t.agent_id].c++;txMap[t.agent_id].tot+=parseFloat(t.amount_spent);});
-    r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
-    var arr=r[0].map(function(a){var tx=txMap[a.id]||{c:0,tot:0};return {name:a.name,inv:invMap[a.id]||0,fills:tx.c,earned:tx.tot*(rateMap[a.id]||RATE)};});
+    var teamMap={};r[1].forEach(function(t){teamMap[t.agent_id]=t;});
+    var invMap={};r[2].forEach(function(i){invMap[i.agent_id]=(invMap[i.agent_id]||0)+1;});
+    var arr=r[0].map(function(a){var t=teamMap[a.id]||{};return {name:a.name,isAgent:!!a.parent_agent_id,inv:invMap[a.id]||0,fills:parseInt(t.own_txns||0),earned:parseFloat(t.total_earnings||0)};});
     arr.sort(function(a,b){return b.inv-a.inv||b.earned-a.earned;});
     if(!arr.length){el.innerHTML='<div class="empty">No agents yet.</div>';return;}
     var h='';
@@ -750,8 +880,8 @@ function loadLeaderboard(){
       var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
       var rk=rankFor(a.inv);
       h+='<div class="lb-row"><div class="lb-rank '+cls+'">'+medal+'</div>';
-      h+='<div class="lb-body"><div class="lb-name">'+esc(a.name)+' <span class="arank" style="background:'+rk.color+'22;color:'+rk.color+';border:1px solid '+rk.color+'44;font-size:9px">'+rk.name+'</span></div><div class="lb-meta">'+a.inv+' drivers · '+a.fills+' fills</div></div>';
-      h+='<div class="lb-earn"><div class="lb-earn-v">'+fmtE(a.earned)+'</div><div class="lb-earn-l">IQD EARNED</div></div></div>';
+      h+='<div class="lb-body"><div class="lb-name">'+esc(a.name)+' '+(a.isAgent?'<span class="role-badge agent">🤝</span>':'<span class="role-badge vip">👑</span>')+' <span class="arank" style="background:'+rk.color+'22;color:'+rk.color+';border:1px solid '+rk.color+'44;font-size:9px">'+rk.name+'</span></div><div class="lb-meta">'+a.inv+' drivers · '+a.fills+' fills</div></div>';
+      h+='<div class="lb-earn"><div class="lb-earn-v">'+fmtE(a.earned)+'</div><div class="lb-earn-l">IQD TAKE-HOME</div></div></div>';
     });
     el.innerHTML=h;
   }).catch(function(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';});
