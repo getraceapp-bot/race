@@ -94,6 +94,8 @@ main{padding:20px;max-width:660px;margin:0 auto;display:flex;flex-direction:colu
 .earn-num sup{font-family:'Outfit';font-size:18px;font-weight:600;color:var(--dim);letter-spacing:0;vertical-align:super;margin-left:5px;-webkit-text-fill-color:var(--dim)}
 .earn-desc{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-top:16px;line-height:1.6}
 .earn-desc strong{color:var(--txt)}
+.earn-split{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue);margin-top:10px;line-height:1.5;display:none}
+.earn-split.show{display:block}
 .earn-pulse{position:absolute;bottom:18px;right:20px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);display:flex;align-items:center;gap:5px;opacity:0;transition:opacity 0.4s}
 .earn-pulse.show{opacity:1}
 
@@ -139,8 +141,41 @@ main{padding:20px;max-width:660px;margin:0 auto;display:flex;flex-direction:colu
 #qr-code{display:inline-block;padding:14px;background:#fff;border-radius:10px}
 .qr-cap{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:10px;letter-spacing:1px}
 
-/* SECTION TITLE */
-.sec-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin:8px 4px 0;font-weight:600}
+/* ═══ GROW YOUR NETWORK (recruitment showpiece) ═══ */
+.net{position:relative;border-radius:18px;padding:24px;overflow:hidden;background:linear-gradient(150deg,#1a1024,#0e0e10 55%);border:1px solid rgba(167,139,250,0.28)}
+.net::before{content:'';position:absolute;top:-3px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--o),var(--gold),var(--purple));background-size:300%;animation:shimmer 4s linear infinite}
+.net::after{content:'';position:absolute;top:-60px;right:-60px;width:230px;height:230px;background:radial-gradient(circle,rgba(167,139,250,0.16),transparent 65%);pointer-events:none;animation:pulse 5s ease-in-out infinite}
+.net-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--purple);margin-bottom:10px;font-weight:600;position:relative;z-index:1}
+.net-title{font-family:'Cabinet Grotesk';font-size:24px;font-weight:900;letter-spacing:-0.9px;line-height:1.05;margin-bottom:9px;position:relative;z-index:1}
+.net-title em{font-style:normal;background:linear-gradient(135deg,var(--purple),var(--o));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.net-sub{font-size:13px;color:var(--dim2);line-height:1.6;margin-bottom:18px;position:relative;z-index:1}
+.net-sub b{color:var(--txt)}
+.net-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;position:relative;z-index:1}
+.net-stat{background:rgba(255,255,255,0.03);border:1px solid rgba(167,139,250,0.18);border-radius:12px;padding:15px}
+.net-stat-v{font-family:'Cabinet Grotesk';font-size:26px;font-weight:900;line-height:1}
+.net-stat-v.p{color:var(--purple)}
+.net-stat-v.g{color:var(--green)}
+.net-stat-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-top:5px}
+.net-block{position:relative;z-index:1;margin-bottom:14px}
+.net-block-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--dim);margin-bottom:9px}
+.net-field{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.net-field input{padding:13px 15px;background:var(--bg);border:1px solid rgba(167,139,250,0.3);color:var(--txt);font-family:'Outfit';font-size:14px;outline:none;border-radius:10px;transition:border-color 0.2s}
+.net-field input:focus{border-color:var(--purple)}
+.net-field input::placeholder{color:#5a5a66}
+.net-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple),#8b6df0);border:none;color:#fff;font-family:'Cabinet Grotesk';font-size:14px;font-weight:800;cursor:pointer;border-radius:11px;transition:transform 0.2s;letter-spacing:0.3px}
+.net-submit:active{transform:scale(0.98)}
+.net-or{text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin:14px 0;letter-spacing:1.5px;position:relative;z-index:1}
+.net-linkbox{background:var(--bg);border:1px solid rgba(167,139,250,0.3);border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:9px;margin-bottom:10px;position:relative;z-index:1}
+.net-link{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--purple);flex:1;word-break:break-all;line-height:1.4}
+.net-copy{flex-shrink:0;padding:8px 13px;background:var(--purple);border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;border-radius:7px}
+.net-copy.ok{background:var(--green)}
+.net-wa{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:1px solid rgba(37,211,102,0.4);background:rgba(37,211,102,0.08);color:#fff;font-family:'Outfit';font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;border-radius:11px}
+.net-wa:active{transform:scale(0.98)}
+.net-recruits{position:relative;z-index:1;margin-top:16px}
+.net-recruit{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--b1);border-radius:10px;margin-bottom:8px}
+.net-recruit-name{font-family:'Cabinet Grotesk';font-size:14px;font-weight:700}
+.net-recruit-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-top:2px}
+.net-recruit-earn{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--green);font-weight:600;white-space:nowrap}
 
 /* MY ARMY BUTTON */
 .invites-btn{width:100%;padding:18px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s;color:var(--txt)}
@@ -214,8 +249,6 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
 .sticky-cta-btn{width:100%;padding:17px;background:linear-gradient(135deg,#25D366,#1da851);border:none;border-radius:14px;color:#fff;font-family:'Cabinet Grotesk';font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 30px rgba(37,211,102,0.3);transition:transform 0.2s}
 .sticky-cta-btn:active{transform:scale(0.98)}
 
-
-
 /* WITHDRAWAL */
 .wd-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:22px;position:relative;overflow:hidden}
 .wd-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
@@ -281,6 +314,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
   .earn-num{font-size:44px}
   main{padding:14px;gap:12px;padding-bottom:90px}
   .mission-title{font-size:20px}
+  .net-title{font-size:21px}
 }
 </style>
 </head>
@@ -325,7 +359,6 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
       </div>
     </div>
 
-
     <!-- INSTALL BANNER -->
     <div class="install-banner hidden" id="installBanner" onclick="openInstall()">
       <div class="install-ic"><img src="icon-192.png" alt="RACE"></div>
@@ -341,6 +374,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
       <div class="earn-lbl"><span class="live-dot"></span>YOUR TOTAL EARNINGS</div>
       <div class="earn-num" id="earn-total">0<sup>IQD</sup></div>
       <div class="earn-desc" id="earn-desc">Loading your data...</div>
+      <div class="earn-split" id="earnSplit"></div>
       <div class="earn-pulse" id="earnPulse">● updated</div>
     </div>
 
@@ -351,8 +385,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
       <div class="stat-card"><div class="stat-ic">💰</div><div class="stat-v g" id="st-spend">0</div><div class="stat-l">IQD MOVED</div></div>
     </div>
 
-
-    <!-- WITHDRAWAL -->
+    <!-- WALLET -->
     <div class="wd-card">
       <div class="card-sec-lbl" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:16px">// YOUR WALLET</div>
       <div class="wd-split">
@@ -373,7 +406,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
       <div class="wd-list" id="wd-list"></div>
     </div>
 
-    <!-- MISSION / INVITE -->
+    <!-- MISSION / INVITE DRIVERS -->
     <div class="mission">
       <div class="mission-tag">// YOUR ONE JOB</div>
       <div class="mission-title">Invite drivers. <em>Earn forever.</em></div>
@@ -399,6 +432,42 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
       </div>
     </div>
 
+    <!-- ═══ GROW YOUR NETWORK ═══ -->
+    <div class="net">
+      <div class="net-tag">// LEVEL UP — BUILD YOUR NETWORK</div>
+      <div class="net-title">Recruit agents.<br><em>Earn from their hustle.</em></div>
+      <div class="net-sub">Bring in another agent and you earn a slice of <b>everything they make</b> — passive income stacked on top of your own, for as long as they're active. Recruit as many as you want. <b>They get free towing &amp; car services too.</b></div>
+
+      <div class="net-stats">
+        <div class="net-stat"><div class="net-stat-v p" id="net-count">0</div><div class="net-stat-l">AGENTS YOU RECRUITED</div></div>
+        <div class="net-stat"><div class="net-stat-v g" id="net-override">0</div><div class="net-stat-l">EARNED FROM THEM (IQD)</div></div>
+      </div>
+
+      <div class="net-block">
+        <div class="net-block-lbl">// SEND THEM YOUR SIGN-UP LINK</div>
+        <div class="net-linkbox">
+          <div class="net-link" id="net-link">—</div>
+          <button class="net-copy" id="net-copy" onclick="copyRecruit()">COPY</button>
+        </div>
+        <a class="net-wa" id="net-wa" href="#" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          INVITE VIA WHATSAPP
+        </a>
+      </div>
+
+      <div class="net-or">— OR JUST SEND RACE THEIR DETAILS —</div>
+
+      <div class="net-block">
+        <div class="net-field">
+          <input type="text" id="rec-name" placeholder="Their full name">
+          <input type="tel" id="rec-phone" placeholder="Their phone / WhatsApp">
+        </div>
+        <button class="net-submit" id="rec-btn" onclick="submitAgentReferral()">🚀 SEND TO RACE — I'LL EARN FROM THEM</button>
+      </div>
+
+      <div class="net-recruits" id="net-recruits"></div>
+    </div>
+
     <!-- MY ARMY -->
     <button class="invites-btn" onclick="openInvites()">
       <div class="invites-btn-left">
@@ -421,7 +490,7 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
     </div>
 
     <!-- TX HISTORY -->
-    <div class="sec-title">// EARNING ACTIVITY</div>
+    <div class="sec-title" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);margin:8px 4px 0;font-weight:600">// EARNING ACTIVITY</div>
     <div class="tx-card">
       <div class="tx-hdr">
         <div class="tx-hdr-title">⚡ Live Earnings Feed</div>
@@ -459,7 +528,6 @@ footer{text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;fon
   </div>
 </div>
 
-
 <!-- INSTALL MODAL -->
 <div class="imodal" id="iModal" onclick="if(event.target===this)closeInstall()">
   <div class="imodal-card">
@@ -492,6 +560,7 @@ const SB='https://zluhwkdrijrklviijuvl.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpsdWh3a2RyaWpya2x2aWlqdXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDU0NTksImV4cCI6MjA5NTk4MTQ1OX0.H_Vp_zr7C9bZeewQ4y9AObK7_29maOZ4iHfXFMKcx0w';
 let RATE=0.0032; // overwritten per-agent from DB
 let refLink='',agentId='',qrDone=false,invitesData=[],lastEarned=0,prevTxCount=0;
+let agentCode='',agentName='',recruitLink='',parentSplit=0,parentName='',teamData=null,recruits=[];
 
 // RANK SYSTEM
 const RANKS=[
@@ -525,7 +594,6 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// Count-up animation
 function countUp(el,target,suffix,decimals){
   const start=parseFloat((el.dataset.cur||'0'));
   if(start===target){el.innerHTML=(decimals?fmtE(target):fmt(target))+(suffix||'');return}
@@ -542,12 +610,8 @@ function countUp(el,target,suffix,decimals){
 
 function computeRank(n){
   let cur=RANKS[0],next=null;
-  for(let i=0;i<RANKS.length;i++){
-    if(n>=RANKS[i].min)cur=RANKS[i];
-  }
-  for(let i=0;i<RANKS.length;i++){
-    if(RANKS[i].min>n){next=RANKS[i];break}
-  }
+  for(let i=0;i<RANKS.length;i++){if(n>=RANKS[i].min)cur=RANKS[i];}
+  for(let i=0;i<RANKS.length;i++){if(RANKS[i].min>n){next=RANKS[i];break}}
   return {cur,next};
 }
 
@@ -596,19 +660,14 @@ function setCookie(name,val){
   try{document.cookie=name+'='+val+';path=/;max-age=31536000;SameSite=Lax';}catch(e){}
 }
 function resolveAgentId(){
-  // 1. URL query ?id= or ?agent=
   const params=new URLSearchParams(window.location.search);
   let id=params.get('id')||params.get('agent');
-  // 2. URL hash #id=xxx (survives some PWA launches)
   if(!id&&window.location.hash){
     const h=new URLSearchParams(window.location.hash.replace('#',''));
     id=h.get('id')||window.location.hash.replace('#','');
   }
-  // 3. localStorage
   if(!id){try{id=localStorage.getItem('race_agent_id')||'';}catch(e){}}
-  // 4. cookie fallback (most reliable for iOS standalone)
   if(!id){id=getCookie('race_agent_id');}
-  // persist everywhere we found a fresh one
   if(id){
     try{localStorage.setItem('race_agent_id',id);}catch(e){}
     setCookie('race_agent_id',id);
@@ -617,8 +676,6 @@ function resolveAgentId(){
 }
 
 function injectDynamicManifest(id){
-  // Build a per-agent manifest so the installed home-screen app
-  // always relaunches with this agent's id baked into start_url.
   const manifest={
     name:"RACE VIP",short_name:"RACE VIP",
     description:"RACE VIP Agent — Invite drivers, earn forever.",
@@ -636,7 +693,6 @@ function injectDynamicManifest(id){
   let link=document.querySelector('link[rel="manifest"]');
   if(!link){link=document.createElement('link');link.rel='manifest';document.head.appendChild(link);}
   link.href=url;
-  // also update apple-touch start url hint
   const aTitle=document.querySelector('meta[name="apple-mobile-web-app-title"]');
   if(aTitle)aTitle.content='RACE VIP';
 }
@@ -644,7 +700,6 @@ function injectDynamicManifest(id){
 async function boot(){
   agentId=resolveAgentId();
   if(!agentId){showErr('No agent ID found. Please open the original link your RACE admin sent you (in your browser), then add to home screen.');return;}
-  // Bake this agent's id into a dynamic manifest for correct PWA relaunch
   injectDynamicManifest(agentId);
   try{
     const [agents,txs,invites]=await Promise.all([
@@ -655,10 +710,17 @@ async function boot(){
     if(!agents.length){showErr('Agent not found. Contact RACE admin.');return;}
     const agent=agents[0];
     if(agent.commission_rate!=null&&!isNaN(parseFloat(agent.commission_rate))){RATE=parseFloat(agent.commission_rate);}
+    agentCode=agent.referral_code||'';
+    agentName=agent.name||'';
+    parentSplit=parseFloat(agent.parent_split_rate||0);
+    recruitLink='https://getraceapp-bot.github.io/race/?ref='+agentCode;
+    document.getElementById('net-link').textContent=recruitLink;
+    buildRecruitWa();
     var rd=document.getElementById('rate-display');if(rd)rd.textContent=(RATE*100).toFixed(2).replace(/\.?0+$/,'')+'%';
     invitesData=invites;
     prevTxCount=txs.length;
     await loadWithdrawals();
+    await loadNetwork(agent.parent_agent_id);
 
     document.getElementById('hdr-name').textContent=agent.name.toUpperCase();
     document.title=agent.name+' — RACE VIP';
@@ -667,7 +729,6 @@ async function boot(){
     document.getElementById('ref-link-txt').textContent=refLink;
 
     buildWa();
-
     renderAll(txs,invites,false);
 
     document.getElementById('loading').style.display='none';
@@ -681,14 +742,27 @@ function buildWa(){
   const waMsg=encodeURIComponent('🚗 Join RACE — Erbil\'s fuel rewards network!\n\n✅ Free emergency roadside cover\n✅ Cashback every time you fill up\n✅ One-tap towing & service\n\nJoin free with my link:\n'+refLink);
   document.getElementById('wa-btn').href='https://wa.me/?text='+waMsg;
 }
+function buildRecruitWa(){
+  const msg=encodeURIComponent('🏁 Become a RACE agent — like me!\n\n💰 Invite drivers, earn '+(RATE*100).toFixed(2).replace(/\.?0+$/,'')+'% of every fill they make — forever\n🚛 Free towing & car services\n📈 Recruit your own agents and earn from them too\n\nSign up here:\n'+recruitLink);
+  const a=document.getElementById('net-wa');if(a)a.href='https://wa.me/?text='+msg;
+}
 
 function renderAll(txs,invites,isRefresh){
   const totalSpend=txs.reduce((s,t)=>s+parseFloat(t.amount_spent),0);
-  const totalEarned=totalSpend*RATE;
+  let totalEarned=totalSpend*RATE;
+  if(teamData&&teamData.total_earnings!=null){totalEarned=parseFloat(teamData.total_earnings);}
 
   countUp(document.getElementById('earn-total'),totalEarned,'<sup>IQD</sup>',true);
   renderWallet(totalEarned);
   document.getElementById('earn-desc').innerHTML='<strong>'+txs.length+' fills</strong> · '+invites.length+' drivers recruited · <strong>'+fmt(totalSpend)+' IQD</strong> total moved';
+
+  // subtle note if this agent shares up to a recruiter
+  const es=document.getElementById('earnSplit');
+  if(es){
+    if(parentSplit>0){es.classList.add('show');es.innerHTML='🤝 '+parentSplit+'% of your commission goes to '+(parentName?esc(parentName):'the agent who recruited you')+'. Your total above is already your net share.';}
+    else{es.classList.remove('show');}
+  }
+
   countUp(document.getElementById('st-invites'),invites.length,'',false);
   countUp(document.getElementById('st-txs'),txs.length,'',false);
   countUp(document.getElementById('st-spend'),totalSpend,'',false);
@@ -697,19 +771,19 @@ function renderAll(txs,invites,isRefresh){
 
   renderRank(invites.length);
   renderMiles(invites.length);
+  renderNetwork();
 
   const txEl=document.getElementById('tx-list');
   if(txs.length){
     txEl.innerHTML=txs.map(t=>`
       <div class="tx-row">
         <div><div class="tx-user">${esc(t.race_username)}</div><div class="tx-date">${esc(t.transaction_date)}</div></div>
-        <div><div class="tx-spent">${fmt(t.amount_spent)} IQD spent</div><div class="tx-earn">+${fmtE(parseFloat(t.amount_spent)*RATE)} IQD</div></div>
+        <div><div class="tx-spent">${fmt(t.amount_spent)} IQD spent</div><div class="tx-earn">+${fmtE(parseFloat(t.amount_spent)*RATE*(1-parentSplit/100))} IQD</div></div>
       </div>`).join('');
   }
 
   updateInvitesModal();
 
-  // New earning detection
   if(isRefresh&&txs.length>prevTxCount){
     const newOnes=txs.length-prevTxCount;
     const gained=totalEarned-lastEarned;
@@ -724,12 +798,14 @@ function renderAll(txs,invites,isRefresh){
 
 async function refresh(){
   try{
-    const [txs,invites]=await Promise.all([
+    const [agentRow,txs,invites]=await Promise.all([
+      sb('vip_agents?id=eq.'+agentId+'&select=parent_agent_id'),
       sb('agent_transactions?agent_id=eq.'+agentId+'&order=created_at.desc&select=*'),
       sb('agent_invites?agent_id=eq.'+agentId+'&order=joined_date.desc&select=*')
     ]);
     invitesData=invites;
     await loadWithdrawals();
+    await loadNetwork(agentRow[0]?agentRow[0].parent_agent_id:null);
     renderAll(txs,invites,true);
   }catch(e){}
 }
@@ -812,19 +888,14 @@ function fxLoop(){
 }
 fxLoop();
 
-
-
 // ═══ WITHDRAWAL SYSTEM ═══
 let withdrawalsData=[];
-
 async function loadWithdrawals(){
   try{
     withdrawalsData=await sb('agent_withdrawals?agent_id=eq.'+agentId+'&order=requested_at.desc&select=*');
   }catch(e){withdrawalsData=[];}
 }
-
 function renderWallet(totalEarned){
-  // Sum pending + paid withdrawals
   let withdrawn=0,pending=0;
   withdrawalsData.forEach(w=>{
     const amt=parseFloat(w.amount)||0;
@@ -835,7 +906,6 @@ function renderWallet(totalEarned){
   countUp(document.getElementById('wd-earned'),totalEarned,'',true);
   countUp(document.getElementById('wd-avail'),available,'',true);
   window._available=available;
-
   const list=document.getElementById('wd-list');
   if(!withdrawalsData.length){list.innerHTML='';return;}
   list.innerHTML=withdrawalsData.map(w=>{
@@ -848,7 +918,6 @@ function renderWallet(totalEarned){
     </div>`;
   }).join('');
 }
-
 async function requestWithdraw(){
   const inp=document.getElementById('wd-amount');
   const amt=parseFloat(inp.value);
@@ -875,6 +944,66 @@ async function requestWithdraw(){
   }
 }
 
+// ═══ NETWORK / RECRUITMENT (override-aware, one level) ═══
+async function loadNetwork(parentAgentId){
+  try{
+    const [team,caps]=await Promise.all([
+      sb('agent_team_earnings?agent_id=eq.'+agentId+'&select=*'),
+      sb('captain_breakdown?parent_agent_id=eq.'+agentId+'&order=override_to_parent.desc&select=*')
+    ]);
+    teamData=team[0]||null;
+    recruits=caps||[];
+    if(parentAgentId){
+      try{const p=await sb('vip_agents?id=eq.'+parentAgentId+'&select=name');parentName=(p[0]&&p[0].name)||'';}catch(e){parentName='';}
+    }else{parentName='';}
+  }catch(e){teamData=null;recruits=[];}
+}
+
+function renderNetwork(){
+  document.getElementById('net-count').textContent=recruits.length;
+  const ov=teamData?parseFloat(teamData.override_from_captains||0):0;
+  countUp(document.getElementById('net-override'),ov,'',true);
+  const wrap=document.getElementById('net-recruits');
+  if(!recruits.length){wrap.innerHTML='';return;}
+  wrap.innerHTML='<div class="net-block-lbl">// YOUR RECRUITED AGENTS</div>'+recruits.map(c=>`
+    <div class="net-recruit">
+      <div><div class="net-recruit-name">${esc(c.captain_name)}</div><div class="net-recruit-meta">${fmt(c.volume)} IQD moved · you take ${c.parent_split_rate}%</div></div>
+      <div class="net-recruit-earn">+${fmtE(c.override_to_parent)} IQD</div>
+    </div>`).join('');
+}
+
+async function submitAgentReferral(){
+  const name=(document.getElementById('rec-name').value||'').trim();
+  const phone=(document.getElementById('rec-phone').value||'').trim();
+  if(!name||!phone){toast('⚠️ Enter their name and phone');return;}
+  const btn=document.getElementById('rec-btn');
+  btn.disabled=true;btn.textContent='SENDING...';
+  try{
+    const r=await fetch(SB+'/rest/v1/agent_applications',{
+      method:'POST',
+      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify({first_name:name,last_name:'',whatsapp:phone,invited_by_code:agentCode,status:'new',notes:'Referred by agent '+agentName+' via dashboard'})
+    });
+    if(!r.ok)throw new Error(await r.text());
+    document.getElementById('rec-name').value='';
+    document.getElementById('rec-phone').value='';
+    btn.disabled=false;btn.textContent='🚀 SEND TO RACE — I\'LL EARN FROM THEM';
+    triggerCoins();
+    toast('✅ Sent to RACE — they\'ll set up the account');
+  }catch(e){
+    btn.disabled=false;btn.textContent='🚀 SEND TO RACE — I\'LL EARN FROM THEM';
+    toast('⚠️ Could not send. Try again.');
+  }
+}
+function copyRecruit(){
+  navigator.clipboard.writeText(recruitLink).then(()=>{
+    const b=document.getElementById('net-copy');
+    b.textContent='COPIED!';b.classList.add('ok');
+    toast('🔗 Your recruit link copied');
+    setTimeout(()=>{b.textContent='COPY';b.classList.remove('ok');},2500);
+  });
+}
+
 // ═══ PWA INSTALL SYSTEM ═══
 let deferredPrompt=null;
 const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
@@ -887,10 +1016,9 @@ window.addEventListener('beforeinstallprompt',(e)=>{
 });
 
 function showInstallBanner(){
-  if(isStandalone)return; // already installed
+  if(isStandalone)return;
   const b=document.getElementById('installBanner');
   if(b)b.classList.remove('hidden');
-  // default tab to user's platform
   if(isIOS)switchTab('ios');else switchTab('and');
 }
 function openInstall(){document.getElementById('iModal').classList.add('open');document.body.style.overflow='hidden';}
@@ -914,7 +1042,6 @@ window.addEventListener('appinstalled',()=>{
   toast('🎉 RACE VIP added to your home screen!');
 });
 
-// Register service worker for offline + installability
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
